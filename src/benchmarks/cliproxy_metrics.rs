@@ -10,10 +10,10 @@
 //! - GET /v1/rankings - Model rankings
 //! - GET /health - System health
 
+use chrono::{DateTime, Utc};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use tracing::info;
-use chrono::{DateTime, Utc};
 
 const DEFAULT_BASE_URL: &str = "http://localhost:8317";
 
@@ -54,7 +54,7 @@ pub struct RequestMetrics {
     pub model: String,
     /// Provider used
     pub provider: String,
-    
+
     // ===== USAGE TOKENS (12) =====
     /// Input tokens sent
     pub input_tokens: u64,
@@ -80,7 +80,7 @@ pub struct RequestMetrics {
     pub native_input_tokens: Option<u64>,
     /// Native output tokens (before truncation)
     pub native_output_tokens: Option<u64>,
-    
+
     // ===== PERFORMANCE (12) =====
     /// Time to first token (ms)
     pub time_to_first_token_ms: Option<f64>,
@@ -106,7 +106,7 @@ pub struct RequestMetrics {
     pub time_to_first_tool_ms: Option<f64>,
     /// Time between tool calls (agentic)
     pub inter_tool_call_ms: Option<f64>,
-    
+
     // ===== QUALITY/BEHAVIOR (14) ⚡ =====
     /// Number of conversation turns
     pub turn_count: u32,
@@ -136,7 +136,7 @@ pub struct RequestMetrics {
     pub token_efficiency: Option<f64>,
     /// Output sentiment score
     pub sentiment_score: Option<f64>,
-    
+
     // ===== ERROR/RELIABILITY (12) =====
     /// Whether request succeeded
     pub success: bool,
@@ -162,7 +162,7 @@ pub struct RequestMetrics {
     pub partial_failure: bool,
     /// Timeout flag
     pub timed_out: bool,
-    
+
     // ===== COST (8) =====
     /// Input cost in USD
     pub cost_input_usd: Option<f64>,
@@ -180,7 +180,7 @@ pub struct RequestMetrics {
     pub cost_reasoning_usd: Option<f64>,
     /// Tool cost USD
     pub cost_tool_usd: Option<f64>,
-    
+
     // ===== ROUTING (7) =====
     /// Routing strategy used
     pub routing_strategy: Option<String>,
@@ -196,7 +196,7 @@ pub struct RequestMetrics {
     pub primary_provider_latency_ms: Option<f64>,
     /// Fallback provider latency
     pub fallback_provider_latency_ms: Option<f64>,
-    
+
     // ===== CONTEXT/WINDOW (6) =====
     /// Context window size
     pub context_window: Option<u64>,
@@ -210,7 +210,7 @@ pub struct RequestMetrics {
     pub context_overflow_tokens: Option<u64>,
     /// Sliding window position
     pub sliding_window_position: Option<f64>,
-    
+
     // ===== AGENTIC (10) ⚡ =====
     /// Whether this was an agentic request
     pub is_agentic: bool,
@@ -232,7 +232,7 @@ pub struct RequestMetrics {
     pub used_planning: bool,
     /// Re-planning count
     pub replan_count: u32,
-    
+
     // ===== TIMESTAMP =====
     /// When request started
     pub timestamp: DateTime<Utc>,
@@ -245,7 +245,7 @@ impl Default for RequestMetrics {
             session_id: None,
             model: String::new(),
             provider: String::new(),
-            
+
             // USAGE TOKENS (12)
             input_tokens: 0,
             output_tokens: 0,
@@ -259,7 +259,7 @@ impl Default for RequestMetrics {
             cache_saved_tokens: None,
             native_input_tokens: None,
             native_output_tokens: None,
-            
+
             // PERFORMANCE (12)
             time_to_first_token_ms: None,
             total_latency_ms: None,
@@ -273,7 +273,7 @@ impl Default for RequestMetrics {
             context_processing_ms: None,
             time_to_first_tool_ms: None,
             inter_tool_call_ms: None,
-            
+
             // QUALITY/BEHAVIOR (14)
             turn_count: 1,
             tool_call_count: 0,
@@ -289,7 +289,7 @@ impl Default for RequestMetrics {
             tool_success_rate: None,
             token_efficiency: None,
             sentiment_score: None,
-            
+
             // ERROR/RELIABILITY (12)
             success: true,
             error_message: None,
@@ -303,7 +303,7 @@ impl Default for RequestMetrics {
             error_recovery_ms: None,
             partial_failure: false,
             timed_out: false,
-            
+
             // COST (8)
             cost_input_usd: None,
             cost_output_usd: None,
@@ -313,7 +313,7 @@ impl Default for RequestMetrics {
             cost_before_optimization: None,
             cost_reasoning_usd: None,
             cost_tool_usd: None,
-            
+
             // ROUTING (7)
             routing_strategy: None,
             used_fallback: false,
@@ -322,7 +322,7 @@ impl Default for RequestMetrics {
             providers_tried: 0,
             primary_provider_latency_ms: None,
             fallback_provider_latency_ms: None,
-            
+
             // CONTEXT/WINDOW (6)
             context_window: None,
             context_utilization: None,
@@ -330,7 +330,7 @@ impl Default for RequestMetrics {
             hit_context_limit: false,
             context_overflow_tokens: None,
             sliding_window_position: None,
-            
+
             // AGENTIC (10)
             is_agentic: false,
             agent_loop_count: 0,
@@ -342,7 +342,7 @@ impl Default for RequestMetrics {
             reflection_tokens: None,
             used_planning: false,
             replan_count: 0,
-            
+
             // TIMESTAMP
             timestamp: Utc::now(),
         }
@@ -354,7 +354,7 @@ impl Default for RequestMetrics {
 pub struct ProviderMetrics {
     // ===== IDENTITY =====
     pub provider: String,
-    
+
     // ===== USAGE (8 metrics) =====
     pub total_input_tokens: u64,
     pub total_output_tokens: u64,
@@ -364,7 +364,7 @@ pub struct ProviderMetrics {
     pub total_tool_input_tokens: u64,
     pub total_tool_output_tokens: u64,
     pub total_reasoning_tokens: Option<u64>,
-    
+
     // ===== PERFORMANCE (5 metrics) =====
     /// Average tokens per second (throughput)
     pub avg_tokens_per_second: Option<f64>,
@@ -376,23 +376,23 @@ pub struct ProviderMetrics {
     pub avg_latency_ms: Option<f64>,
     /// Median latency ms
     pub median_latency_ms: Option<f64>,
-    
+
     // ===== RELIABILITY (4 metrics) =====
     pub total_requests: u64,
     pub successful_requests: u64,
     pub failed_requests: u64,
     pub success_rate: Option<f64>,
     pub rate_limited_requests: u64,
-    
+
     // ===== COST (3 metrics) =====
     pub total_cost_usd: Option<f64>,
     pub avg_cost_per_request: Option<f64>,
     pub cost_per_1k_tokens: Option<f64>,
-    
+
     // ===== QUALITY (2 metrics) =====
     pub total_turns: u64,
     pub total_tool_calls: u64,
-    
+
     // ===== TIMESTAMP =====
     pub updated_at: DateTime<Utc>,
 }
@@ -403,7 +403,7 @@ pub struct ModelMetrics {
     // ===== IDENTITY =====
     pub model: String,
     pub provider: String,
-    
+
     // ===== USAGE (8 metrics) =====
     pub total_input_tokens: u64,
     pub total_output_tokens: u64,
@@ -413,20 +413,20 @@ pub struct ModelMetrics {
     pub total_tool_input_tokens: u64,
     pub total_tool_output_tokens: u64,
     pub total_reasoning_tokens: Option<u64>,
-    
+
     // ===== PERFORMANCE (5 metrics) =====
     pub avg_tokens_per_second: Option<f64>,
     pub median_tokens_per_second: Option<f64>,
     pub p95_tokens_per_second: Option<f64>,
     pub avg_latency_ms: Option<f64>,
     pub median_latency_ms: Option<f64>,
-    
+
     // ===== VERBOSITY (2 metrics) =====
     /// Average verbosity (output tokens per request)
     pub avg_verbosity: Option<f64>,
     /// Median verbosity
     pub median_verbosity: Option<f64>,
-    
+
     // ===== RELIABILITY (5 metrics) =====
     pub total_requests: u64,
     pub successful_requests: u64,
@@ -434,12 +434,12 @@ pub struct ModelMetrics {
     pub success_rate: Option<f64>,
     pub avg_turns_per_request: Option<f64>,
     pub avg_tool_calls_per_request: Option<f64>,
-    
+
     // ===== COST (3 metrics) =====
     pub total_cost_usd: Option<f64>,
     pub avg_cost_per_request: Option<f64>,
     pub cost_per_1k_tokens: Option<f64>,
-    
+
     // ===== TIMESTAMP =====
     pub updated_at: DateTime<Utc>,
 }
@@ -479,15 +479,15 @@ impl CLIProxyMetricsClient {
     /// Fetch provider-level metrics
     pub async fn get_provider_metrics(&self) -> Result<Vec<ProviderMetrics>, reqwest::Error> {
         let url = format!("{}/v1/metrics/providers", self.config.base_url);
-        
+
         let mut request = self.http_client.get(&url);
         if let Some(ref key) = self.config.api_key {
             request = request.header("Authorization", format!("Bearer {}", key));
         }
-        
+
         let response = request.send().await?;
         let metrics: Vec<ProviderMetrics> = response.json().await?;
-        
+
         info!("Fetched provider metrics for {} providers", metrics.len());
         Ok(metrics)
     }
@@ -495,27 +495,27 @@ impl CLIProxyMetricsClient {
     /// Fetch model-level metrics
     pub async fn get_model_metrics(&self) -> Result<Vec<ModelMetrics>, reqwest::Error> {
         let url = format!("{}/v1/metrics/models", self.config.base_url);
-        
+
         let mut request = self.http_client.get(&url);
         if let Some(ref key) = self.config.api_key {
             request = request.header("Authorization", format!("Bearer {}", key));
         }
-        
+
         let response = request.send().await?;
         let metrics: Vec<ModelMetrics> = response.json().await?;
-        
+
         info!("Fetched model metrics for {} models", metrics.len());
         Ok(metrics)
     }
 
     /// Fetch rankings
     pub async fn get_rankings(
-        &self, 
+        &self,
         category: Option<&str>,
         limit: Option<u32>,
     ) -> Result<Vec<ModelRanking>, reqwest::Error> {
         let mut url = format!("{}/v1/rankings", self.config.base_url);
-        
+
         let mut params = Vec::new();
         if let Some(cat) = category {
             params.push(format!("category={}", cat));
@@ -526,19 +526,19 @@ impl CLIProxyMetricsClient {
         if !params.is_empty() {
             url = format!("{}?{}", url, params.join("&"));
         }
-        
+
         let mut request = self.http_client.get(&url);
         if let Some(ref key) = self.config.api_key {
             request = request.header("Authorization", format!("Bearer {}", key));
         }
-        
+
         let response = request.send().await?;
         #[derive(Deserialize)]
         struct RankingsResponse {
             rankings: Vec<ModelRanking>,
         }
         let result: RankingsResponse = response.json().await?;
-        
+
         info!("Fetched {} rankings", result.rankings.len());
         Ok(result.rankings)
     }
@@ -546,25 +546,25 @@ impl CLIProxyMetricsClient {
     /// Fetch usage analytics
     pub async fn get_usage(&self) -> Result<UsageAnalytics, reqwest::Error> {
         let url = format!("{}/v1/usage", self.config.base_url);
-        
+
         let mut request = self.http_client.get(&url);
         if let Some(ref key) = self.config.api_key {
             request = request.header("Authorization", format!("Bearer {}", key));
         }
-        
+
         let response = request.send().await?;
         let usage: UsageAnalytics = response.json().await?;
-        
+
         Ok(usage)
     }
 
     /// Check health
     pub async fn health_check(&self) -> Result<HealthStatus, reqwest::Error> {
         let url = format!("{}/health", self.config.base_url);
-        
+
         let response = self.http_client.get(&url).send().await?;
         let health: HealthStatus = response.json().await?;
-        
+
         Ok(health)
     }
 }
@@ -640,10 +640,14 @@ impl RequestMetrics {
     pub fn calculate_cost(&mut self, input_price_per_1m: f64, output_price_per_1m: f64) {
         self.cost_input_usd = Some(self.input_tokens as f64 * input_price_per_1m / 1_000_000.0);
         self.cost_output_usd = Some(self.output_tokens as f64 * output_price_per_1m / 1_000_000.0);
-        self.cost_total_usd = self.cost_input_usd.map(|i| i + self.cost_output_usd.unwrap_or(0.0));
-        
+        self.cost_total_usd = self
+            .cost_input_usd
+            .map(|i| i + self.cost_output_usd.unwrap_or(0.0));
+
         if self.total_tokens > 0 {
-            self.cost_per_1k_tokens = self.cost_total_usd.map(|c| c * 1000.0 / self.total_tokens as f64);
+            self.cost_per_1k_tokens = self
+                .cost_total_usd
+                .map(|c| c * 1000.0 / self.total_tokens as f64);
         }
     }
 }
@@ -667,15 +671,15 @@ mod tests {
             total_tokens: 1500,
             ..Default::default()
         };
-        
+
         // Set latency
         metrics.total_latency_ms = Some(1000.0); // 1 second
-        
+
         // Calculate derived metrics
         metrics.calculate_verbosity();
         metrics.calculate_tps();
         metrics.calculate_cost(2.0, 8.0); // $2/1M input, $8/1M output
-        
+
         assert_eq!(metrics.verbosity_score, Some(0.5)); // 500/1000
         assert_eq!(metrics.tokens_per_second, Some(500.0)); // 500 tokens in 1 second
         assert_eq!(metrics.cost_input_usd, Some(0.002)); // 1000 * 2 / 1M

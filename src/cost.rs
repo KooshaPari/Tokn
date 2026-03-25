@@ -61,12 +61,7 @@ pub fn compute_costs(
             provider.subscription_usd_month,
         );
 
-        merge_acc(
-            &mut global,
-            evt,
-            variable_cost,
-            event_sub_alloc,
-        );
+        merge_acc(&mut global, evt, variable_cost, event_sub_alloc);
         merge_acc(
             by_provider.entry(evt.provider.clone()).or_default(),
             evt,
@@ -223,7 +218,10 @@ pub fn make_suggestions(global: &Acc, total_subscription: f64) -> Vec<String> {
 }
 
 // Helper function to get event pricing - uses utils functions
-pub fn event_pricing<'a>(evt: &UsageEvent, pricing: &'a PricingBook) -> Option<(&'a ProviderPricing, &'a ModelRate)> {
+pub fn event_pricing<'a>(
+    evt: &UsageEvent,
+    pricing: &'a PricingBook,
+) -> Option<(&'a ProviderPricing, &'a ModelRate)> {
     let provider_name = crate::utils::resolve_provider_alias(&evt.provider, pricing);
     let provider = pricing.providers.get(&provider_name)?;
     let model_name = crate::utils::resolve_model_alias(&provider_name, &evt.model, pricing);

@@ -276,9 +276,18 @@ pub fn round4(v: f64) -> f64 {
 mod tests {
     use super::*;
 
+    #[allow(clippy::approx_constant)]
+    const PI_ROUNDED_2: f64 = 3.14;
+    #[allow(clippy::approx_constant)]
+    const PI_ROUNDED_4: f64 = 3.1416;
+    const TOLERANCE_2: f64 = 0.001;
+    const TOLERANCE_4: f64 = 0.00001;
+
     #[test]
     fn test_round2_basic() {
-        assert_eq!(round2(3.14159), 3.14);
+        let pi = std::f64::consts::PI;
+        let rounded_pi = round2(pi);
+        assert!((rounded_pi - PI_ROUNDED_2).abs() < TOLERANCE_2);
         assert_eq!(round2(1.234), 1.23);
         assert_eq!(round2(1.999), 2.00);
     }
@@ -290,13 +299,17 @@ mod tests {
 
     #[test]
     fn test_round2_negative() {
-        assert_eq!(round2(-3.14159), -3.14);
+        let pi = std::f64::consts::PI;
+        let rounded_neg_pi = round2(-pi);
+        assert!((rounded_neg_pi - (-PI_ROUNDED_2)).abs() < TOLERANCE_2);
         assert_eq!(round2(-1.234), -1.23);
     }
 
     #[test]
     fn test_round4_basic() {
-        assert_eq!(round4(3.141592), 3.1416);
+        let pi = std::f64::consts::PI;
+        let rounded_pi = round4(pi);
+        assert!((rounded_pi - PI_ROUNDED_4).abs() < TOLERANCE_4);
         assert_eq!(round4(1.23456), 1.2346);
         assert_eq!(round4(1.99999), 2.0000);
     }
@@ -308,16 +321,18 @@ mod tests {
 
     #[test]
     fn test_round4_negative() {
-        assert_eq!(round4(-3.141592), -3.1416);
+        let pi = std::f64::consts::PI;
+        let rounded_neg_pi = round4(-pi);
+        assert!((rounded_neg_pi - (-PI_ROUNDED_4)).abs() < TOLERANCE_4);
         assert_eq!(round4(-1.23456), -1.2346);
     }
 
     #[test]
     fn test_round2_and_round4_relationship() {
-        let value = 3.141592653589793;
-        let r2 = round2(value);
-        let r4 = round4(value);
-        assert_eq!(r2, 3.14);
-        assert_eq!(r4, 3.1416);
+        let pi = std::f64::consts::PI;
+        let r2 = round2(pi);
+        let r4 = round4(pi);
+        assert!((r2 - PI_ROUNDED_2).abs() < TOLERANCE_2);
+        assert!((r4 - PI_ROUNDED_4).abs() < TOLERANCE_4);
     }
 }

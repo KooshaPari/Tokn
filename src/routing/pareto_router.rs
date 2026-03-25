@@ -1,8 +1,8 @@
 //! Routing logic and model mapping utilities.
 
-use async_trait::async_trait;
-use crate::benchmarks::BenchmarkData;
 use super::ports::*;
+use crate::benchmarks::BenchmarkData;
+use async_trait::async_trait;
 
 // =============================================================================
 // PARETO ROUTER
@@ -17,26 +17,26 @@ impl ParetoRouter {
     pub fn new(store: crate::benchmarks::BenchmarkStore) -> Self {
         Self { store }
     }
-    
+
     /// Calculate Pareto score for a benchmark
     pub fn calculate_pareto_score(benchmark: &BenchmarkData) -> f64 {
         let quality = benchmark.intelligence_index.unwrap_or(0.0) / 100.0; // Normalize to 0-1
         let speed = benchmark.speed_tps.unwrap_or(0.0) / 200.0; // Normalize (200 tps = max)
         let cost = 1.0 - (benchmark.price_input_per_1m.unwrap_or(1.0) / 10.0).min(1.0); // Lower cost = higher score
-        
+
         // Weighted combination
         (quality * 0.5) + (speed * 0.3) + (cost * 0.2)
     }
-    
+
     /// Get Pareto-optimal models
     pub async fn get_pareto_frontier(&self) -> Vec<(String, f64)> {
         let benchmarks = self.store.get_all().await;
-        
+
         let mut scored: Vec<(String, f64)> = benchmarks
             .iter()
             .map(|b| (b.model_id.clone(), Self::calculate_pareto_score(b)))
             .collect();
-        
+
         scored.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
         scored
     }
@@ -46,7 +46,7 @@ impl ParetoRouter {
 impl RoutingPort for ParetoRouter {
     async fn select(&self, criteria: &RoutingCriteria) -> PortResult<RoutingDecision> {
         let benchmarks = self.store.get_all().await;
-        
+
         // Filter and score
         let mut candidates: Vec<(BenchmarkData, f64)> = benchmarks
             .iter()
@@ -72,9 +72,9 @@ impl RoutingPort for ParetoRouter {
             })
             .map(|b| (b.clone(), Self::calculate_pareto_score(b)))
             .collect();
-        
+
         candidates.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
-        
+
         match candidates.first() {
             Some((best, score)) => Ok(RoutingDecision {
                 model: best.model_id.clone(),
@@ -100,12 +100,15 @@ impl RoutingPort for ParetoRouter {
             None => Err(PortError::NotFound("No models match criteria".into())),
         }
     }
-    
-    async fn get_rankings(&self, _category: Option<&str>, limit: Option<u32>) 
-        -> PortResult<Vec<RoutingAlternative>> {
+
+    async fn get_rankings(
+        &self,
+        _category: Option<&str>,
+        limit: Option<u32>,
+    ) -> PortResult<Vec<RoutingAlternative>> {
         let frontier = self.get_pareto_frontier().await;
         let limit = limit.unwrap_or(20) as usize;
-        
+
         Ok(frontier
             .into_iter()
             .take(limit)
@@ -117,11 +120,11 @@ impl RoutingPort for ParetoRouter {
             })
             .collect())
     }
-    
+
     async fn is_available(&self) -> bool {
         true
     }
-    
+
     fn source_name(&self) -> &str {
         "pareto-router"
     }
@@ -140,7 +143,7 @@ impl ModelMappingResolver {
     pub fn new(store: crate::benchmarks::BenchmarkStore) -> Self {
         Self { store }
     }
-    
+
     /// Resolve provider-harness-model trio
     pub async fn resolve_trio(
         &self,
@@ -150,7 +153,7 @@ impl ModelMappingResolver {
     ) -> PortResult<ProviderHarnessModel> {
         // Get benchmark data for this model
         let benchmark = self.store.get(model).await;
-        
+
         let (quality, cost, latency, throughput) = match benchmark {
             Some(b) => (
                 b.intelligence_index,
@@ -160,7 +163,7 @@ impl ModelMappingResolver {
             ),
             None => (None, None, None, None),
         };
-        
+
         Ok(ProviderHarnessModel {
             provider: provider.unwrap_or("unknown").to_string(),
             harness: harness.unwrap_or("unknown").to_string(),
@@ -185,10 +188,10 @@ impl TrioPort for ModelMappingResolver {
     ) -> PortResult<ProviderHarnessModel> {
         self.resolve_trio(provider, harness, model).await
     }
-    
+
     async fn all_trios(&self) -> PortResult<Vec<ProviderHarnessModel>> {
         let benchmarks = self.store.get_all().await;
-        
+
         Ok(benchmarks
             .into_iter()
             .map(|b| ProviderHarnessModel {
@@ -204,11 +207,11 @@ impl TrioPort for ModelMappingResolver {
             })
             .collect())
     }
-    
+
     async fn is_available(&self) -> bool {
         true
     }
-    
+
     fn source_name(&self) -> &str {
         "mapping-resolver"
     }

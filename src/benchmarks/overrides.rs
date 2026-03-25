@@ -4,7 +4,7 @@
 //! This has HIGHEST PRIORITY over all other sources.
 
 use crate::benchmarks::{BenchmarkData, BenchmarkSource};
-use serde::{Deserialize};
+use serde::Deserialize;
 use std::collections::HashMap;
 use std::path::Path;
 use tracing::info;
@@ -51,23 +51,23 @@ impl ModelOverride {
         BenchmarkData {
             model_id: model_id.to_string(),
             provider: None,
-            
+
             intelligence_index: self.intelligence_index,
             coding_index: self.coding_index,
             agentic_index: self.agentic_index,
-            
+
             speed_tps: self.speed_tps,
             latency_ttft_ms: self.latency_ms,
             latency_e2e_ms: None,
-            
+
             price_input_per_1m: self.price_input,
             price_output_per_1m: self.price_output,
             price_cache_read_per_1m: None,
             price_cache_write_per_1m: None,
-            
+
             context_window_tokens: self.context_window,
             max_output_tokens: None,
-            
+
             source: BenchmarkSource::ManualOverride,
             confidence: 1.0, // Highest confidence for manual overrides
             updated_at: chrono::Utc::now(),
@@ -76,6 +76,7 @@ impl ModelOverride {
 }
 
 /// Manual overrides loader
+#[derive(Default)]
 pub struct ManualOverrides {
     overrides: HashMap<String, BenchmarkData>,
 }
@@ -85,15 +86,15 @@ impl ManualOverrides {
     pub fn from_yaml(path: impl AsRef<Path>) -> Result<Self, Box<dyn std::error::Error>> {
         let content = std::fs::read_to_string(path)?;
         let config: ManualOverridesConfig = serde_yaml::from_str(&content)?;
-        
+
         let mut overrides = HashMap::new();
         for (model_id, override_data) in config.overrides {
             let benchmark = override_data.to_benchmark_data(&model_id);
             overrides.insert(model_id, benchmark);
         }
-        
+
         info!("Loaded {} manual benchmark overrides", overrides.len());
-        
+
         Ok(Self { overrides })
     }
 
@@ -101,15 +102,15 @@ impl ManualOverrides {
     pub fn from_json(path: impl AsRef<Path>) -> Result<Self, Box<dyn std::error::Error>> {
         let content = std::fs::read_to_string(path)?;
         let config: ManualOverridesConfig = serde_json::from_slice(content.as_bytes())?;
-        
+
         let mut overrides = HashMap::new();
         for (model_id, override_data) in config.overrides {
             let benchmark = override_data.to_benchmark_data(&model_id);
             overrides.insert(model_id, benchmark);
         }
-        
+
         info!("Loaded {} manual benchmark overrides", overrides.len());
-        
+
         Ok(Self { overrides })
     }
 
@@ -126,14 +127,6 @@ impl ManualOverrides {
     /// Get all model IDs with overrides
     pub fn model_ids(&self) -> Vec<&String> {
         self.overrides.keys().collect()
-    }
-}
-
-impl Default for ManualOverrides {
-    fn default() -> Self {
-        Self {
-            overrides: HashMap::new(),
-        }
     }
 }
 

@@ -7,7 +7,7 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 
 /// Source of benchmark data
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "snake_case")]
 pub enum BenchmarkSource {
     /// Artificial Analysis API
@@ -19,13 +19,8 @@ pub enum BenchmarkSource {
     /// Web scraping (future)
     WebScrape,
     /// Fallback/hardcoded values
+    #[default]
     Fallback,
-}
-
-impl Default for BenchmarkSource {
-    fn default() -> Self {
-        Self::Fallback
-    }
 }
 
 /// Unified benchmark data for a model
@@ -33,10 +28,10 @@ impl Default for BenchmarkSource {
 pub struct BenchmarkData {
     /// Unique model identifier (canonical)
     pub model_id: String,
-    
+
     /// Provider (if known)
     pub provider: Option<String>,
-    
+
     // ===== QUALITY =====
     /// Artificial Analysis Intelligence Index (0-100+)
     pub intelligence_index: Option<f64>,
@@ -44,7 +39,7 @@ pub struct BenchmarkData {
     pub coding_index: Option<f64>,
     /// Agentic capability score
     pub agentic_index: Option<f64>,
-    
+
     // ===== PERFORMANCE =====
     /// Output tokens per second
     pub speed_tps: Option<f64>,
@@ -52,7 +47,7 @@ pub struct BenchmarkData {
     pub latency_ttft_ms: Option<f64>,
     /// End-to-end latency for 500 tokens (ms)
     pub latency_e2e_ms: Option<f64>,
-    
+
     // ===== PRICING =====
     /// Input price per 1M tokens (USD)
     pub price_input_per_1m: Option<f64>,
@@ -62,13 +57,13 @@ pub struct BenchmarkData {
     pub price_cache_read_per_1m: Option<f64>,
     /// Cache write price per 1M tokens (USD)
     pub price_cache_write_per_1m: Option<f64>,
-    
+
     // ===== CONTEXT =====
     /// Maximum context window (tokens)
     pub context_window_tokens: Option<u64>,
     /// Maximum output tokens
     pub max_output_tokens: Option<u64>,
-    
+
     // ===== METADATA =====
     /// Data source
     pub source: BenchmarkSource,
@@ -120,7 +115,9 @@ impl BenchmarkSource {
     pub fn priority(&self) -> SourcePriority {
         match self {
             BenchmarkSource::ManualOverride => SourcePriority::Manual,
-            BenchmarkSource::ArtificialAnalysis | BenchmarkSource::OpenRouter => SourcePriority::Api,
+            BenchmarkSource::ArtificialAnalysis | BenchmarkSource::OpenRouter => {
+                SourcePriority::Api
+            }
             BenchmarkSource::WebScrape => SourcePriority::Scrape,
             BenchmarkSource::Fallback => SourcePriority::Fallback,
         }
@@ -162,7 +159,7 @@ impl BenchmarkStore {
     /// Merge benchmark data with priority resolution
     pub async fn merge(&self, model_id: String, new_data: BenchmarkData) {
         let mut data = self.data.write().await;
-        
+
         if let Some(existing) = data.get(&model_id) {
             // Resolve conflicts based on priority
             let merged = if new_data.source.priority() < existing.source.priority() {
@@ -183,26 +180,58 @@ impl BenchmarkStore {
         BenchmarkData {
             model_id: new.model_id.clone(),
             provider: new.provider.clone().or_else(|| existing.provider.clone()),
-            
-            intelligence_index: Self::merge_field(existing.intelligence_index, new.intelligence_index, new.confidence),
-            coding_index: Self::merge_field(existing.coding_index, new.coding_index, new.confidence),
-            agentic_index: Self::merge_field(existing.agentic_index, new.agentic_index, new.confidence),
-            
+
+            intelligence_index: Self::merge_field(
+                existing.intelligence_index,
+                new.intelligence_index,
+                new.confidence,
+            ),
+            coding_index: Self::merge_field(
+                existing.coding_index,
+                new.coding_index,
+                new.confidence,
+            ),
+            agentic_index: Self::merge_field(
+                existing.agentic_index,
+                new.agentic_index,
+                new.confidence,
+            ),
+
             speed_tps: Self::merge_field(existing.speed_tps, new.speed_tps, new.confidence),
-            latency_ttft_ms: Self::merge_field(existing.latency_ttft_ms, new.latency_ttft_ms, new.confidence),
-            latency_e2e_ms: Self::merge_field(existing.latency_e2e_ms, new.latency_e2e_ms, new.confidence),
-            
+            latency_ttft_ms: Self::merge_field(
+                existing.latency_ttft_ms,
+                new.latency_ttft_ms,
+                new.confidence,
+            ),
+            latency_e2e_ms: Self::merge_field(
+                existing.latency_e2e_ms,
+                new.latency_e2e_ms,
+                new.confidence,
+            ),
+
             price_input_per_1m: new.price_input_per_1m.or(existing.price_input_per_1m),
             price_output_per_1m: new.price_output_per_1m.or(existing.price_output_per_1m),
-            price_cache_read_per_1m: new.price_cache_read_per_1m.or(existing.price_cache_read_per_1m),
-            price_cache_write_per_1m: new.price_cache_write_per_1m.or(existing.price_cache_write_per_1m),
-            
+            price_cache_read_per_1m: new
+                .price_cache_read_per_1m
+                .or(existing.price_cache_read_per_1m),
+            price_cache_write_per_1m: new
+                .price_cache_write_per_1m
+                .or(existing.price_cache_write_per_1m),
+
             context_window_tokens: new.context_window_tokens.or(existing.context_window_tokens),
             max_output_tokens: new.max_output_tokens.or(existing.max_output_tokens),
-            
-            source: if new.source.priority() < existing.source.priority() { new.source } else { existing.source },
+
+            source: if new.source.priority() < existing.source.priority() {
+                new.source
+            } else {
+                existing.source
+            },
             confidence: new.confidence.max(existing.confidence),
-            updated_at: if new.source.priority() < existing.source.priority() { new.updated_at } else { existing.updated_at },
+            updated_at: if new.source.priority() < existing.source.priority() {
+                new.updated_at
+            } else {
+                existing.updated_at
+            },
         }
     }
 
@@ -240,7 +269,7 @@ mod tests {
     #[tokio::test]
     async fn test_store_get_set() {
         let store = BenchmarkStore::new(3600);
-        
+
         let data = BenchmarkData {
             model_id: "gpt-4o".to_string(),
             intelligence_index: Some(85.0),
@@ -248,9 +277,9 @@ mod tests {
             confidence: 0.9,
             ..Default::default()
         };
-        
+
         store.set("gpt-4o".to_string(), data.clone()).await;
-        
+
         let retrieved = store.get("gpt-4o").await;
         assert!(retrieved.is_some());
         assert_eq!(retrieved.unwrap().intelligence_index, Some(85.0));
@@ -259,7 +288,7 @@ mod tests {
     #[tokio::test]
     async fn test_priority_merge() {
         let store = BenchmarkStore::new(3600);
-        
+
         // Low priority data
         let low_priority = BenchmarkData {
             model_id: "gpt-4o".to_string(),
@@ -268,7 +297,7 @@ mod tests {
             confidence: 0.3,
             ..Default::default()
         };
-        
+
         // High priority data
         let high_priority = BenchmarkData {
             model_id: "gpt-4o".to_string(),
@@ -277,10 +306,10 @@ mod tests {
             confidence: 0.9,
             ..Default::default()
         };
-        
+
         store.merge("gpt-4o".to_string(), low_priority).await;
         store.merge("gpt-4o".to_string(), high_priority).await;
-        
+
         let result = store.get("gpt-4o").await.unwrap();
         assert_eq!(result.intelligence_index, Some(85.0));
     }

@@ -15,8 +15,8 @@ pub use crate::cache::{
     resolve_ingest_providers, resolve_model_alias, resolve_provider_alias,
 };
 pub use crate::cost::{
-    allocate_subscription, build_breakdown, calc_variable_cost, compute_costs,
-    event_pricing, make_suggestions, merge_acc, session_hash,
+    allocate_subscription, build_breakdown, calc_variable_cost, compute_costs, event_pricing,
+    make_suggestions, merge_acc, session_hash,
 };
 pub use crate::format::{
     default_generated_at, print_coverage_table, print_daily_markdown, print_daily_table,
@@ -107,10 +107,7 @@ pub fn run_perf_gate_checks(
         return Ok(());
     }
 
-    Err(anyhow!(
-        "performance gate FAILED\n{}",
-        failures.join("\n")
-    ))
+    Err(anyhow!("performance gate FAILED\n{}", failures.join("\n")))
 }
 
 pub fn fail_on_bench_trend_regressions(report: &BenchTrendReport) -> Result<()> {
@@ -123,7 +120,10 @@ pub fn fail_on_bench_trend_regressions(report: &BenchTrendReport) -> Result<()> 
         if regress_pct > 5.0 {
             failures.push(format!(
                 "{}: latest {:.2}ms is {:.2}% slower than median {:.2}ms",
-                scenario.scenario, scenario.latest_elapsed_ms, regress_pct, scenario.median_elapsed_ms
+                scenario.scenario,
+                scenario.latest_elapsed_ms,
+                regress_pct,
+                scenario.median_elapsed_ms
             ));
         }
 
@@ -133,7 +133,10 @@ pub fn fail_on_bench_trend_regressions(report: &BenchTrendReport) -> Result<()> 
         if eps_change_pct < -5.0 {
             failures.push(format!(
                 "{}: latest {:.2} eps is {:.2}% slower than median {:.2} eps",
-                scenario.scenario, scenario.latest_events_per_sec, -eps_change_pct, scenario.median_events_per_sec
+                scenario.scenario,
+                scenario.latest_events_per_sec,
+                -eps_change_pct,
+                scenario.median_events_per_sec
             ));
         }
     }
@@ -160,7 +163,10 @@ pub fn bench_scenario_name(scenario: BenchScenario) -> &'static str {
 
 pub fn print_bench_table(report: &BenchReport) {
     // Check if any result has deltas
-    let has_deltas = report.results.iter().any(|r| r.elapsed_ms_delta.is_some() || r.events_per_sec_delta.is_some());
+    let has_deltas = report
+        .results
+        .iter()
+        .any(|r| r.elapsed_ms_delta.is_some() || r.events_per_sec_delta.is_some());
 
     if has_deltas {
         println!("Benchmark Results with Deltas");
@@ -275,17 +281,12 @@ pub fn apply_pricing_patch_file(
     if wrote_pricing {
         if write_backup {
             let backup = backup_path_for(pricing_path, Utc::now());
-            fs::copy(pricing_path, &backup).with_context(|| {
-                format!(
-                    "write backup of {:?} to {:?}",
-                    pricing_path, backup
-                )
-            })?;
+            fs::copy(pricing_path, &backup)
+                .with_context(|| format!("write backup of {:?} to {:?}", pricing_path, backup))?;
             backup_path = Some(backup);
         }
         let mut f = BufWriter::new(
-            File::create(pricing_path)
-                .with_context(|| format!("create {:?}", pricing_path))?,
+            File::create(pricing_path).with_context(|| format!("create {:?}", pricing_path))?,
         );
         let json = serde_json::to_string_pretty(&pricing)?;
         f.write_all(json.as_bytes())?;
@@ -297,11 +298,7 @@ pub fn apply_pricing_patch_file(
         changed,
         wrote_pricing,
         backup_path,
-        pricing_after: if wrote_pricing {
-            Some(pricing)
-        } else {
-            None
-        },
+        pricing_after: if wrote_pricing { Some(pricing) } else { None },
     })
 }
 
@@ -388,7 +385,12 @@ pub fn collect_pricing_placeholder_violations(pricing: &PricingBook) -> Vec<Stri
     violations
 }
 
-pub fn append_rate_violation(violations: &mut Vec<String>, provider: &str, model: &str, reason: &str) {
+pub fn append_rate_violation(
+    violations: &mut Vec<String>,
+    provider: &str,
+    model: &str,
+    reason: &str,
+) {
     violations.push(format!("{provider} / {model}: {reason}"));
 }
 
@@ -412,7 +414,9 @@ pub fn merge_pricing_patch(
                 models: missing_patch.models.clone(),
                 model_aliases: missing_patch.model_aliases.clone(),
             };
-            pricing.providers.insert(provider_name.clone(), new_provider);
+            pricing
+                .providers
+                .insert(provider_name.clone(), new_provider);
             summary.providers_added += 1;
             changed = true;
         }
@@ -423,7 +427,9 @@ pub fn merge_pricing_patch(
         if let Some(provider) = pricing.providers.get_mut(provider_name) {
             for (model_name, model_rate) in missing_models {
                 if !provider.models.contains_key(model_name) {
-                    provider.models.insert(model_name.clone(), model_rate.clone());
+                    provider
+                        .models
+                        .insert(model_name.clone(), model_rate.clone());
                     summary.models_added += 1;
                     changed = true;
                 } else {
@@ -438,7 +444,6 @@ pub fn merge_pricing_patch(
 
     (summary, changed)
 }
-
 
 pub fn first_existing_provider_candidate<'a>(
     candidates: &'a [String],
@@ -462,7 +467,10 @@ pub fn first_existing_model_candidate<'a>(
 
 pub fn backup_path_for(pricing_path: &Path, now: DateTime<Utc>) -> PathBuf {
     let timestamp = now.format("%Y%m%d_%H%M%S").to_string();
-    let stem = pricing_path.file_stem().unwrap_or_default().to_string_lossy();
+    let stem = pricing_path
+        .file_stem()
+        .unwrap_or_default()
+        .to_string_lossy();
     let parent = pricing_path.parent().unwrap_or_else(|| Path::new("."));
     parent.join(format!("{stem}.{timestamp}.bak"))
 }
@@ -541,8 +549,10 @@ pub fn filter_provider_model(
     let model_filter = normalize_model_filters(pricing, models);
     events
         .into_iter()
-        .filter(|e| (provider_filter.is_empty() || provider_filter.contains(&e.provider)) &&
-                     (model_filter.is_empty() || model_filter.contains(&e.model)))
+        .filter(|e| {
+            (provider_filter.is_empty() || provider_filter.contains(&e.provider))
+                && (model_filter.is_empty() || model_filter.contains(&e.model))
+        })
         .collect()
 }
 
@@ -590,18 +600,26 @@ pub fn normalize_model_filters(pricing: &PricingBook, models: &[String]) -> Hash
     result
 }
 
-
 pub fn validate_aliases(pricing: &PricingBook) -> Result<()> {
     for (alias, provider) in &pricing.provider_aliases {
         if !pricing.providers.contains_key(provider) {
-            return Err(anyhow!("provider_alias '{}' points to unknown provider '{}'", alias, provider));
+            return Err(anyhow!(
+                "provider_alias '{}' points to unknown provider '{}'",
+                alias,
+                provider
+            ));
         }
     }
 
     for (provider_name, provider) in &pricing.providers {
         for (alias, model) in &provider.model_aliases {
             if !provider.models.contains_key(model) {
-                return Err(anyhow!("provider '{}' has model_alias '{}' pointing to unknown model '{}'", provider_name, alias, model));
+                return Err(anyhow!(
+                    "provider '{}' has model_alias '{}' pointing to unknown model '{}'",
+                    provider_name,
+                    alias,
+                    model
+                ));
             }
         }
     }
@@ -640,4 +658,80 @@ where
 
 pub fn normalize_alias_key(raw: &str) -> String {
     raw.to_lowercase().replace("_", "").replace("-", "")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_bench_scenario_name() {
+        assert_eq!(
+            bench_scenario_name(BenchScenario::ColdBackfill),
+            "cold-backfill"
+        );
+        assert_eq!(bench_scenario_name(BenchScenario::WarmTail), "warm-tail");
+        assert_eq!(bench_scenario_name(BenchScenario::Burst), "burst");
+        assert_eq!(bench_scenario_name(BenchScenario::All), "all");
+    }
+
+    #[test]
+    fn test_parse_month_valid() {
+        let (year, month) = parse_month("2024-01").expect("should parse valid month");
+        assert_eq!(year, 2024);
+        assert_eq!(month, 1);
+
+        let (year, month) = parse_month("2024-12").expect("should parse valid month");
+        assert_eq!(year, 2024);
+        assert_eq!(month, 12);
+    }
+
+    #[test]
+    fn test_parse_month_invalid() {
+        assert!(parse_month("2024").is_err());
+        assert!(parse_month("invalid").is_err());
+        assert!(parse_month("2024-13").is_err());
+        assert!(parse_month("2024-00").is_err());
+    }
+
+    #[test]
+    fn test_normalize_alias_key() {
+        assert_eq!(normalize_alias_key("Claude-3"), "claude3");
+        assert_eq!(normalize_alias_key("GPT_4O"), "gpt4o");
+        assert_eq!(normalize_alias_key("GEMINI-PRO"), "geminipro");
+        assert_eq!(normalize_alias_key("llama-2-13b"), "llama213b");
+    }
+
+    #[test]
+    fn test_suggest_aliases() {
+        let candidates = vec![
+            "claude-3".to_string(),
+            "gpt-4o".to_string(),
+            "gemini-pro".to_string(),
+        ];
+
+        let suggestions = suggest_aliases("claude", &candidates);
+        assert!(suggestions.contains(&"claude-3".to_string()));
+        assert!(!suggestions.contains(&"gpt-4o".to_string()));
+
+        let suggestions = suggest_aliases("gpt", &candidates);
+        assert!(suggestions.contains(&"gpt-4o".to_string()));
+        assert!(!suggestions.contains(&"claude-3".to_string()));
+    }
+
+    #[test]
+    fn test_has_placeholder_marker() {
+        assert!(has_placeholder_marker("TODO: add price"));
+        assert!(has_placeholder_marker("todo"));
+        assert!(has_placeholder_marker("0.5x"));
+        assert!(has_placeholder_marker("EXample"));
+        assert!(!has_placeholder_marker("0.5"));
+        assert!(!has_placeholder_marker("1.5"));
+        assert!(!has_placeholder_marker("completed"));
+    }
+
+    #[test]
+    fn test_mtok_constant() {
+        assert_eq!(MTOK, 1_000_000.0);
+    }
 }

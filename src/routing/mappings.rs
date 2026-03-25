@@ -70,13 +70,13 @@ pub const MODEL_FAMILIES: &[(&str, &str)] = &[
 /// Resolve provider from model ID
 pub fn resolve_provider(model_id: &str) -> (Option<String>, MappingRule) {
     let lower = model_id.to_lowercase();
-    
+
     for (prefix, provider) in PROVIDER_PREFIXES {
         if lower.starts_with(prefix) {
             return (Some(provider.to_string()), MappingRule::Prefix);
         }
     }
-    
+
     // Check model families for hints
     for (family, _provider) in MODEL_FAMILIES {
         if lower.contains(family) {
@@ -93,7 +93,7 @@ pub fn resolve_provider(model_id: &str) -> (Option<String>, MappingRule) {
             return (provider.map(String::from), MappingRule::Fuzzy);
         }
     }
-    
+
     (None, MappingRule::None)
 }
 
@@ -101,14 +101,14 @@ pub fn resolve_provider(model_id: &str) -> (Option<String>, MappingRule) {
 pub fn normalize_model_id(model_id: &str) -> (String, MappingRule) {
     let lower = model_id.to_lowercase();
     let trimmed = lower.trim();
-    
+
     // Remove provider prefix
     let canonical = PROVIDER_PREFIXES
         .iter()
         .find(|(prefix, _)| trimmed.starts_with(prefix))
         .map(|(prefix, _)| &trimmed[prefix.len()..])
         .unwrap_or(trimmed);
-    
+
     // Remove common suffixes
     let cleaned = canonical
         .trim_end_matches("-high")
@@ -117,7 +117,7 @@ pub fn normalize_model_id(model_id: &str) -> (String, MappingRule) {
         .trim_end_matches("/high")
         .trim_end_matches("/low")
         .trim_end_matches("/medium");
-    
+
     let rule = if cleaned != canonical {
         MappingRule::Suffix
     } else if trimmed != model_id {
@@ -125,15 +125,12 @@ pub fn normalize_model_id(model_id: &str) -> (String, MappingRule) {
     } else {
         MappingRule::Exact
     };
-    
+
     (cleaned.to_string(), rule)
 }
 
 /// Resolve harness from model or context
-pub fn resolve_harness(
-    _model_id: &str,
-    _headers: Option<&str>,
-) -> (Option<String>, MappingRule) {
+pub fn resolve_harness(_model_id: &str, _headers: Option<&str>) -> (Option<String>, MappingRule) {
     // Could use headers or other context hints
     // For now, return unknown
     (None, MappingRule::None)
@@ -152,10 +149,10 @@ pub fn create_mapping(
     let (resolved_provider, provider_rule) = resolve_provider(source_model);
     let (canonical, normalize_rule) = normalize_model_id(source_model);
     let (resolved_harness, _) = resolve_harness(source_model, None);
-    
+
     let p = provider.or(resolved_provider.as_deref());
     let h = harness.or(resolved_harness.as_deref());
-    
+
     let confidence = match (provider.is_some(), normalize_rule) {
         (true, MappingRule::Exact) => 1.0,
         (true, _) => 0.9,
@@ -163,14 +160,14 @@ pub fn create_mapping(
         (false, MappingRule::Prefix) => 0.7,
         _ => 0.5,
     };
-    
+
     let rule = match (provider_rule, normalize_rule) {
         (MappingRule::Prefix, _) => "provider_prefix",
         (_, MappingRule::Suffix) => "model_suffix",
         (MappingRule::Fuzzy, _) => "model_family",
         _ => "normalize",
     };
-    
+
     ModelMapping {
         source_model: source_model.to_string(),
         canonical_model: canonical,
@@ -188,7 +185,7 @@ pub fn resolve_trio(
     model: &str,
 ) -> ProviderHarnessModel {
     let mapping = create_mapping(model, provider, harness);
-    
+
     ProviderHarnessModel {
         provider: mapping.provider.unwrap_or_else(|| "unknown".to_string()),
         harness: mapping.harness.unwrap_or_else(|| "unknown".to_string()),
@@ -205,26 +202,26 @@ pub fn resolve_trio(
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_resolve_provider() {
         let (provider, rule) = resolve_provider("openai/gpt-4o");
         assert_eq!(provider, Some("openai".to_string()));
         assert_eq!(rule, MappingRule::Prefix);
-        
-        let (provider, rule) = resolve_provider("anthropic/claude-3-5-sonnet");
+
+        let (provider, _rule) = resolve_provider("anthropic/claude-3-5-sonnet");
         assert_eq!(provider, Some("anthropic".to_string()));
     }
-    
+
     #[test]
     fn test_normalize_model_id() {
-        let (canonical, rule) = normalize_model_id("openai/gpt-4o");
+        let (canonical, _rule) = normalize_model_id("openai/gpt-4o");
         assert_eq!(canonical, "gpt-4o");
-        
-        let (canonical, rule) = normalize_model_id("GPT-4O");
+
+        let (canonical, _rule) = normalize_model_id("GPT-4O");
         assert_eq!(canonical, "gpt-4o");
     }
-    
+
     #[test]
     fn test_create_mapping() {
         let mapping = create_mapping("gpt-4o", Some("openai"), None);

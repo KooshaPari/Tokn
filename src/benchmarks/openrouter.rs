@@ -75,8 +75,9 @@ impl OpenRouterClient {
     /// Fetch all models from OpenRouter API
     pub async fn fetch_models(&self) -> Result<Vec<response::ModelEntry>, OrError> {
         info!("Fetching models from OpenRouter API");
-        
-        let response = self.http_client
+
+        let response = self
+            .http_client
             .get(OPENROUTER_API_BASE)
             .header("Authorization", format!("Bearer {}", self.api_key))
             .header("Content-Type", "application/json")
@@ -87,11 +88,11 @@ impl OpenRouterClient {
             let status = response.status();
             let text = response.text().await.unwrap_or_default();
             warn!("OpenRouter API returned error: {} - {}", status, text);
-            return Err(OrError::Api(format!("{} - {}", status, text)).into());
+            return Err(OrError::Api(format!("{} - {}", status, text)));
         }
 
         let data: response::ApiResponse = response.json().await?;
-        
+
         info!("Fetched {} models from OpenRouter", data.data.len());
         Ok(data.data)
     }
@@ -115,27 +116,34 @@ impl OpenRouterClient {
         BenchmarkData {
             model_id: entry.id.clone(),
             provider,
-            
+
             // Quality - NOT provided by OpenRouter
             intelligence_index: None,
             coding_index: None,
             agentic_index: None,
-            
+
             // Performance - NOT provided by OpenRouter
             speed_tps: None,
             latency_ttft_ms: None,
             latency_e2e_ms: None,
-            
+
             // Pricing
-            price_input_per_1m: parse_price(&entry.pricing.as_ref().map(|p| p.price_prompt.clone()).flatten()),
-            price_output_per_1m: parse_price(&entry.pricing.as_ref().map(|p| p.price_completion.clone()).flatten()),
+            price_input_per_1m: parse_price(
+                &entry.pricing.as_ref().and_then(|p| p.price_prompt.clone()),
+            ),
+            price_output_per_1m: parse_price(
+                &entry
+                    .pricing
+                    .as_ref()
+                    .and_then(|p| p.price_completion.clone()),
+            ),
             price_cache_read_per_1m: None,
             price_cache_write_per_1m: None,
-            
+
             // Context
             context_window_tokens: entry.context_length,
             max_output_tokens: entry.max_completion_tokens,
-            
+
             // Metadata
             source: BenchmarkSource::OpenRouter,
             confidence: 0.8, // High confidence for official API
@@ -147,12 +155,12 @@ impl OpenRouterClient {
     pub async fn fetch_and_store(&self, store: &BenchmarkStore) -> Result<usize, OrError> {
         let entries = self.fetch_models().await?;
         let count = entries.len();
-        
+
         for entry in entries {
             let benchmark = Self::to_benchmark_data(&entry);
             store.merge(entry.id.clone(), benchmark).await;
         }
-        
+
         info!("Stored {} benchmarks from OpenRouter", count);
         Ok(count)
     }
@@ -162,20 +170,23 @@ impl OpenRouterClient {
 pub async fn fetch_benchmarks(api_key: &str) -> Result<Vec<BenchmarkData>, OrError> {
     let client = OpenRouterClient::new(api_key);
     let entries = client.fetch_models().await?;
-    
-    Ok(entries.iter().map(OpenRouterClient::to_benchmark_data).collect())
+
+    Ok(entries
+        .iter()
+        .map(OpenRouterClient::to_benchmark_data)
+        .collect())
 }
 
 /// Normalize model ID for matching across sources
 pub fn normalize_model_id(id: &str) -> String {
     // Remove common prefixes/suffixes and lowercase
     let normalized = id.to_lowercase();
-    
+
     // Handle common patterns
     // "openai/gpt-4o" -> "gpt-4o"
     // "anthropic/claude-3-5-sonnet" -> "claude-3-5-sonnet"
     // "google/gemini-2-5-flash" -> "gemini-2-5-flash"
-    
+
     if let Some(slash_pos) = normalized.find('/') {
         normalized[slash_pos + 1..].to_string()
     } else {
@@ -190,7 +201,10 @@ mod tests {
     #[test]
     fn test_normalize_model_id() {
         assert_eq!(normalize_model_id("openai/gpt-4o"), "gpt-4o");
-        assert_eq!(normalize_model_id("anthropic/claude-3-5-sonnet"), "claude-3-5-sonnet");
+        assert_eq!(
+            normalize_model_id("anthropic/claude-3-5-sonnet"),
+            "claude-3-5-sonnet"
+        );
         assert_eq!(normalize_model_id("GPT-4O"), "gpt-4o");
     }
 
@@ -210,7 +224,7 @@ mod tests {
         };
 
         let data = OpenRouterClient::to_benchmark_data(&entry);
-        
+
         assert_eq!(data.model_id, "openai/gpt-4o");
         assert_eq!(data.provider, Some("openai".to_string()));
         assert_eq!(data.price_input_per_1m, Some(2.50));

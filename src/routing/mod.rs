@@ -33,21 +33,19 @@
 //! └─────────────────────────────────────────────────────────┘
 //! ```
 
-pub mod ports;
 pub mod adapters;
-pub mod pareto_router;
 pub mod mappings;
+pub mod pareto_router;
+pub mod ports;
 
 // Re-exports for convenience
-pub use ports::{
-    BenchmarkPort, MetricsPort, RoutingPort, ModelMappingPort, TrioPort,
-    PortError, PortResult,
-    RoutingDecision, RoutingAlternative, RoutingCriteria,
-    ModelMapping, ProviderHarnessModel,
-};
 pub use adapters::{
-    CLIProxyAdapter, HeliosHarnessAdapter, ThegentRoutingAdapter, 
-    AgentAPIAdapter, UnifiedAdapter,
+    AgentAPIAdapter, CLIProxyAdapter, HeliosHarnessAdapter, ThegentRoutingAdapter, UnifiedAdapter,
 };
-pub use pareto_router::ParetoRouter;
 pub use mappings::resolve_trio;
+pub use pareto_router::ParetoRouter;
+pub use ports::{
+    BenchmarkPort, MetricsPort, ModelMapping, ModelMappingPort, PortError, PortResult,
+    ProviderHarnessModel, RoutingAlternative, RoutingCriteria, RoutingDecision, RoutingPort,
+    TrioPort,
+};

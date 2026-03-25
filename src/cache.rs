@@ -138,9 +138,7 @@ pub fn maybe_write_unpriced_outputs(
     Ok(())
 }
 
-pub fn resolve_ingest_providers(
-    providers: &[IngestProvider],
-) -> Vec<IngestProvider> {
+pub fn resolve_ingest_providers(providers: &[IngestProvider]) -> Vec<IngestProvider> {
     if providers.is_empty() {
         vec![
             IngestProvider::Claude,

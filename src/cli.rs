@@ -437,16 +437,16 @@ pub enum BenchmarksCommand {
 pub struct RefreshBenchmarksArgs {
     #[arg(long, help = "Artificial Analysis API key")]
     pub aa_api_key: Option<String>,
-    
+
     #[arg(long, help = "OpenRouter API key")]
     pub openrouter_api_key: Option<String>,
-    
+
     #[arg(long, default_value_t = false, help = "Skip API calls, use cache only")]
     pub no_fetch: bool,
-    
+
     #[arg(long, help = "Output file for benchmarks JSON")]
     pub output: Option<PathBuf>,
-    
+
     #[arg(long, help = "Comma-separated sources to refresh")]
     pub sources: Option<String>,
 }
@@ -455,13 +455,13 @@ pub struct RefreshBenchmarksArgs {
 pub struct ListBenchmarksArgs {
     #[arg(long, help = "Filter by source (aa, openrouter, manual)")]
     pub source: Option<String>,
-    
+
     #[arg(long, default_value_t = 20, help = "Limit number of results")]
     pub limit: usize,
-    
+
     #[arg(long, default_value = "table", help = "Output format (table, json)")]
     pub output: String,
-    
+
     #[arg(long, help = "Sort by field (intelligence, speed, cost)")]
     pub sort_by: Option<String>,
 }
@@ -470,7 +470,7 @@ pub struct ListBenchmarksArgs {
 pub struct ShowBenchmarkArgs {
     #[arg(help = "Model ID to show")]
     pub model_id: String,
-    
+
     #[arg(long, default_value = "table", help = "Output format")]
     pub output: String,
 }

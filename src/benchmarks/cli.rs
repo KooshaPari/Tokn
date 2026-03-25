@@ -1,9 +1,6 @@
 //! CLI command handlers for benchmarks.
 
-use crate::benchmarks::{
-    artificial_analysis, openrouter,
-    store::BenchmarkStore,
-};
+use crate::benchmarks::{artificial_analysis, openrouter, store::BenchmarkStore};
 use crate::cli::BenchmarksArgs;
 use anyhow::Result;
 use std::sync::Arc;
@@ -23,20 +20,24 @@ pub fn run_benchmarks(args: BenchmarksArgs) -> Result<()> {
 /// Refresh benchmarks from configured sources
 fn run_refresh(args: crate::cli::RefreshBenchmarksArgs) -> Result<()> {
     println!("Refreshing benchmarks...");
-    
+
     let rt = tokio::runtime::Runtime::new()?;
-    
+
     rt.block_on(async {
         let store = Arc::new(RwLock::new(BenchmarkStore::new(3600)));
         let mut total = 0;
-        
+
         // Refresh from Artificial Analysis if API key provided
         if let Some(ref key) = args.aa_api_key {
             info!("Fetching benchmarks from Artificial Analysis...");
             match artificial_analysis::fetch_benchmarks(key).await {
                 Ok(data) => {
                     for benchmark in &data {
-                        store.write().await.merge(benchmark.model_id.clone(), benchmark.clone()).await;
+                        store
+                            .write()
+                            .await
+                            .merge(benchmark.model_id.clone(), benchmark.clone())
+                            .await;
                     }
                     total += data.len();
                     println!("✓ Fetched {} models from Artificial Analysis", data.len());
@@ -46,14 +47,18 @@ fn run_refresh(args: crate::cli::RefreshBenchmarksArgs) -> Result<()> {
                 }
             }
         }
-        
+
         // Refresh from OpenRouter if API key provided
         if let Some(ref key) = args.openrouter_api_key {
             info!("Fetching benchmarks from OpenRouter...");
             match openrouter::fetch_benchmarks(key).await {
                 Ok(data) => {
                     for benchmark in &data {
-                        store.write().await.merge(benchmark.model_id.clone(), benchmark.clone()).await;
+                        store
+                            .write()
+                            .await
+                            .merge(benchmark.model_id.clone(), benchmark.clone())
+                            .await;
                     }
                     total += data.len();
                     println!("✓ Fetched {} models from OpenRouter", data.len());
@@ -63,11 +68,11 @@ fn run_refresh(args: crate::cli::RefreshBenchmarksArgs) -> Result<()> {
                 }
             }
         }
-        
+
         // Output results
         if total > 0 {
             println!("\nTotal benchmarks: {}", total);
-            
+
             if let Some(output_path) = &args.output {
                 // Just print count to output file
                 std::fs::write(output_path, format!("{{\"count\":{}}}", total))?;
@@ -79,7 +84,7 @@ fn run_refresh(args: crate::cli::RefreshBenchmarksArgs) -> Result<()> {
             println!("  tokenledger benchmarks refresh --aa-api-key YOUR_KEY");
             println!("  tokenledger benchmarks refresh --openrouter-api-key YOUR_KEY");
         }
-        
+
         Ok(())
     })
 }
@@ -103,25 +108,22 @@ fn run_show(args: crate::cli::ShowBenchmarkArgs) -> Result<()> {
 /// Validate benchmark configuration
 fn run_validate(args: crate::cli::ValidateBenchmarksArgs) -> Result<()> {
     println!("Validating benchmark configuration...");
-    
+
     if let Some(config_path) = args.config {
         let content = std::fs::read_to_string(&config_path)?;
         let _config: serde_yaml::Value = serde_yaml::from_str(&content)?;
         println!("✓ Config is valid: {}", config_path.display());
     } else {
         println!("No config file provided. Checking default locations...");
-        
-        let default_paths = [
-            "configs/benchmarks.yaml",
-            "configs/benchmarks.example.yaml",
-        ];
-        
+
+        let default_paths = ["configs/benchmarks.yaml", "configs/benchmarks.example.yaml"];
+
         for path in default_paths {
             if std::path::Path::new(path).exists() {
                 println!("✓ Found: {}", path);
             }
         }
     }
-    
+
     Ok(())
 }

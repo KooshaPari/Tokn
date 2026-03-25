@@ -25,6 +25,7 @@ mod response {
 
     #[derive(Debug, Deserialize)]
     pub struct ApiResponse {
+        #[allow(dead_code)]
         pub status: u16,
         pub data: Vec<ModelEntry>,
     }
@@ -85,8 +86,9 @@ impl ArtificialAnalysisClient {
     /// Fetch all models from AA API
     pub async fn fetch_models(&self) -> Result<Vec<response::ModelEntry>, AaError> {
         info!("Fetching models from Artificial Analysis API");
-        
-        let response = self.http_client
+
+        let response = self
+            .http_client
             .get(AA_API_BASE)
             .header("x-api-key", &self.api_key)
             .send()
@@ -96,12 +98,15 @@ impl ArtificialAnalysisClient {
             let status = response.status();
             let text = response.text().await.unwrap_or_default();
             warn!("AA API returned error: {} - {}", status, text);
-            return Err(AaError::Api(format!("{} - {}", status, text)).into());
+            return Err(AaError::Api(format!("{} - {}", status, text)));
         }
 
         let data: response::ApiResponse = response.json().await?;
-        
-        info!("Fetched {} models from Artificial Analysis", data.data.len());
+
+        info!(
+            "Fetched {} models from Artificial Analysis",
+            data.data.len()
+        );
         Ok(data.data)
     }
 
@@ -110,31 +115,30 @@ impl ArtificialAnalysisClient {
         BenchmarkData {
             model_id: entry.slug.clone(),
             provider: Some(entry.model_creator.slug.clone()),
-            
+
             // Quality
-            intelligence_index: entry.evaluations.as_ref()
+            intelligence_index: entry
+                .evaluations
+                .as_ref()
                 .and_then(|e| e.intelligence_index),
-            coding_index: entry.evaluations.as_ref()
-                .and_then(|e| e.coding_index),
+            coding_index: entry.evaluations.as_ref().and_then(|e| e.coding_index),
             agentic_index: None, // Not in AA API
-            
+
             // Performance
             speed_tps: entry.speed_tps,
             latency_ttft_ms: entry.ttft_seconds.map(|s| s * 1000.0),
             latency_e2e_ms: None, // Not directly available
-            
+
             // Pricing
-            price_input_per_1m: entry.pricing.as_ref()
-                .and_then(|p| p.input_per_1m),
-            price_output_per_1m: entry.pricing.as_ref()
-                .and_then(|p| p.output_per_1m),
+            price_input_per_1m: entry.pricing.as_ref().and_then(|p| p.input_per_1m),
+            price_output_per_1m: entry.pricing.as_ref().and_then(|p| p.output_per_1m),
             price_cache_read_per_1m: None,
             price_cache_write_per_1m: None,
-            
+
             // Context - not in this endpoint
             context_window_tokens: None,
             max_output_tokens: None,
-            
+
             // Metadata
             source: BenchmarkSource::ArtificialAnalysis,
             confidence: 0.9, // High confidence for official API
@@ -146,12 +150,12 @@ impl ArtificialAnalysisClient {
     pub async fn fetch_and_store(&self, store: &BenchmarkStore) -> Result<usize, AaError> {
         let entries = self.fetch_models().await?;
         let count = entries.len();
-        
+
         for entry in entries {
             let benchmark = Self::to_benchmark_data(&entry);
             store.merge(entry.slug, benchmark).await;
         }
-        
+
         info!("Stored {} benchmarks from Artificial Analysis", count);
         Ok(count)
     }
@@ -161,8 +165,11 @@ impl ArtificialAnalysisClient {
 pub async fn fetch_benchmarks(api_key: &str) -> Result<Vec<BenchmarkData>, AaError> {
     let client = ArtificialAnalysisClient::new(api_key);
     let entries = client.fetch_models().await?;
-    
-    Ok(entries.iter().map(ArtificialAnalysisClient::to_benchmark_data).collect())
+
+    Ok(entries
+        .iter()
+        .map(ArtificialAnalysisClient::to_benchmark_data)
+        .collect())
 }
 
 #[cfg(test)]
@@ -193,7 +200,7 @@ mod tests {
         };
 
         let data = ArtificialAnalysisClient::to_benchmark_data(&entry);
-        
+
         assert_eq!(data.model_id, "test-model");
         assert_eq!(data.provider, Some("openai".to_string()));
         assert_eq!(data.intelligence_index, Some(85.0));

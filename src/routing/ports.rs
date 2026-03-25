@@ -3,24 +3,24 @@
 //! These traits define the contracts for benchmark, metrics, routing, and model mapping.
 //! Each adapter implements one or more of these ports.
 
-use async_trait::async_trait;
 use crate::benchmarks::BenchmarkData;
+use async_trait::async_trait;
 
 /// Error type for port operations
 #[derive(Debug, thiserror::Error)]
 pub enum PortError {
     #[error("Source not available: {0}")]
     NotAvailable(String),
-    
+
     #[error("Data not found: {0}")]
     NotFound(String),
-    
+
     #[error("Connection error: {0}")]
     ConnectionError(String),
-    
+
     #[error("Parse error: {0}")]
     ParseError(String),
-    
+
     #[error("Timeout: {0}")]
     Timeout(String),
 }
@@ -36,16 +36,16 @@ pub type PortResult<T> = Result<T, PortError>;
 pub trait BenchmarkPort: Send + Sync {
     /// Get benchmark data for a specific model
     async fn get_benchmark(&self, model_id: &str) -> PortResult<Option<BenchmarkData>>;
-    
+
     /// Get all benchmarks
     async fn get_all_benchmarks(&self) -> PortResult<Vec<BenchmarkData>>;
-    
+
     /// Refresh data from source
     async fn refresh(&self) -> PortResult<()>;
-    
+
     /// Check if source is available
     async fn is_available(&self) -> bool;
-    
+
     /// Source name for debugging
     fn source_name(&self) -> &str;
 }
@@ -54,23 +54,23 @@ pub trait BenchmarkPort: Send + Sync {
 // METRICS PORT
 // =============================================================================
 
-use crate::benchmarks::cliproxy_metrics::{ProviderMetrics, ModelMetrics};
+use crate::benchmarks::cliproxy_metrics::{ModelMetrics, ProviderMetrics};
 
 /// Port for accessing runtime metrics
 #[async_trait]
 pub trait MetricsPort: Send + Sync {
     /// Get provider-level metrics
     async fn get_provider_metrics(&self) -> PortResult<Vec<ProviderMetrics>>;
-    
+
     /// Get model-level metrics
     async fn get_model_metrics(&self) -> PortResult<Vec<ModelMetrics>>;
-    
+
     /// Get real-time metrics for a specific model
     async fn get_model_realtime(&self, model_id: &str) -> PortResult<Option<ModelMetrics>>;
-    
+
     /// Check if metrics are available
     async fn is_available(&self) -> bool;
-    
+
     /// Source name
     fn source_name(&self) -> &str;
 }
@@ -133,14 +133,17 @@ pub struct RoutingCriteria {
 pub trait RoutingPort: Send + Sync {
     /// Select best model/provider for criteria
     async fn select(&self, criteria: &RoutingCriteria) -> PortResult<RoutingDecision>;
-    
+
     /// Get rankings
-    async fn get_rankings(&self, category: Option<&str>, limit: Option<u32>) 
-        -> PortResult<Vec<RoutingAlternative>>;
-    
+    async fn get_rankings(
+        &self,
+        category: Option<&str>,
+        limit: Option<u32>,
+    ) -> PortResult<Vec<RoutingAlternative>>;
+
     /// Check if routing is available
     async fn is_available(&self) -> bool;
-    
+
     /// Source name
     fn source_name(&self) -> &str;
 }
@@ -171,19 +174,19 @@ pub struct ModelMapping {
 pub trait ModelMappingPort: Send + Sync {
     /// Map a source model to canonical form
     async fn map_model(&self, source_model: &str) -> PortResult<ModelMapping>;
-    
+
     /// Resolve provider for model
     async fn resolve_provider(&self, model: &str) -> PortResult<Option<String>>;
-    
+
     /// Resolve harness for model
     async fn resolve_harness(&self, model: &str) -> PortResult<Option<String>>;
-    
+
     /// Get all known mappings
     async fn all_mappings(&self) -> PortResult<Vec<ModelMapping>>;
-    
+
     /// Check if mapping is available
     async fn is_available(&self) -> bool;
-    
+
     /// Source name
     fn source_name(&self) -> &str;
 }
@@ -201,7 +204,7 @@ pub struct ProviderHarnessModel {
     pub harness: String,
     /// Model (gpt-4o, claude-3-5-sonnet, etc.)
     pub model: String,
-    
+
     // Derived metrics from all sources
     /// Quality score (0-1)
     pub quality_score: Option<f64>,
@@ -222,18 +225,18 @@ pub struct ProviderHarnessModel {
 pub trait TrioPort: Send + Sync {
     /// Resolve provider-harness-model trio
     async fn resolve_trio(
-        &self, 
+        &self,
         provider: Option<&str>,
         harness: Option<&str>,
         model: &str,
     ) -> PortResult<ProviderHarnessModel>;
-    
+
     /// Get all known trios
     async fn all_trios(&self) -> PortResult<Vec<ProviderHarnessModel>>;
-    
+
     /// Check if trio resolution is available
     async fn is_available(&self) -> bool;
-    
+
     /// Source name
     fn source_name(&self) -> &str;
 }

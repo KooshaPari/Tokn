@@ -17,12 +17,11 @@ pub mod overrides;
 pub mod store;
 pub mod thegent_adapter;
 
-pub use store::{BenchmarkStore, BenchmarkData, BenchmarkSource};
 pub use cli::run_benchmarks;
-pub use overrides::ManualOverrides;
-pub use thegent_adapter::{ThegentAdapter, ThegentAdapterConfig};
 pub use cliproxy_metrics::{
-    CLIProxyMetricsClient, CLIProxyMetricsConfig,
-    RequestMetrics, ProviderMetrics, ModelMetrics, ModelRanking,
-    UsageAnalytics, HealthStatus,
+    CLIProxyMetricsClient, CLIProxyMetricsConfig, HealthStatus, ModelMetrics, ModelRanking,
+    ProviderMetrics, RequestMetrics, UsageAnalytics,
 };
+pub use overrides::ManualOverrides;
+pub use store::{BenchmarkData, BenchmarkSource, BenchmarkStore};
+pub use thegent_adapter::{ThegentAdapter, ThegentAdapterConfig};

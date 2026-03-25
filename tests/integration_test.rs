@@ -1,7 +1,7 @@
 use chrono::Utc;
 use std::collections::HashMap;
+use tokenledger::cost::{allocate_subscription, calc_variable_cost};
 use tokenledger::models::*;
-use tokenledger::cost::{calc_variable_cost, allocate_subscription};
 
 #[test]
 fn test_token_usage_full_workflow() {
@@ -165,7 +165,7 @@ fn test_pricing_with_cache_tokens() {
 
 #[test]
 fn test_multiple_usage_events_aggregation() {
-    let events = vec![
+    let events = [
         UsageEvent {
             provider: "openai".to_string(),
             model: "gpt-4".to_string(),
