@@ -106,12 +106,12 @@ pub fn compute_routing_score(h: &ProviderHarness, criteria: RoutingCriteria) -> 
 
 /// Parse a pricing YAML file into a price map.
 pub fn parse_pricing_yaml(yaml_content: &str) -> Result<Vec<ModelPricing>, String> {
-    serde_yaml::from_str(yaml_content).map_err(|e| format!("YAML parse error: {e}"))
+    serde_yaml_ng::from_str(yaml_content).map_err(|e| format!("YAML parse error: {e}"))
 }
 
 /// Serialize price map back to YAML.
 pub fn serialize_pricing_yaml(prices: &[ModelPricing]) -> Result<String, String> {
-    serde_yaml::to_string(prices).map_err(|e| format!("YAML serialize error: {e}"))
+    serde_yaml_ng::to_string(prices).map_err(|e| format!("YAML serialize error: {e}"))
 }
 
 // ─── Price Lookup ─────────────────────────────────────────────────────────────

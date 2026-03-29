@@ -111,7 +111,7 @@ fn run_validate(args: crate::cli::ValidateBenchmarksArgs) -> Result<()> {
 
     if let Some(config_path) = args.config {
         let content = std::fs::read_to_string(&config_path)?;
-        let _config: serde_yaml::Value = serde_yaml::from_str(&content)?;
+        let _config: serde_yaml_ng::Value = serde_yaml_ng::from_str(&content)?;
         println!("✓ Config is valid: {}", config_path.display());
     } else {
         println!("No config file provided. Checking default locations...");

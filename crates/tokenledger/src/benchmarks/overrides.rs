@@ -85,7 +85,7 @@ impl ManualOverrides {
     /// Load overrides from a YAML file
     pub fn from_yaml(path: impl AsRef<Path>) -> Result<Self, Box<dyn std::error::Error>> {
         let content = std::fs::read_to_string(path)?;
-        let config: ManualOverridesConfig = serde_yaml::from_str(&content)?;
+        let config: ManualOverridesConfig = serde_yaml_ng::from_str(&content)?;
 
         let mut overrides = HashMap::new();
         for (model_id, override_data) in config.overrides {
