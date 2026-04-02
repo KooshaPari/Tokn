@@ -1,0 +1,51 @@
+version: "0.5"
+
+# Tokn - Rust CLI tool
+# Native-first local development orchestration
+
+environment:
+  - RUST_BACKTRACE=1
+  - RUST_LOG=info,tokn=debug
+
+processes:
+  # ============================================================
+  # Build & Test
+  # ============================================================
+  build:
+    command: cargo build --release
+    depends_on: {}
+    log_location: .logs/build.log
+
+  test:
+    command: cargo test --workspace
+    depends_on: {}
+    log_location: .logs/test.log
+
+  clippy:
+    command: cargo clippy --workspace -- -D warnings
+    depends_on: {}
+    log_location: .logs/clippy.log
+
+  # ============================================================
+  # Binary development
+  # ============================================================
+  dev:
+    command: cargo run --bin toknd --watch
+    depends_on: {}
+    log_location: .logs/dev.log
+
+  # ============================================================
+  # CLI tool (when running toknd server)
+  # ============================================================
+  server:
+    command: cargo run --bin toknd
+    depends_on: {}
+    log_location: .logs/server.log
+    readiness_probe:
+      http_get:
+        host: localhost
+        port: 8080
+        path: /health
+      initial_delay_seconds: 5
+      period_seconds: 5
+      failure_threshold: 3
