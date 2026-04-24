@@ -8,6 +8,7 @@ edition = "2021"
 license = "MIT"
 authors = ["KooshaPari <kooshapari@kooshapari.com>"]
 
+rust-version = "1.75"
 [workspace.dependencies]
 anyhow = "1.0"
 chrono = { version = "0.4", features = ["serde"] }
