@@ -9,6 +9,12 @@
 /crates/* @KooshaPari
 /packages/* @KooshaPari
 
-# Infrastructure
+# Infrastructure as code
+/iac/ @KooshaPari
 /infra/* @KooshaPari
+/.github/ @KooshaPari
 /.github/workflows/* @KooshaPari
+
+# Security-sensitive
+/SECURITY.md @KooshaPari
+/.github/dependabot.yml @KooshaPari
