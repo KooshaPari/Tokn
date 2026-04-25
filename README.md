@@ -122,6 +122,45 @@ agentapi --cliproxy http://localhost:8317
 
 ---
 
+## Governance & Development
+
+**Project Name**: tokenledger (code name: Tokn)  
+**AgilePlus Tracking**: All work tracked in `/repos/AgilePlus`. Review `CLAUDE.md` for development policies.
+
+**Quality Standards**:
+- **Zero new lint suppressions** without inline justification
+- **80% test coverage minimum** (cargo-tarpaulin)
+- **Zero high/critical security findings** (cargo-audit)
+- **Max 40 lines per function**, zero placeholder TODOs
+
+**Quick Commands**:
+```bash
+cargo build                 # Development build
+cargo test                  # Test suite
+cargo clippy               # Lint check
+cargo audit                # Security scan
+cargo tarpaulin            # Coverage report
+```
+
+## Integration & Adoption
+
+**With thegent**: Configure as LLM provider proxy for agent token routing and cost optimization.
+
+**With agentapi**: Use as cost-tracking backend for multi-agent orchestration across provider networks.
+
+**Extensibility**: Implement `Provider` trait to add new token/cost models.
+
+## Related Phenotype Projects
+
+- **[Sidekick](../Sidekick)** — Agent dispatch & routing
+- **[cheap-llm-mcp](../cheap-llm-mcp)** — Cost-optimized LLM routing
+- **[AgilePlus](../AgilePlus)** — Specification hub
+- **[thegent](../thegent)** — Agent execution framework
+
 ## License
 
 MIT License - see LICENSE file
+
+**Status**: Active development (agent provider expansion)  
+**Maintained by**: Phenotype Org  
+**Last Updated**: 2026-04-24
