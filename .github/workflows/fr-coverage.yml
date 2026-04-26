@@ -1,0 +1,9 @@
+name: fr-coverage
+on: [pull_request]
+jobs:
+  fr:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "FR coverage check placeholder"
