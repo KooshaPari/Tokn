@@ -21,6 +21,9 @@ on:
       - "tokenledger/Cargo.lock"
       - "tokenledger/examples/**"
       - "tokenledger/pricing.example.json"
+permissions:
+  contents: read
+
 
 jobs:
   bench-perf-gate:

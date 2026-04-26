@@ -9,6 +9,9 @@ on:
       - main
     paths:
       - "tokenledger/**"
+permissions:
+  contents: read
+
 
 jobs:
   ledger-diff-check:
