@@ -7,6 +7,10 @@ on:
     branches: [main, master]
   schedule:
     - cron: '0 0 * * *'  # Daily
+permissions:
+  contents: read
+  security-events: write
+
 
 jobs:
   # 1. Dependency Vulnerability Scan (Snyk-style)
