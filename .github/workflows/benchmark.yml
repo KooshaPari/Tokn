@@ -17,15 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install Rust
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4- name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cache cargo
-        uses: Swatinem/rust-cache@v2
-
-      - name: Install cargo-criterion
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2- name: Install cargo-criterion
         run: cargo install cargo-criterion || true
 
       - name: Run benchmarks
@@ -42,16 +38,14 @@ jobs:
           fi
 
       - name: Upload results
-        uses: actions/upload-artifact@v4
-        with:
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4with:
           name: Tokn-benchmark-results-${{ github.sha }}
           path: benchmark-results/
           retention-days: 30
 
       - name: Comment on PR
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7with:
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -67,11 +61,8 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Download current results
-        uses: actions/download-artifact@v4
-        with:
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4- name: Download current results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4with:
           name: Tokn-benchmark-results-${{ github.sha }}
           path: current
 
