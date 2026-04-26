@@ -25,6 +25,9 @@ on:
       - "tokenledger/README.md"
       - "tokenledger/docs/**"
       - "tokenledger/.github/workflows/pricing-governance-check.yml"
+permissions:
+  contents: read
+
 
 jobs:
   pricing-governance-check:
