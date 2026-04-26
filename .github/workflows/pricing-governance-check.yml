@@ -34,15 +34,11 @@ jobs:
         working-directory: tokenledger
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Rust
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4- name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cache cargo registry and target
-        uses: Swatinem/rust-cache@v2
-
-      - name: Pricing lint
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2- name: Pricing lint
         run: cargo run -- pricing-lint --pricing ./pricing.example.json
 
       - name: Pricing audit
