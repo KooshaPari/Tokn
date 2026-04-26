@@ -3,7 +3,7 @@ use std::fs::{self, File};
 use std::io::{BufRead, BufReader, BufWriter, Write};
 use std::path::{Path, PathBuf};
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result, anyhow};
 use chrono::{DateTime, Datelike, Utc};
 
 use crate::cli::{BenchScenario, OutputMode};
@@ -176,11 +176,7 @@ pub fn print_bench_table(report: &BenchReport) {
         );
         for result in &report.results {
             let regress_flag = if let Some(delta) = result.events_per_sec_delta {
-                if delta < 0.0 {
-                    "REGRESS"
-                } else {
-                    ""
-                }
+                if delta < 0.0 { "REGRESS" } else { "" }
             } else {
                 ""
             };

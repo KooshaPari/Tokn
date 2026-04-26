@@ -99,8 +99,7 @@ pub fn aggregate_by_provider(snapshots: &[CostSnapshot]) -> Vec<ProviderCostAggr
             let total_input_cost: f64 = group.iter().map(|s| s.input_cost).sum();
             let total_output_cost: f64 = group.iter().map(|s| s.output_cost).sum();
             let total_cost: f64 = group.iter().map(|s| s.total_cost).sum();
-            let latencies: Vec<f64> =
-                group.iter().filter_map(|s| s.latency_ms).collect();
+            let latencies: Vec<f64> = group.iter().filter_map(|s| s.latency_ms).collect();
             let avg_latency_ms = if latencies.is_empty() {
                 None
             } else {
@@ -128,11 +127,10 @@ pub fn build_pricing_audits(
     price_map: &[ModelPricing],
     on_unpriced: OnUnpricedAction,
 ) -> Vec<PricingAudit> {
-    let price_lookup: std::collections::HashMap<(String, String), ModelPricing> =
-        price_map
-            .iter()
-            .map(|p| ((p.provider.clone(), p.model.clone()), p.clone()))
-            .collect();
+    let price_lookup: std::collections::HashMap<(String, String), ModelPricing> = price_map
+        .iter()
+        .map(|p| ((p.provider.clone(), p.model.clone()), p.clone()))
+        .collect();
 
     let mut audits = Vec::new();
     for record in records {

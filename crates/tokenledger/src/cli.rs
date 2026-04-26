@@ -398,7 +398,7 @@ pub enum OutputMode {
     Json,
 }
 
-pub use ParetoRs::OnUnpricedAction;
+pub use pareto_rs::OnUnpricedAction;
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, ValueEnum, Serialize)]
 #[serde(rename_all = "lowercase")]

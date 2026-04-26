@@ -1,5 +1,5 @@
 [package]
-name = "TokenLedgerRs"
+name = "tokenledger-rs"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -26,4 +26,4 @@ walkdir.workspace = true
 serde_yaml_ng.workspace = true
 tempfile.workspace = true
 
-ParetoRs = { path = "../pareto-rs" }
+pareto-rs = { path = "../pareto-rs" }

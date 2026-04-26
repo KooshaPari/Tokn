@@ -3,11 +3,11 @@
 use std::collections::{BTreeMap, HashMap};
 use std::hash::{Hash, Hasher};
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 
-use ParetoRs::OnUnpricedAction;
 use crate::format::{round2, round4};
 use crate::models::*;
+use pareto_rs::OnUnpricedAction;
 
 pub const MTOK: f64 = 1_000_000.0;
 
