@@ -45,6 +45,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.1] - 2026-04-25
+
+### Fixed
+
+- **Licensing**
+  - Add Unicode-3.0 to deny.toml allow list (W-79: cargo-deny fix)
+
+### Changed
+
+- CI: Add monthly SBOM workflow per org standard
+- Rust 2024 edition migration completed
+- Align tokio + serde to org baseline (phenotype-versions.toml)
+
+---
+
 ## [Unreleased]
 
 ### Added

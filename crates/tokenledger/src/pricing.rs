@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result, anyhow};
 use chrono::{DateTime, Datelike, Utc};
 use serde_json::Value;
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -42,7 +42,11 @@ pub fn run_pricing_check(args: PricingCheckArgs) -> Result<()> {
 
     Err(anyhow!(
         "pricing-check failed: month={} events={} priced={} unpriced={}: {}. Re-run with --allow-unpriced to continue",
-        report.month, report.totals.events, report.priced_count, report.unpriced_count, details
+        report.month,
+        report.totals.events,
+        report.priced_count,
+        report.unpriced_count,
+        details
     ))
 }
 

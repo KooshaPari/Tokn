@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result, anyhow};
 use chrono::{DateTime, Datelike, Utc};
 use serde::Serialize;
 use std::collections::BTreeMap;
@@ -9,7 +9,7 @@ use std::path::{Path, PathBuf};
 use std::time::Instant;
 
 use crate::analytics::*;
-use crate::bench::{execute_bench, load_bench_report, load_perf_gate_config, PERF_GATES_PATH};
+use crate::bench::{PERF_GATES_PATH, execute_bench, load_bench_report, load_perf_gate_config};
 use crate::cli::{
     BenchArgs, BenchScenario, IngestArgs, IngestProvider, OnUnpricedAction, OrchestrateArgs,
     OutputMode, PricingAuditArgs, PricingLintArgs, PricingReconcileArgs, QueryArgs, UiSnapshotMode,

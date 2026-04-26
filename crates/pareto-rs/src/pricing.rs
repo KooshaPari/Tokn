@@ -29,9 +29,7 @@ pub fn select_pareto_optimal(
     let mut pareto: Vec<&ProviderHarness> = harnesses.iter().collect();
 
     // Remove strictly dominated options
-    pareto.retain(|h| {
-        !harnesses.iter().any(|other| dominates(other, h, criteria))
-    });
+    pareto.retain(|h| !harnesses.iter().any(|other| dominates(other, h, criteria)));
 
     // Step 2: Score remaining options by routing criteria
     let scored: Vec<(ProviderHarness, f64)> = pareto
@@ -44,9 +42,7 @@ pub fn select_pareto_optimal(
 
     // Step 3: Sort by score (best first)
     let mut sorted = scored;
-    sorted.sort_by(|a, b| {
-        b.1.partial_cmp(&a.1).expect("NaN in routing score")
-    });
+    sorted.sort_by(|a, b| b.1.partial_cmp(&a.1).expect("NaN in routing score"));
 
     sorted.into_iter().map(|(h, _)| h).collect()
 }
@@ -58,15 +54,14 @@ fn dominates(
     dominated: &ProviderHarness,
     criteria: RoutingCriteria,
 ) -> bool {
-    let cost_better = dominator.input_cost + dominator.output_cost
-        < dominated.input_cost + dominated.output_cost;
+    let cost_better =
+        dominator.input_cost + dominator.output_cost < dominated.input_cost + dominated.output_cost;
     let latency_better = match (dominator.p95_latency_ms, dominated.p95_latency_ms) {
         (Some(d), Some(b)) => d < b,
         (Some(_), None) => true,
         _ => false,
     };
-    let reliability_better =
-        dominator.success_rate > dominated.success_rate;
+    let reliability_better = dominator.success_rate > dominated.success_rate;
 
     match criteria {
         RoutingCriteria::Cost => cost_better,
@@ -94,7 +89,11 @@ pub fn compute_routing_score(h: &ProviderHarness, criteria: RoutingCriteria) -> 
         RoutingCriteria::Balanced => {
             // Weighted composite: 40% cost, 30% latency, 30% reliability
             let total_cost = h.input_cost + h.output_cost;
-            let cost_score = if total_cost > 0.0 { 1.0 / total_cost } else { f64::INFINITY };
+            let cost_score = if total_cost > 0.0 {
+                1.0 / total_cost
+            } else {
+                f64::INFINITY
+            };
             let latency_score = h.p95_latency_ms.map(|l| 1.0 / (l.max(1.0))).unwrap_or(0.0);
             let reliability_score = h.success_rate;
             0.4 * cost_score + 0.3 * latency_score + 0.3 * reliability_score
@@ -122,11 +121,15 @@ pub fn find_model_price<'a>(
     provider: &str,
     model: &str,
 ) -> Option<&'a ModelPricing> {
-    prices.iter().find(|p| p.provider == provider && p.model == model)
+    prices
+        .iter()
+        .find(|p| p.provider == provider && p.model == model)
 }
 
 /// Build a lookup map from (provider, model) -> ModelPricing.
-pub fn build_price_map(prices: &[ModelPricing]) -> std::collections::HashMap<(String, String), ModelPricing> {
+pub fn build_price_map(
+    prices: &[ModelPricing],
+) -> std::collections::HashMap<(String, String), ModelPricing> {
     prices
         .iter()
         .map(|p| ((p.provider.clone(), p.model.clone()), p.clone()))
@@ -152,7 +155,8 @@ pub fn diff_pricing(
         match old_map.get(key) {
             Some(old_p) => {
                 let input_changed = pct_diff(old_p.input_per_m, new_p.input_per_m) > threshold_pct;
-                let output_changed = pct_diff(old_p.output_per_m, new_p.output_per_m) > threshold_pct;
+                let output_changed =
+                    pct_diff(old_p.output_per_m, new_p.output_per_m) > threshold_pct;
                 if input_changed || output_changed {
                     changed.push(PriceChange {
                         provider: new_p.provider.clone(),

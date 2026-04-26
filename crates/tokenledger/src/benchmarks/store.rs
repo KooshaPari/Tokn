@@ -237,7 +237,7 @@ impl BenchmarkStore {
 
     fn merge_field(existing: Option<f64>, new: Option<f64>, new_confidence: f64) -> Option<f64> {
         match (existing, new) {
-            (Some(e), Some(n)) if new_confidence > 0.5 => Some(n),
+            (Some(_e), Some(n)) if new_confidence > 0.5 => Some(n),
             (Some(e), Some(_)) => Some(e),
             (Some(e), None) => Some(e),
             (None, Some(n)) => Some(n),
