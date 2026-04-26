@@ -1,12 +1,19 @@
-![Build Status](https://github.com/Phenotype-Enterprise/tokenledger/actions/workflows/quality-gate.yml/badge.svg)
-![Security Audit](https://github.com/Phenotype-Enterprise/tokenledger/actions/workflows/security-guard.yml/badge.svg)
-![Policy Compliance](https://github.com/Phenotype-Enterprise/tokenledger/actions/workflows/policy-gate.yml/badge.svg)
+![Build Status](https://github.com/KooshaPari/Tokn/actions/workflows/quality-gate.yml/badge.svg)
+![Security Audit](https://github.com/KooshaPari/Tokn/actions/workflows/security-guard.yml/badge.svg)
+![Policy Compliance](https://github.com/KooshaPari/Tokn/actions/workflows/policy-gate.yml/badge.svg)
 
-# tokenledger
+# Tokn (tokenledger)
 
 Enterprise-grade token management and pricing governance system for AI coding agents.
 
 This repository works with Claude and other AI agents as autonomous software engineers.
+
+## Workspace
+
+This is a Rust workspace with two main crates:
+
+- **tokenledger** — Enterprise-grade token management and pricing governance system. Provides unified token and cost tracking across multiple AI provider APIs with optimization recommendations.
+- **ParetoRs** — Pareto-optimal cost engine for AI coding agents. Delivers cost optimization and resource allocation algorithms for multi-provider agent orchestration.
 
 ## Quick Start
 
