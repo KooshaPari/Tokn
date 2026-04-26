@@ -4,6 +4,8 @@
 
 # Tokn (tokenledger)
 
+**Status:** alpha
+
 Enterprise-grade token management and pricing governance system for AI coding agents.
 
 This repository works with Claude and other AI agents as autonomous software engineers.
