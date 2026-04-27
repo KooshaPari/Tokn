@@ -1,4 +1,5 @@
 #![allow(non_snake_case)]
+#![allow(clippy::collapsible_if)]
 
 pub mod analytics;
 pub mod bench;
