@@ -1,1 +1,8 @@
-../template-commons/.pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: security-guard-hook-wiring
+        name: security guard hook wiring
+        entry: bash -c 'test -x .github/hooks/security-guard.sh && test -x .github/scripts/security-guard.sh'
+        language: system
+        pass_filenames: false

@@ -1,4 +1,6 @@
 target/
+docs/package-lock.json
+*.profraw
 
 # Added by Spec Kitty CLI (auto-managed)
 .opencode/
