@@ -20,6 +20,7 @@ pub fn calc_total_cost(input_tokens: u64, output_tokens: u64, rate: PricingRate)
 }
 
 /// Build a cost snapshot from raw call data and provider harness info.
+#[allow(clippy::too_many_arguments)]
 pub fn build_snapshot(
     id: String,
     provider: &str,

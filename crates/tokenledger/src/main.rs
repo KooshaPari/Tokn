@@ -1,13 +1,13 @@
 use anyhow::Result;
 use clap::Parser;
 
-use TokenLedgerRs::analytics::{run_coverage, run_daily, run_monthly};
-use TokenLedgerRs::bench::run_bench;
-use TokenLedgerRs::benchmarks::run_benchmarks;
-use TokenLedgerRs::cli::{Cli, Command};
-use TokenLedgerRs::ingest::run_ingest;
-use TokenLedgerRs::orchestrate::run_orchestrate;
-use TokenLedgerRs::pricing::{
+use tokenledger::analytics::{run_coverage, run_daily, run_monthly};
+use tokenledger::bench::run_bench;
+use tokenledger::benchmarks::run_benchmarks;
+use tokenledger::cli::{Cli, Command};
+use tokenledger::ingest::run_ingest;
+use tokenledger::orchestrate::run_orchestrate;
+use tokenledger::pricing::{
     run_pricing_apply, run_pricing_audit, run_pricing_check, run_pricing_lint,
     run_pricing_reconcile,
 };

@@ -10,6 +10,10 @@ description = "Token management and pricing governance CLI for AI coding agents"
 name = "tokenledger"
 path = "src/main.rs"
 
+[lib]
+name = "tokenledger"
+path = "src/lib.rs"
+
 [dependencies]
 anyhow.workspace = true
 chrono.workspace = true
