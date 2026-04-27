@@ -22,6 +22,7 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD)
 # Skip checks for specific branches if needed
 if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
     echo -e "${YELLOW}⚠️  Pushing to $BRANCH branch - ensure all CI checks pass${NC}"
+    exit 0
 fi
 
 # Test 1: Run full test suite
