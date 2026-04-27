@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         continue-on-error: true
         with:
-          repository: KooshaPari/PhenoKits
+          repository: KooshaPari/phenoShared
           path: phenotype-repos
           sparse-checkout: tooling/legacy-enforcement
 
