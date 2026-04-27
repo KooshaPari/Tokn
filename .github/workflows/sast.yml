@@ -18,4 +18,4 @@ jobs:
         with:
           languages: typescript,python,rust,go
 
-      - uses: github/codeql-action/analyze@19b3a84f58f551a99396341585444cb37be03324  # was: no ref (default branch)
+      - uses: github/codeql-action/analyze@ce64ddcb0d8d890d2df4a9d1c04ff297367dea2a # v3
