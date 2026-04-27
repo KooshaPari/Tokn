@@ -23,6 +23,7 @@ jobs:
         env:
           HEAD_REF: ${{ github.head_ref }}
           BASE_REF: ${{ github.base_ref }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
           PR_LABELS: ${{ toJson(github.event.pull_request.labels.*.name) }}
         run: |
           set -euo pipefail
@@ -43,9 +44,9 @@ jobs:
           fi
 
           # 2) Prevent merge commits in PR branch diff range.
-          git fetch origin "$BASE_REF" --depth=1 || true
+          git fetch origin "$BASE_REF" || true
           PR_HEAD="${{ github.event.pull_request.head.sha }}"
-          MERGES=$(git rev-list --merges "origin/$BASE_REF..$PR_HEAD" || true)
+          MERGES=$(git rev-list --merges "$BASE_SHA..$PR_HEAD" || true)
           if [[ -n "$MERGES" ]]; then
             echo "ERROR: merge commits detected in PR diff range:"
             echo "$MERGES"
