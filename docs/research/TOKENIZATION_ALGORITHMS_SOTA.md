@@ -607,8 +607,8 @@ Based on published research and industry benchmarks:
 
 | Algorithm | OOV Rate (English) | OOV Rate (Multilingual) |
 |-----------|-------------------|-------------------------|
-| BPE (character) | <0.1% | 1-5% |
-| WordPiece | <0.1% | 1-3% |
+| BPE (character) | &lt;0.1% | 1-5% |
+| WordPiece | &lt;0.1% | 1-3% |
 | BBPE | 0% | 0% |
 | Character | 0% | 0% |
 

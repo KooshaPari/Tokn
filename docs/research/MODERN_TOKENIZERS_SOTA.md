@@ -824,8 +824,8 @@ Based on this analysis, Tokn should target:
 |--------|--------|-----------|
 | Throughput | 15M tok/s | tiktoken: 10M/s |
 | Latency p99 | 0.3ms | tiktoken: 0.15ms |
-| Memory | <20MB vocab | Similar to tiktoken |
-| Load time | <20ms | Match competitors |
+| Memory | &lt;20MB vocab | Similar to tiktoken |
+| Load time | &lt;20ms | Match competitors |
 
 ---
 

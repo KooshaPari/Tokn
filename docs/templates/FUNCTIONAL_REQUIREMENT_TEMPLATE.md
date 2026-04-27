@@ -98,7 +98,7 @@ The system **SHALL** {detailed requirement description}.
 - {Constraint 3: e.g., "User MUST be authenticated to access endpoint"}
 
 ### Performance Constraints
-- {Performance 1: e.g., "Response time SHALL be < 200ms for 95th percentile"}
+- {Performance 1: e.g., "Response time SHALL be &lt; 200ms for 95th percentile"}
 - {Performance 2: e.g., "System SHALL handle 1000 concurrent requests"}
 - {Performance 3: e.g., "Batch operations SHALL process ≥ 100 items/second"}
 
@@ -172,7 +172,7 @@ CREATE TABLE {table_name} (
 - [ ] {Test 1: e.g., "Unit tests for validation logic"}
 - [ ] {Test 2: e.g., "Integration test for happy path"}
 - [ ] {Test 3: e.g., "Error case tests (400, 404, 422, 500)"}
-- [ ] {Test 4: e.g., "Performance test (response time < 200ms)"}
+- [ ] {Test 4: e.g., "Performance test (response time &lt; 200ms)"}
 - [ ] {Test 5: e.g., "Security test (auth, rate limiting)"}
 
 ### Documentation Status

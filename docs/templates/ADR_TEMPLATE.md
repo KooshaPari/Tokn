@@ -78,7 +78,7 @@
 - **Phase 3:** {Description and timeline}
 
 ### Success Criteria
-- [ ] {Measurable criterion 1: e.g., "Query latency < 100ms for 95th percentile"}
+- [ ] {Measurable criterion 1: e.g., "Query latency &lt; 100ms for 95th percentile"}
 - [ ] {Measurable criterion 2: e.g., "Zero data loss during migration"}
 - [ ] {Measurable criterion 3: e.g., "All tests passing after implementation"}
 

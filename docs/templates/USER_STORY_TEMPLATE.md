@@ -64,7 +64,7 @@
 - [ ] **Then** {expected behavior}
 
 ### Non-Functional Acceptance Criteria
-- [ ] {Performance: e.g., "Page loads in < 2 seconds"}
+- [ ] {Performance: e.g., "Page loads in &lt; 2 seconds"}
 - [ ] {Security: e.g., "Unauthorized users receive 403 Forbidden"}
 - [ ] {Usability: e.g., "Error messages are user-friendly and actionable"}
 - [ ] {Accessibility: e.g., "All actions keyboard-navigable"}

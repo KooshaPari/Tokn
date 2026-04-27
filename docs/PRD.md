@@ -29,9 +29,9 @@ Build an enterprise-grade token and cost tracking system for AI coding agents th
 | Metric | Target | Timeline |
 |--------|--------|----------|
 | Cost savings | ≥30% vs unmanaged | v1.0 |
-| Provider switching | <100ms latency impact | v1.0 |
+| Provider switching | &lt;100ms latency impact | v1.0 |
 | Budget alerts | 100% accuracy | v1.0 |
-| Report generation | <5s for 30-day report | v1.0 |
+| Report generation | &lt;5s for 30-day report | v1.0 |
 
 ### Target Users
 
@@ -304,10 +304,10 @@ GET /api/v1/costs/aggregate?start=2026-01-01&end=2026-01-31&group_by=team
 
 | Metric | Target |
 |--------|--------|
-| Latency overhead | <10ms |
+| Latency overhead | &lt;10ms |
 | Throughput | 1000 req/s |
-| Aggregation query | <5s |
-| Startup time | <1s |
+| Aggregation query | &lt;5s |
+| Startup time | &lt;1s |
 
 ### Reliability
 

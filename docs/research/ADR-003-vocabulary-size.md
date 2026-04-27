@@ -53,7 +53,7 @@ Our analysis (see `docs/research/TOKENIZATION_ALGORITHMS_SOTA.md`) shows:
 
 ### Constraints
 
-1. **Memory efficiency**: Target <20MB per vocabulary
+1. **Memory efficiency**: Target &lt;20MB per vocabulary
 2. **Performance**: Larger vocabularies have cache implications
 3. **Training data**: Must have sufficient corpus for chosen size
 4. **Compatibility**: Match reference implementations (tiktoken: 100K)

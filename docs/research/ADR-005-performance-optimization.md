@@ -19,7 +19,7 @@ Based on market analysis and use cases:
 
 | Use Case | Throughput Target | Latency Target | Scale |
 |----------|-------------------|----------------|-------|
-| API services | 10M+ tok/s | <1ms p99 | High concurrent |
+| API services | 10M+ tok/s | &lt;1ms p99 | High concurrent |
 | Batch processing | 50M+ tok/s | N/A | Single-node throughput |
 | CLI operations | 5M+ tok/s | Interactive | Single-threaded |
 | Training | 1M+ tok/s | N/A | Background processing |

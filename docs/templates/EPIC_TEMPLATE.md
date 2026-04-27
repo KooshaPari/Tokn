@@ -35,7 +35,7 @@ EPIC-{NNN}: {Epic Title}
 
 ### Success Criteria
 - {Metric 1: e.g., "95% of requirements traced to tests"}
-- {Metric 2: e.g., "Traceability matrix generation < 5 seconds"}
+- {Metric 2: e.g., "Traceability matrix generation &lt; 5 seconds"}
 - {Metric 3: e.g., "User satisfaction score ≥ 4.5/5"}
 - {Metric 4: e.g., "Zero critical bugs in production for 30 days post-launch"}
 
@@ -93,7 +93,7 @@ EPIC-{NNN}: {Epic Title}
 - {FR-UI-003: Bulk operations interface}
 
 ### Performance Requirements
-- {FR-PERF-001: Response time < 200ms for 95th percentile}
+- {FR-PERF-001: Response time &lt; 200ms for 95th percentile}
 - {FR-PERF-002: Support 10,000 items per project}
 - {FR-PERF-003: Concurrent user support (100+ users)}
 
@@ -255,7 +255,7 @@ EPIC-{NNN}: {Epic Title}
 ### Success Metrics (30 days post-launch)
 - {Daily Active Users: ≥ 50}
 - {Average Session Duration: ≥ 10 minutes}
-- {Error Rate: < 1%}
+- {Error Rate: &lt; 1%}
 - {User Satisfaction: ≥ 4.5/5}
 
 ### Monitoring & Support
