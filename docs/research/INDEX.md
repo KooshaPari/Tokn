@@ -1,6 +1,6 @@
 # Research Index
 
-<DONE>
+`<DONE>`
 
 - `docs/research/USAGE_AUDIT_AND_MARKET_SCAN.md`
 - `docs/research/DEEP_RESEARCH_AND_OPTIMIZATION_PLAN.md`
