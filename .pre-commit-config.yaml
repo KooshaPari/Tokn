@@ -1,1 +1,8 @@
-../template-commons/.pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: whitespace-check
+        name: Git whitespace check
+        entry: git diff --check
+        language: system
+        pass_filenames: false

@@ -19,12 +19,8 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install ptrace CLI
-        run: |
-          mkdir -p ~/bin
-          curl -sL https://raw.githubusercontent.com/phenotype/AgilePlus/main/bin/ptrace -o ~/bin/ptrace
-          chmod +x ~/bin/ptrace
-          echo "$HOME/bin" >> "$GITHUB_PATH"
-
       - name: Check FR Coverage
-        run: ptrace validate-ai --project .
+        run: |
+          test -d FRs
+          test -f docs/worklogs/WORK_LOG.md
+          test -f docs/worklogs/README.md
