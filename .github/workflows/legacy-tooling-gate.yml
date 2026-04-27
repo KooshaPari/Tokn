@@ -25,8 +25,9 @@ jobs:
 
       - name: Checkout phenotype/repos for shared tools
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        continue-on-error: true
         with:
-          repository: kooshapari/phenotype
+          repository: KooshaPari/PhenoKits
           path: phenotype-repos
           sparse-checkout: tooling/legacy-enforcement
 
@@ -40,6 +41,11 @@ jobs:
 
       - name: Run Legacy Tooling Scanner (WARN Mode)
         run: |
+          if [ ! -f phenotype-repos/tooling/legacy-enforcement/scanner/legacy_tooling_scanner.py ]; then
+            echo "Legacy tooling scanner unavailable; skipping warn-mode scan."
+            exit 0
+          fi
+
           python3 phenotype-repos/tooling/legacy-enforcement/scanner/legacy_tooling_scanner.py \
             --repo-root . \
             --policy phenotype-repos/tooling/legacy-enforcement/policy/rules.yaml \
