@@ -1,4 +1,5 @@
 target/
+docs/package-lock.json
 
 # Added by Spec Kitty CLI (auto-managed)
 .opencode/
