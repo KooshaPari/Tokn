@@ -8,6 +8,6 @@ repos:
         pass_filenames: false
       - id: whitespace-check
         name: Git whitespace check
-        entry: git diff --check
+        entry: git diff --cached --check
         language: system
         pass_filenames: false
