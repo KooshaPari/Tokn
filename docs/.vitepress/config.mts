@@ -3,6 +3,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Project",
   description: "Documentation",
+  srcExclude: ['**/templates/**', '**/research/**', '**/.generated/**'],
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
