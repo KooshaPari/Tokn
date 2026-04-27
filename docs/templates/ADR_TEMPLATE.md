@@ -9,18 +9,18 @@
 
 ## Context
 
-{Describe the technical, business, or architectural context that necessitates this decision. Include:}
+\{Describe the technical, business, or architectural context that necessitates this decision. Include:\}
 - {What problem are we solving?}
 - {What constraints exist? (technical, timeline, resource, regulatory)}
 - {What triggered this decision? (new requirement, technical debt, performance issue)}
 
 ## Decision
 
-{State the decision clearly and concisely. Use active voice. Example: "We will use PostgreSQL as the primary database for the traceability system."}
+\{State the decision clearly and concisely. Use active voice. Example: "We will use PostgreSQL as the primary database for the traceability system."\}
 
 ## Rationale
 
-{Explain WHY this decision was made. Include:}
+\{Explain WHY this decision was made. Include:\}
 - {How does this decision solve the problem stated in Context?}
 - {What key factors influenced the decision? (performance, cost, maintainability, team expertise)}
 - {What trade-offs were considered?}
@@ -40,7 +40,7 @@
 - **Cons:** {Disadvantages}
 - **Why Rejected:** {Specific reasons}
 
-{Add more alternatives as needed}
+\{Add more alternatives as needed\}
 
 ## Consequences
 
@@ -66,7 +66,7 @@
 - {Component 3: path/to/component}
 
 ### Migration Strategy
-{If applicable, describe how to migrate from old approach to new. Include:}
+\{If applicable, describe how to migrate from old approach to new. Include:\}
 - {Migration steps}
 - {Rollback plan}
 - {Data migration considerations}
@@ -93,4 +93,4 @@
 ---
 
 **Notes:**
-{Any additional context, open questions, or follow-up items}
+\{Any additional context, open questions, or follow-up items\}
