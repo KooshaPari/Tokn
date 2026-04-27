@@ -20,6 +20,7 @@ export default defineConfig({
   description: 'Token and cost tracking for LLM operations',
   base: docsBase,
   ignoreDeadLinks: true,
+  srcExclude: ['**/templates/**', '**/research/**', '**/.generated/**'],
   themeConfig: {
     nav: [
       { text: 'Wiki', link: '/wiki/' },
