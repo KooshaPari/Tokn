@@ -1,37 +1,11 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig, withBase } from 'vitepress'
+
+const docsBase = '/Tokn/'
 
 export default defineConfig({
-  title: "Project",
-  description: "Documentation",
-  srcExclude: ['**/templates/**', '**/research/**', '**/.generated/**'],
-  themeConfig: {
-    nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Journeys', link: '/journeys/' },
-      { text: 'Stories', link: '/stories/' },
-      { text: 'Traceability', link: '/traceability/' },
-    ],
-    sidebar: {
-      '/journeys/': [{
-        text: 'Journeys',
-        items: [
-          { text: 'Overview', link: '/journeys/' },
-          { text: 'Quick Start', link: '/journeys/quick-start' },
-        ]
-      }],
-      '/stories/': [{
-        text: 'Stories',
-        items: [
-          { text: 'Overview', link: '/stories/' },
-          { text: 'Hello World', link: '/stories/hello-world' },
-        ]
-      }],
-      '/traceability/': [{
-        text: 'Traceability',
-        items: [
-          { text: 'Overview', link: '/traceability/' },
-        ]
-      }],
-    }
-  }
+  base: docsBase,
+  title: 'Tokn',
+  description: 'Tokn documentation for token management and pricing governance',
+  lang: 'en-US',
+  head: [['link', { rel: 'icon', href: withBase('/favicon.svg') }]],
 })

@@ -5,7 +5,10 @@ OUT_FILE="$ROOT_DIR/.generated/doc-index.json"
 mkdir -p "$(dirname "$OUT_FILE")"
 
 FILES=$(cd "$ROOT_DIR" && find . -type f \( -name "*.md" -o -name "*.mdx" \) \
-  -not -path './.vitepress/*' -not -path './.generated/*' | sed 's#^\./##' | sort)
+  -not -path './.vitepress/*' \
+  -not -path './.generated/*' \
+  -not -path './node_modules/*' \
+  -not -path './node_modules/**' | sed 's#^\./##' | sort)
 
 {
   echo '{'
