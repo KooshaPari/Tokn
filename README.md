@@ -1,3 +1,10 @@
+> **Pinned references (Phenotype-org)**
+> - MSRV: see rust-toolchain.toml
+> - cargo-deny config: see deny.toml
+> - cargo-audit: rustsec/audit-check@v2 weekly
+> - Branch protection: 1 reviewer required, no force-push
+> - Authority: phenotype-org-governance/SUPERSEDED.md
+
 ![Build Status](https://github.com/KooshaPari/Tokn/actions/workflows/quality-gate.yml/badge.svg)
 ![Security Audit](https://github.com/KooshaPari/Tokn/actions/workflows/security-guard.yml/badge.svg)
 ![Policy Compliance](https://github.com/KooshaPari/Tokn/actions/workflows/policy-gate.yml/badge.svg)
