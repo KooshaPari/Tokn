@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.36.0
         with:
           scan-type: 'fs'
           ignore-unfixed: true
@@ -81,7 +81,7 @@ jobs:
       
       - name: Scan image with Trivy
         if: steps.dockerfile.outputs.present == 'true'
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.36.0
         with:
           image-ref: 'app:${{ github.sha }}'
           format: 'sarif'
