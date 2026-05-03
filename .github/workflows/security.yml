@@ -30,7 +30,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run cargo-deny
-        uses: cargo-bins/cargo-deny-action@v2
+        uses: cargo-bins/cargo-deny-action@91bf2b620e09e18d6eb78b92e7861937469acedb # v6
         with:
           command: check advisories bans licenses
           arguments: --strict
