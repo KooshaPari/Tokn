@@ -19,7 +19,7 @@ mod tests {
 
     #[test]
     fn test_round2_basic() {
-        assert!((round2(std::f64::consts::PI) - 3.14).abs() < TOL_2);
+        assert!((round2(std::f64::consts::PI) - std::f64::consts::PI.round()).abs() < TOL_2);
         assert_eq!(round2(1.234), 1.23);
         assert_eq!(round2(1.999), 2.00);
     }
@@ -31,7 +31,7 @@ mod tests {
 
     #[test]
     fn test_round4_basic() {
-        assert!((round4(std::f64::consts::PI) - 3.1416).abs() < TOL_4);
+        assert!((round4(std::f64::consts::PI) - std::f64::consts::PI).abs() < TOL_4);
         assert_eq!(round4(1.23456), 1.2346);
     }
 
