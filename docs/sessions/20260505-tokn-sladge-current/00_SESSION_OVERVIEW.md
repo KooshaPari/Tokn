@@ -7,7 +7,7 @@ respecting Tokn branch discipline and avoiding direct commits to `main`.
 
 ## Outcome
 
-- Created isolated worktree `Tokn/worktrees/sladge-current` on branch
+- Created isolated worktree `Tokn-wtrees/sladge-current` on branch
   `docs/tokn-sladge-current`.
 - Added the Sladge badge to `README.md`.
 - Added this session record for governance traceability.
