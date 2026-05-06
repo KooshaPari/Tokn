@@ -1,29 +1,57 @@
 # Journey Traceability
 
-**Repo:** Tokn: token/utilities  
-**Standard:** [phenotype-infra journey-traceability standard](https://github.com/kooshapari/phenotype-infra/blob/main/docs/governance/journey-traceability-standard.md)  
-**Schema:** [phenotype-journeys Manifest schema](https://github.com/kooshapari/phenotype-journeys/blob/main/schema/manifest.schema.json)
+- **Status:** Active
+- **Repo:** KooshaPari/Tokn
+- **Owner:** phenotype-org
+- **Date:** 2026-05-02
 
-## User-facing flows
+## Overview
 
-- CLI command invocation and flag handling
-- Configuration file loading
-- Output formatting and error reporting
+This repo implements the Phenotype journey traceability standard. User-facing flows
+carry evidence bundles (keyframes, recordings, manifests) for auditability and handoff.
 
-## Keyframe capture schedule
+## Implementation
 
-Keyframes should be captured for: command entry, flag parsing, output rendering, error states, completion.
+Tokn tracks its journeys in `docs/journeys/manifests/`.
 
-## Icon set
+### Journey Manifest Format
 
-Iconography lives at `docs/operations/iconography/`. See `SPEC.md` for style guide.
+Each journey has a manifest JSON:
 
-## Manifest location
+```json
+{
+  "id": "tokn-<journey-name>",
+  "repo": "KooshaPari/Tokn",
+  "flow": "<flow-name>",
+  "owner": "phenotype-org",
+  "captured": "YYYY-MM-DD",
+  "environment": "<env-used>",
+  "keyframes": [
+    {
+      "src": "/cli-journeys/keyframes/<journey>/frame-###.png",
+      "caption": "<caption>"
+    }
+  ],
+  "tape": "<tape-id>",
+  "related": []
+}
+```
 
-Journey manifests: `docs/journeys/manifests/`  
-Manifest schema: `manifest.schema.json` (from phenotype-journeys)
+## Verification
 
-## CI Gate
+```bash
+ls docs/journeys/manifests/*.json | while read f; do jq empty "$f" 2>/dev/null || echo "INVALID: $f"; done
+```
 
-Journey gate workflow: `.github/workflows/journey-gate.yml`  
-Gate status: **Stub — populate manifests to pass CI**
+## Progress
+
+- [ ] Identify top user-visible flows
+- [ ] Add journey manifest per flow
+- [ ] Capture keyframes for important states
+- [ ] Record and register tape ids
+- [ ] Link from README or docs index
+
+## Related
+
+- [Phenotype journey-traceability standard](https://github.com/kooshapari/phenotype-infra/blob/main/docs/governance/journey-traceability-standard.md)
+- `docs/operations/iconography/` — icon evidence
