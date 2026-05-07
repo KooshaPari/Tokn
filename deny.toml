@@ -1,3 +1,11 @@
+[bans]
+workspace-features = "deny"
+multiple-mains = "deny"
+main = "deny"
+unnameable-traits = "deny"
+unnameable-types = "deny"
+unknown-lints = "deny"
+
 # Cargo-deny configuration for Tokn
 
 [licenses]

@@ -1,4 +1,0 @@
-# Plans Index
-
-- `docs/plans/UNIFIED_E2E_EXECUTION_PLAN.md`
-- `docs/plans/UNIFIED_MODEL_PROVIDER_LEDGER_PLAN_2026-02-21.md`
