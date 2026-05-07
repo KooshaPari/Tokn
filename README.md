@@ -1,6 +1,7 @@
 ![Build Status](https://github.com/KooshaPari/Tokn/actions/workflows/quality-gate.yml/badge.svg)
 ![Security Audit](https://github.com/KooshaPari/Tokn/actions/workflows/security-guard.yml/badge.svg)
 ![Policy Compliance](https://github.com/KooshaPari/Tokn/actions/workflows/policy-gate.yml/badge.svg)
+[![AI Slop Inside](https://sladge.net/badge.svg)](https://sladge.net)
 
 # Tokn (tokenledger)
 
