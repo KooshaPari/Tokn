@@ -25,3 +25,4 @@ docs/package-lock.json
 .claudeignore
 .llmignore
 Cargo.lock
+Cargo.lock
