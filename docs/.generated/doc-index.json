@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-27T09:50:46Z",
+  "generatedAt": "2026-05-07T21:15:54Z",
   "files": [
     "adr/ADR-002-token-format.md",
     "adr/ADR-003-storage-backend.md",
@@ -58,6 +58,8 @@
     "integrations/EXTENSION_FILE_READ_INTEGRATION_EXAMPLES.md",
     "journeys/index.md",
     "journeys/quick-start.md",
+    "operations/iconography/SPEC.md",
+    "operations/journey-traceability.md",
     "plans/INDEX.md",
     "plans/SYSTEM_ARCHITECTURE_AUDIT.md",
     "plans/UNIFIED_E2E_EXECUTION_PLAN.md",
