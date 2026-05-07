@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-02-21T11:02:59.784816Z",
+  "month": "2026-02",
+  "mode": "extended",
+  "totals": {
+    "cost_usd": 77.47,
+    "tokens": 10450000,
+    "blended_usd_per_mtok": 7.4135,
+    "session_count": 4,
+    "skipped_unpriced_count": 0
+  },
+  "top_providers": [
+    {
+      "name": "claude",
+      "tokens": 6370000,
+      "total_cost_usd": 44.78,
+      "blended_usd_per_mtok": 7.029,
+      "session_count": 1
+    },
+    {
+      "name": "codex",
+      "tokens": 2500000,
+      "total_cost_usd": 6.16,
+      "blended_usd_per_mtok": 2.465,
+      "session_count": 1
+    },
+    {
+      "name": "cursor",
+      "tokens": 840000,
+      "total_cost_usd": 23.53,
+      "blended_usd_per_mtok": 28.0134,
+      "session_count": 1
+    },
+    {
+      "name": "droid",
+      "tokens": 740000,
+      "total_cost_usd": 3.0,
+      "blended_usd_per_mtok": 4.0574,
+      "session_count": 1
+    }
+  ],
+  "top_models": [
+    {
+      "name": "claude-sonnet-4-5",
+      "tokens": 6370000,
+      "total_cost_usd": 44.78,
+      "blended_usd_per_mtok": 7.029,
+      "session_count": 1
+    },
+    {
+      "name": "gpt-5",
+      "tokens": 2500000,
+      "total_cost_usd": 6.16,
+      "blended_usd_per_mtok": 2.465,
+      "session_count": 1
+    },
+    {
+      "name": "cursor-codex-latest",
+      "tokens": 840000,
+      "total_cost_usd": 23.53,
+      "blended_usd_per_mtok": 28.0134,
+      "session_count": 1
+    },
+    {
+      "name": "factory-droid-latest",
+      "tokens": 740000,
+      "total_cost_usd": 3.0,
+      "blended_usd_per_mtok": 4.0574,
+      "session_count": 1
+    }
+  ],
+  "suggestions": [
+    "No obvious anomalies detected; keep collecting session-level data and compare 4-week trend deltas."
+  ],
+  "reconcile_latest_summary_path": "benchmarks/results/reconcile-latest-summary.json"
+}

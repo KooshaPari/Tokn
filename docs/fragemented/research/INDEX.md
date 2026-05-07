@@ -1,0 +1,6 @@
+# Research Index
+
+- `docs/research/USAGE_AUDIT_AND_MARKET_SCAN.md`
+- `docs/research/DEEP_RESEARCH_AND_OPTIMIZATION_PLAN.md`
+- `docs/research/UNIFIED_E2E_RESEARCH_AND_ARCHITECTURE_2026-02-21.md`
+- `docs/research/ADAPTER_BASE_LIBS_AND_FORK_STRATEGY_2026-02-21.md`

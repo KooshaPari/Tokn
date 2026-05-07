@@ -1,0 +1,3 @@
+# Clippy configuration for Tokn
+
+avoid-breaking-exported-api = false

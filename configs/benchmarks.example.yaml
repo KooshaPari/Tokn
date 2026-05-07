@@ -1,0 +1,49 @@
+# Benchmark Sources Configuration
+# 
+# This configures where to fetch benchmark data from and how to prioritize it.
+#
+# Priority (highest to lowest):
+# 1. Manual overrides (highest priority - you define exact values)
+# 2. Artificial Analysis API
+# 3. OpenRouter API
+# 4. Web scraping (future)
+# 5. Fallback/hardcoded values
+
+# API Sources
+sources:
+  # Artificial Analysis - provides intelligence, speed, latency benchmarks
+  artificial_analysis:
+    enabled: true
+    # Get your free API key at: https://artificialanalysis.ai/login
+    api_key: ${AA_API_KEY}
+    # Cache TTL in seconds (default: 3600 = 1 hour)
+    cache_ttl_seconds: 3600
+  
+  # OpenRouter - provides pricing, context length
+  openrouter:
+    enabled: true
+    # Get your free API key at: https://openrouter.ai/keys
+    api_key: ${OPENROUTER_API_KEY}
+    cache_ttl_seconds: 3600
+
+# Manual benchmark overrides
+# These have HIGHEST PRIORITY and override any API data
+# Use this for:
+# - Specific benchmark values you want to force
+# - Models not covered by APIs
+# - Custom/internal models
+overrides:
+  # Example: Gemini 3.1 Pro from the research
+  gemini-3.1-pro-preview:
+    intelligence_index: 57.0
+    speed_tps: 65
+    latency_ms: 3990
+    price_input: 2.00
+    price_output: 12.00
+    context_window: 1048576
+  
+  # Example: Custom internal model
+  internal-model-v1:
+    intelligence_index: 90.0
+    speed_tps: 150
+    latency_ms: 500

@@ -1,0 +1,16 @@
+{
+  "providers": {
+    "proxyapi": {
+      "scanned": 0,
+      "emitted": 0,
+      "skipped": 0
+    }
+  },
+  "incremental_sources_skipped": 0,
+  "emitted_total": 0,
+  "deduped_total": 0,
+  "output": "./artifacts/proxyapi.ingested.sample.jsonl",
+  "started_at": "2026-02-21T11:16:23.200398Z",
+  "finished_at": "2026-02-21T11:16:23.202258Z",
+  "duration_ms": 1
+}

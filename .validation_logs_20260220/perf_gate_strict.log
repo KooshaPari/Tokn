@@ -1,0 +1,4 @@
+=== CMD: env PERF_STRICT=1 task perf:gate:strict
+task: No tasks with description available. Try --list-all to list all tasks
+task: Task "perf:gate:strict" does not exist
+=== EXIT: 200

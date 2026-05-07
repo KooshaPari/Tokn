@@ -1,0 +1,38 @@
+{
+  "scenario": "all",
+  "month": "2026-02",
+  "generated_at": "2026-02-20T15:58:30.868348Z",
+  "label": "orchestrate",
+  "results": [
+    {
+      "scenario": "cold-backfill",
+      "elapsed_ms": 0.079,
+      "events_processed": 4,
+      "events_per_sec": 50632.9114,
+      "elapsed_ms_delta": -0.0777,
+      "events_per_sec_delta": 25107.8937,
+      "elapsed_regression": false,
+      "events_per_sec_regression": false
+    },
+    {
+      "scenario": "warm-tail",
+      "elapsed_ms": 0.1155,
+      "events_processed": 20,
+      "events_per_sec": 173160.1732,
+      "elapsed_ms_delta": 0.0022,
+      "events_per_sec_delta": -3374.7984,
+      "elapsed_regression": true,
+      "events_per_sec_regression": true
+    },
+    {
+      "scenario": "burst",
+      "elapsed_ms": 0.0228,
+      "events_processed": 4,
+      "events_per_sec": 175185.0392,
+      "elapsed_ms_delta": 0.0017,
+      "events_per_sec_delta": -14164.0732,
+      "elapsed_regression": true,
+      "events_per_sec_regression": true
+    }
+  ]
+}

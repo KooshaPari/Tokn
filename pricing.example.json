@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "source": "tokenledger:example-pricing",
+    "updated_at": "2026-02-21T00:00:00Z"
+  },
+  "provider_aliases": {
+    "anthropic": "claude",
+    "openai": "codex",
+    "factory": "droid"
+  },
+  "providers": {
+    "claude": {
+      "subscription_usd_month": 30.0,
+      "model_aliases": {
+        "sonnet": "claude-sonnet-4-5"
+      },
+      "models": {
+        "claude-sonnet-4-5": {
+          "input_usd_per_mtok": 3.0,
+          "output_usd_per_mtok": 15.0,
+          "cache_write_usd_per_mtok": 3.75,
+          "cache_read_usd_per_mtok": 0.30,
+          "tool_input_usd_per_mtok": 3.0,
+          "tool_output_usd_per_mtok": 15.0
+        }
+      }
+    },
+    "codex": {
+      "subscription_usd_month": 0.0,
+      "model_aliases": {
+        "gpt-5-latest": "gpt-5"
+      },
+      "models": {
+        "gpt-5": {
+          "input_usd_per_mtok": 1.25,
+          "output_usd_per_mtok": 10.0,
+          "cache_write_usd_per_mtok": 1.25,
+          "cache_read_usd_per_mtok": 0.125,
+          "tool_input_usd_per_mtok": 1.25,
+          "tool_output_usd_per_mtok": 10.0
+        }
+      }
+    },
+    "cursor": {
+      "subscription_usd_month": 20.0,
+      "model_aliases": {},
+      "models": {
+        "cursor-codex-latest": {
+          "input_usd_per_mtok": 1.25,
+          "output_usd_per_mtok": 10.0
+        }
+      }
+    },
+    "droid": {
+      "subscription_usd_month": 0.0,
+      "model_aliases": {
+        "droid-latest": "factory-droid-latest"
+      },
+      "models": {
+        "factory-droid-latest": {
+          "input_usd_per_mtok": 1.25,
+          "output_usd_per_mtok": 10.0
+        }
+      }
+    }
+  }
+}

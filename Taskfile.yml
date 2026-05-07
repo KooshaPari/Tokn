@@ -1,0 +1,210 @@
+version: '3'
+
+tasks:
+  # Quality gate - runs strict lint, type check, and tests
+  quality:
+    desc: "Run full strict quality pipeline (fmt/clippy/test/audit)"
+    cmds:
+      - task: lint
+      - task: test
+
+  quality:strict:
+    desc: "Run strict quality with extra checks"
+    cmds:
+      - cargo fmt --all -- --check
+      - cargo clippy --all-targets --all-features -- -D warnings
+      - cargo test
+      - cargo audit || true
+
+  lint:
+    cmds:
+      - cargo fmt --all -- --check
+      - cargo clippy --all-targets --all-features -- -D warnings -A clippy::unwrap_or_default -A clippy::too_many_arguments -A clippy::derive_partial_eq_without_eq -A clippy::large_enum_variant -A unused_imports -A unused
+
+  audit:
+    desc: "Run cargo audit for security"
+    cmds:
+      - cargo audit || true
+
+  build:
+    cmds:
+      - cargo build
+
+  test:
+    cmds:
+      - cargo test
+
+  run:sample:
+    cmds:
+      - cargo run -- monthly --events ./examples/events.jsonl --pricing ./pricing.example.json --month 2026-02
+
+  run:daily:
+    cmds:
+      - cargo run -- daily --events ./examples/events.jsonl --pricing ./pricing.example.json --month 2026-02 --output markdown --top-providers 3 --top-models 5
+
+  pricing:coverage:
+    cmds:
+      - cargo run -- coverage --events ./examples/events.jsonl --pricing ./pricing.example.json --month 2026-02 --json-output
+
+  pricing:patch:
+    cmds:
+      - cargo run -- coverage --events ./examples/events.jsonl --pricing ./pricing.example.json --month 2026-02 --write-patch ./benchmarks/results/pricing-patch.json --write-unpriced-events ./benchmarks/results/unpriced-events.jsonl --json-output
+
+  pricing:check:
+    cmds:
+      - cargo run -- pricing-check --events ./examples/events.jsonl --pricing ./pricing.example.json --month 2026-02
+
+  pricing:lint:
+    cmds:
+      - cargo run -- pricing-lint --pricing ./pricing.example.json
+
+  pricing:reconcile:
+    cmds:
+      - cargo run -- pricing-reconcile --events ./examples/events.jsonl --pricing ./pricing.example.json --month 2026-02 --workdir ./benchmarks/results
+
+  pricing:audit:
+    cmds:
+      - cargo run -- pricing-audit --pricing ./pricing.example.json
+
+  pricing:audit:allow-stale:
+    cmds:
+      - cargo run -- pricing-audit --pricing ./pricing.example.json --allow-stale
+
+  pricing:ci:
+    cmds:
+      - cargo run -- pricing-lint --pricing ./pricing.example.json
+      - cargo run -- pricing-audit --pricing ./pricing.example.json
+      - cargo run -- pricing-check --events ./examples/events.jsonl --pricing ./pricing.example.json --month 2026-02
+
+  pricing:apply:
+    cmds:
+      - cargo run -- pricing-apply --pricing ./pricing.example.json --patch ./benchmarks/results/pricing-patch.json --dry-run
+
+  pricing:apply:write:
+    cmds:
+      - cargo run -- pricing-apply --pricing ./pricing.example.json --patch ./benchmarks/results/pricing-patch.json --write-backup
+
+  bench:
+    cmds:
+      - cargo run -- bench --scenario all --events ./examples/events.jsonl --pricing ./pricing.example.json --json-output
+
+  bench:record:
+    cmds:
+      - cargo run -- bench --scenario all --events ./examples/events.jsonl --pricing ./pricing.example.json --record --label task-bench-record
+
+  bench:golden:
+    cmds:
+      - cargo run -- bench --scenario all --events ./examples/events.jsonl --pricing ./pricing.example.json --golden ./benchmarks/fixtures/bench-golden.json --golden-epsilon 0.0001 --json-output
+
+  bench:golden:lock:
+    cmds:
+      - cargo run -- bench --scenario all --events ./examples/events.jsonl --pricing ./pricing.example.json --json-output-path ./benchmarks/fixtures/bench-golden.json
+
+  bench:golden:lock:verify:
+    cmds:
+      - task bench:golden:lock
+      - task bench:golden
+
+  bench:trend:
+    cmds:
+      - cargo run -- bench --trend-dir ./benchmarks/results
+
+  bench:trend:gate:
+    cmds:
+      - cargo run -- bench --trend-dir ./benchmarks/results --trend-fail-on-regression
+
+  perf:gate:
+    cmds:
+      - ./scripts/perf_gate.sh
+
+  perf:gate:baseline:
+    cmds:
+      - ./scripts/perf_gate.sh ./benchmarks/results/latest-summary.json
+
+  perf:gate:strict:
+    cmds:
+      - PERF_STRICT=1 PERF_BASELINE=./benchmarks/results/latest-summary.json ./scripts/perf_gate.sh
+
+  perf:gate:golden:
+    cmds:
+      - cargo run --quiet -- bench --scenario all --events ./examples/events.jsonl --pricing ./pricing.example.json --golden ./benchmarks/fixtures/bench-golden.json --golden-epsilon 0.0001 --json-output > /tmp/tokenledger-bench-golden.json
+      - ./scripts/perf_gate.sh
+
+  do:all:next:
+    deps:
+      - artifacts:ensure
+    cmds:
+      - cargo run -- orchestrate --providers codex --limit 500 --events-out ./artifacts/ingested.sample.jsonl --state-file ./benchmarks/results/ingest-state.json --summary-json-path ./benchmarks/results/ingest-summary.json --ingest-cache-path ./benchmarks/results/orchestrate-ingest-cache.json --aggregate-cache-path ./benchmarks/results/orchestrate-aggregate-cache.json --pipeline-summary-path ./benchmarks/results/orchestrate-summary.json --pricing-reconcile-dry-run
+
+  orchestrate:
+    deps:
+      - artifacts:ensure
+    cmds:
+      - cargo run -- orchestrate --providers codex --limit 500 --events-out ./artifacts/ingested.sample.jsonl --state-file ./benchmarks/results/ingest-state.json --summary-json-path ./benchmarks/results/ingest-summary.json --ingest-cache-path ./benchmarks/results/orchestrate-ingest-cache.json --aggregate-cache-path ./benchmarks/results/orchestrate-aggregate-cache.json --pipeline-summary-path ./benchmarks/results/orchestrate-summary.json --pricing-reconcile-dry-run
+
+  orchestrate:ui:
+    deps:
+      - artifacts:ensure
+    cmds:
+      - cargo run -- orchestrate --providers codex --limit 500 --events-out ./artifacts/ingested.sample.jsonl --state-file ./benchmarks/results/ingest-state.json --summary-json-path ./benchmarks/results/ingest-summary.json --ingest-cache-path ./benchmarks/results/orchestrate-ingest-cache.json --aggregate-cache-path ./benchmarks/results/orchestrate-aggregate-cache.json --pipeline-summary-path ./benchmarks/results/orchestrate-summary.json --pricing-reconcile-dry-run --ui-snapshot-path ./benchmarks/results/ui-snapshot.json
+
+  orchestrate:cache:
+    deps:
+      - artifacts:ensure
+    cmds:
+      - printf '%s\n' '{"provider":"proxyapi","model":"proxyapi-default","session_id":"cache-warm","timestamp":"2026-02-01T00:00:00Z","usage":{"input_tokens":1000,"output_tokens":500,"cache_write_tokens":0,"cache_read_tokens":0,"tool_input_tokens":0,"tool_output_tokens":0}}' > ./artifacts/cache-warm.sample.jsonl
+      - cargo run -- orchestrate --skip-ingest --events-out ./artifacts/cache-warm.sample.jsonl --month 2026-02 --pricing ./pricing.example.json --ingest-cache-path ./benchmarks/results/orchestrate-ingest-cache.cache.json --aggregate-cache-path ./benchmarks/results/orchestrate-aggregate-cache.json --pipeline-summary-path ./benchmarks/results/orchestrate-cache-summary.json --skip-pricing-reconcile --skip-bench --skip-gate --on-unpriced skip
+
+  orchestrate:cache:metrics:validate:
+    deps:
+      - artifacts:ensure
+    cmds:
+      - printf '%s\n' '{"provider":"proxyapi","model":"proxyapi-default","session_id":"cache-metrics-validate","timestamp":"2026-02-01T00:00:00Z","usage":{"input_tokens":1000,"output_tokens":500,"cache_write_tokens":0,"cache_read_tokens":0,"tool_input_tokens":0,"tool_output_tokens":0}}' > ./artifacts/cache-metrics.sample.jsonl
+      - cargo run -- orchestrate --skip-ingest --events-out ./artifacts/cache-metrics.sample.jsonl --month 2026-02 --pricing ./pricing.example.json --aggregate-cache-path ./benchmarks/results/orchestrate-aggregate-cache.validate.json --pipeline-summary-path ./benchmarks/results/orchestrate-cache-summary.first.json --skip-pricing-reconcile --skip-bench --skip-gate --on-unpriced skip
+      - cargo run -- orchestrate --skip-ingest --events-out ./artifacts/cache-metrics.sample.jsonl --month 2026-02 --pricing ./pricing.example.json --aggregate-cache-path ./benchmarks/results/orchestrate-aggregate-cache.validate.json --pipeline-summary-path ./benchmarks/results/orchestrate-cache-summary.second.json --skip-pricing-reconcile --skip-bench --skip-gate --on-unpriced skip
+      - python3 -c "import json,pathlib; p=pathlib.Path('./pricing.example.json'); data=json.loads(p.read_text()); data.setdefault('meta', {}); data['meta']['source']='tokenledger:cache-metrics-validate'; q=pathlib.Path('./benchmarks/results/pricing.cache-metrics.validate.json'); q.write_text(json.dumps(data, indent=2) + '\n')"
+      - cargo run -- orchestrate --skip-ingest --events-out ./artifacts/cache-metrics.sample.jsonl --month 2026-02 --pricing ./benchmarks/results/pricing.cache-metrics.validate.json --aggregate-cache-path ./benchmarks/results/orchestrate-aggregate-cache.validate.json --pipeline-summary-path ./benchmarks/results/orchestrate-cache-summary.third.json --skip-pricing-reconcile --skip-bench --skip-gate --on-unpriced skip
+      - |
+        python3 - <<'PY'
+        import json
+        import pathlib
+
+        first = json.loads(pathlib.Path("./benchmarks/results/orchestrate-cache-summary.first.json").read_text())["aggregate_cache"]
+        second = json.loads(pathlib.Path("./benchmarks/results/orchestrate-cache-summary.second.json").read_text())["aggregate_cache"]
+        third = json.loads(pathlib.Path("./benchmarks/results/orchestrate-cache-summary.third.json").read_text())["aggregate_cache"]
+        assert first["enabled"] is True and first["miss_count"] >= 1
+        assert second["hit_count"] >= 1
+        assert third["invalidate_count"] >= 1 and third["miss_count"] >= 1
+        print("cache-metrics validation passed (miss -> hit -> invalidate)")
+        PY
+
+  ingest:proxyapi:validate:
+    deps:
+      - artifacts:ensure
+    cmds:
+      - cargo run -- ingest --provider proxyapi --limit 500 --output ./artifacts/proxyapi.ingested.sample.jsonl --summary-json-path ./benchmarks/results/proxyapi-ingest-summary.json
+
+  orchestrate:proxyapi:validate:
+    deps:
+      - artifacts:ensure
+    cmds:
+      - printf '%s\n' '{"provider":"proxyapi","model":"proxyapi-default","session_id":"proxyapi-validate","timestamp":"2026-02-01T00:00:00Z","usage":{"input_tokens":1000,"output_tokens":500,"cache_write_tokens":0,"cache_read_tokens":0,"tool_input_tokens":0,"tool_output_tokens":0}}' > ./artifacts/proxyapi.orchestrated.sample.jsonl
+      - cargo run -- orchestrate --skip-ingest --events-out ./artifacts/proxyapi.orchestrated.sample.jsonl --state-file ./benchmarks/results/proxyapi-ingest-state.json --summary-json-path ./benchmarks/results/proxyapi-ingest-summary.json --ingest-cache-path ./benchmarks/results/proxyapi-orchestrate-ingest-cache.json --aggregate-cache-path ./benchmarks/results/proxyapi-orchestrate-aggregate-cache.json --pipeline-summary-path ./benchmarks/results/proxyapi-orchestrate-summary.json --pricing-reconcile-dry-run --pricing-reconcile-allow-unpriced --on-unpriced skip --ui-snapshot-path ./benchmarks/results/proxyapi-ui-snapshot.json
+
+  ledger:proxyapi:e2e:validate:
+    deps:
+      - ingest:proxyapi:validate
+      - orchestrate:proxyapi:validate
+
+  ledger:refresh:
+    cmds:
+      - python3 ./scripts/refresh_ledger.py --allow-missing-snapshot
+
+  ledger:check:
+    cmds:
+      - python3 ./scripts/refresh_ledger.py --allow-missing-snapshot --skip-runtime-discovery
+      - git diff --exit-code -- ./ledger/unified_model_provider_ledger.csv ./ledger/unified_model_provider_ledger.schema.sql ./ledger/unified_model_provider_ledger.seed.sql ./ledger/unified_model_provider_pareto.csv ./ledger/unified_model_provider_pareto.view.sql ./ledger/cliproxyapi_runtime_metrics_snapshot.csv
+
+  ledger:sql:validate:
+    cmds:
+      - python3 -c "import sqlite3; conn=sqlite3.connect(':memory:'); conn.executescript(open('./ledger/unified_model_provider_ledger.schema.sql','r',encoding='utf-8').read()); conn.executescript(open('./ledger/unified_model_provider_ledger.seed.sql','r',encoding='utf-8').read()); rows=conn.execute('SELECT COUNT(*) FROM unified_model_provider_ledger').fetchone()[0]; print(f'ledger_rows={rows}')"

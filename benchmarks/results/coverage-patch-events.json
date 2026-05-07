@@ -1,0 +1,15 @@
+{
+  "model_aliases_patch": {},
+  "notes": [
+    "Fill placeholder canonical names before applying patch.",
+    "Set model rates to real USD/MTok values."
+  ],
+  "provider_aliases_patch": {},
+  "providers_patch": {},
+  "summary": {
+    "events": 4,
+    "missing_model_provider_count": 0,
+    "missing_provider_count": 0,
+    "unpriced_events": 0
+  }
+}

@@ -1,0 +1,13 @@
+repos:
+  - repo: local
+    hooks:
+      - id: security-guard-hook-wiring
+        name: security guard hook wiring
+        entry: bash -c 'test -x .github/hooks/security-guard.sh && test -x .github/scripts/security-guard.sh'
+        language: system
+        pass_filenames: false
+      - id: whitespace-check
+        name: Git whitespace check
+        entry: git diff --cached --check
+        language: system
+        pass_filenames: false

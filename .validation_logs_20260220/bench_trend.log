@@ -1,0 +1,4 @@
+=== CMD: task bench:trend
+task: No tasks with description available. Try --list-all to list all tasks
+task: Task "bench:trend" does not exist
+=== EXIT: 200

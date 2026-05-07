@@ -1,0 +1,41 @@
+name: Ledger Diff Check
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+
+on:
+  pull_request:
+    paths:
+      - "tokenledger/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "tokenledger/**"
+permissions:
+  contents: read
+
+
+jobs:
+  ledger-diff-check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tokenledger
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Refresh deterministic ledger artifacts
+        run: |
+          python3 ./scripts/refresh_ledger.py --allow-missing-snapshot --skip-runtime-discovery
+
+      - name: Ensure generated artifacts are committed
+        run: |
+          git diff --exit-code -- ./ledger/unified_model_provider_ledger.csv ./ledger/unified_model_provider_ledger.schema.sql ./ledger/unified_model_provider_ledger.seed.sql ./ledger/unified_model_provider_pareto.csv ./ledger/unified_model_provider_pareto.view.sql ./ledger/cliproxyapi_runtime_metrics_snapshot.csv

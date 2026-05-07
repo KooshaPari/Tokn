@@ -1,0 +1,23 @@
+{
+  "require_baseline_for_regression_checks": true,
+  "scenarios": {
+    "cold-backfill": {
+      "max_ms": 3000,
+      "min_events_per_sec": 100,
+      "max_elapsed_regression_pct": 25,
+      "max_eps_drop_pct": 25
+    },
+    "warm-tail": {
+      "max_ms": 1500,
+      "min_events_per_sec": 1000,
+      "max_elapsed_regression_pct": 25,
+      "max_eps_drop_pct": 25
+    },
+    "burst": {
+      "max_ms": 2000,
+      "min_events_per_sec": 500,
+      "max_elapsed_regression_pct": 25,
+      "max_eps_drop_pct": 25
+    }
+  }
+}

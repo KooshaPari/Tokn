@@ -1,0 +1,23 @@
+{
+  "contract_name": "provider-ledger-schema",
+  "module": "provider-ledger-schema-v1",
+  "schema": {
+    "canonical_path": "ledger/provider-ledger-schema-v1/unified_model_provider_ledger.schema.sql",
+    "source_of_truth_path": "ledger/unified_model_provider_ledger.schema.sql"
+  },
+  "ownership": {
+    "team": "tokenledger",
+    "scope": "model/provider unified ledger schema artifacts"
+  },
+  "semver": {
+    "version": "1.0.0",
+    "policy": "MAJOR for breaking schema/interface changes, MINOR for additive backward-compatible changes, PATCH for non-breaking fixes/documentation metadata updates"
+  },
+  "required_artifacts": [
+    "docs/changes/shared-modules/provider-ledger-schema-v1/proposal.md",
+    "docs/changes/shared-modules/provider-ledger-schema-v1/tasks.md",
+    "docs/contracts/provider-ledger-schema.contract.json",
+    "ledger/provider-ledger-schema-v1/unified_model_provider_ledger.schema.sql",
+    "scripts/validate_provider_ledger_module.sh"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "generated_at": "2026-02-20T15:46:59.679795Z",
+    "month": "2026-02",
+    "source_events_count": 2
+  },
+  "missing_models_by_provider": {
+    "codex": {
+      "nonexistent-model": {
+        "cache_read_usd_per_mtok": null,
+        "cache_write_usd_per_mtok": null,
+        "input_usd_per_mtok": 0.0,
+        "output_usd_per_mtok": 0.0,
+        "tool_input_usd_per_mtok": null,
+        "tool_output_usd_per_mtok": null
+      }
+    }
+  },
+  "missing_providers": {},
+  "suggested_aliases": {
+    "model_aliases_by_provider": {
+      "codex": {
+        "nonexistent-model": []
+      }
+    },
+    "provider_aliases": {}
+  }
+}

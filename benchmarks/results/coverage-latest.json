@@ -1,0 +1,13 @@
+{
+  "month": "2026-02",
+  "totals": {
+    "events": 4,
+    "tokens": 10450000
+  },
+  "priced_count": 4,
+  "unpriced_count": 0,
+  "missing_providers": [],
+  "missing_models_by_provider": {},
+  "suggested_provider_aliases": {},
+  "suggested_model_aliases_by_provider": {}
+}

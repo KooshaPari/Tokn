@@ -1,0 +1,33 @@
+[package]
+name = "tokenledger-rs"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Token management and pricing governance CLI for AI coding agents"
+
+[[bin]]
+name = "tokenledger"
+path = "src/main.rs"
+
+[lib]
+name = "tokenledger"
+path = "src/lib.rs"
+
+[dependencies]
+anyhow.workspace = true
+chrono.workspace = true
+clap.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+reqwest.workspace = true
+thiserror.workspace = true
+async-trait.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+walkdir.workspace = true
+serde_yaml_ng.workspace = true
+tempfile.workspace = true
+
+pareto-rs = { path = "../pareto-rs" }

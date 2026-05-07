@@ -1,0 +1,19 @@
+{
+  "model_aliases_patch": {
+    "codex": {
+      "nonexistent-model": "<canonical-model>"
+    }
+  },
+  "notes": [
+    "Fill placeholder canonical names before applying patch.",
+    "Set model rates to real USD/MTok values."
+  ],
+  "provider_aliases_patch": {},
+  "providers_patch": {},
+  "summary": {
+    "events": 2,
+    "missing_model_provider_count": 1,
+    "missing_provider_count": 0,
+    "unpriced_events": 1
+  }
+}

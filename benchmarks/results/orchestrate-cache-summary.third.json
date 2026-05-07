@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-02-21T11:08:51.711382Z",
+  "month_filter": "2026-02",
+  "events_out": "./artifacts/cache-metrics.sample.jsonl",
+  "pricing": "./benchmarks/results/pricing.cache-metrics.validate.json",
+  "on_unpriced": "skip",
+  "duration_ms": 9,
+  "ingest": {
+    "skipped": true,
+    "cache_enabled": false,
+    "cache_hit": false,
+    "cache_path": null,
+    "duration_ms": 0,
+    "summary_json_path": null,
+    "summary": null
+  },
+  "pricing_reconcile": {
+    "skipped": true,
+    "duration_ms": 0,
+    "run_summary_path": null,
+    "latest_summary_path": null,
+    "summary": null
+  },
+  "monthly": {
+    "skipped": false,
+    "duration_ms": 1
+  },
+  "daily": {
+    "skipped": false,
+    "duration_ms": 1
+  },
+  "aggregate_cache": {
+    "enabled": true,
+    "cache_path": "./benchmarks/results/orchestrate-aggregate-cache.validate.json",
+    "hit_count": 0,
+    "miss_count": 1,
+    "invalidate_count": 1
+  },
+  "bench": {
+    "skipped": true,
+    "duration_ms": 0,
+    "latest_summary_path": null,
+    "baseline_used": false,
+    "report": null
+  },
+  "perf_gate": {
+    "skipped": true,
+    "duration_ms": 0
+  },
+  "ui_snapshot_path": null
+}

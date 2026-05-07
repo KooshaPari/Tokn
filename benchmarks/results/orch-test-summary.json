@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-02-21T11:02:59.791611Z",
+  "month_filter": "2026-02",
+  "events_out": "./examples/events.jsonl",
+  "pricing": "pricing.example.json",
+  "on_unpriced": "error",
+  "duration_ms": 18,
+  "ingest": {
+    "skipped": true,
+    "cache_enabled": false,
+    "cache_hit": false,
+    "cache_path": null,
+    "duration_ms": 0,
+    "summary_json_path": null,
+    "summary": null
+  },
+  "pricing_reconcile": {
+    "skipped": true,
+    "duration_ms": 0,
+    "run_summary_path": null,
+    "latest_summary_path": null,
+    "summary": null
+  },
+  "monthly": {
+    "skipped": false,
+    "duration_ms": 4
+  },
+  "daily": {
+    "skipped": false,
+    "duration_ms": 2
+  },
+  "bench": {
+    "skipped": true,
+    "duration_ms": 0,
+    "latest_summary_path": null,
+    "baseline_used": false,
+    "report": null
+  },
+  "perf_gate": {
+    "skipped": true,
+    "duration_ms": 0
+  },
+  "ui_snapshot_path": "./benchmarks/results/orch-test-ui.json"
+}

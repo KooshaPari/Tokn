@@ -1,0 +1,17 @@
+=== CMD: cargo test
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.15s
+     Running unittests src/main.rs (target/debug/deps/tokenledger-08f1ea829c034c8a)
+
+running 8 tests
+test tests::variable_cost_uses_cache_and_tool_rates ... ok
+test tests::validate_aliases_rejects_unknown_targets ... ok
+test tests::extract_json_objects_finds_nested_json_in_blob ... ok
+test tests::parse_month_ok ... ok
+test tests::provider_and_model_filters_apply_with_aliases ... ok
+test tests::normalize_ingest_record_extracts_usage ... ok
+test tests::ingest_checkpoint_round_trip ... ok
+test tests::apply_bench_baseline_populates_delta_fields ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+=== EXIT: 0

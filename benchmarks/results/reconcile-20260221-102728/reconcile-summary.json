@@ -1,0 +1,51 @@
+{
+  "pricing": "pricing.example.json",
+  "month_filter": null,
+  "workdir": "./benchmarks/results/reconcile-20260221-102728",
+  "allow_unpriced": true,
+  "dry_run": true,
+  "write_backup": false,
+  "allow_overwrite_model_rates": false,
+  "artifacts": {
+    "patch_path": "./benchmarks/results/reconcile-20260221-102728/pricing-patch.reconcile.json",
+    "unpriced_events_path": "./benchmarks/results/reconcile-20260221-102728/unpriced-events.reconcile.jsonl",
+    "backup_path": null
+  },
+  "coverage": {
+    "month": "2026-02",
+    "totals": {
+      "events": 1,
+      "tokens": 1500
+    },
+    "priced_count": 0,
+    "unpriced_count": 1,
+    "missing_providers": [
+      "proxyapi"
+    ],
+    "missing_models_by_provider": {},
+    "suggested_provider_aliases": {
+      "proxyapi": []
+    },
+    "suggested_model_aliases_by_provider": {}
+  },
+  "pricing_apply": {
+    "changed": true,
+    "wrote_pricing": false,
+    "metadata_updated": false,
+    "summary": {
+      "providers_added": 1,
+      "models_added": 0,
+      "aliases_added": 0,
+      "models_skipped_existing": 0
+    }
+  },
+  "pricing_check": {
+    "passed": true,
+    "month": "2026-02",
+    "priced_count": 0,
+    "unpriced_count": 1,
+    "details": [
+      "proxyapi:proxyapi-default (events=1)"
+    ]
+  }
+}

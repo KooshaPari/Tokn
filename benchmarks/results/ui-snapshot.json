@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-02-21T11:02:35.394218Z",
+  "month": "2025-09",
+  "mode": "compact",
+  "totals": {
+    "cost_usd": 37.77,
+    "tokens": 28616113,
+    "blended_usd_per_mtok": 1.3198,
+    "session_count": 500,
+    "skipped_unpriced_count": 0
+  },
+  "top_providers": [
+    {
+      "name": "codex",
+      "tokens": 28616113,
+      "total_cost_usd": 37.77,
+      "blended_usd_per_mtok": 1.3198,
+      "session_count": 500
+    }
+  ],
+  "top_models": [
+    {
+      "name": "gpt-5",
+      "tokens": 28616113,
+      "total_cost_usd": 37.77,
+      "blended_usd_per_mtok": 1.3198,
+      "session_count": 500
+    }
+  ],
+  "suggestions": [
+    "Cache-read share is low (<10%): improve prompt prefix reuse and session stickiness for Claude-style caching."
+  ],
+  "reconcile_latest_summary_path": "benchmarks/results/reconcile-latest-summary.json"
+}
