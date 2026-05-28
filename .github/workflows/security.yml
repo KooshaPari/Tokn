@@ -20,7 +20,7 @@ permissions:
 jobs:
   security-audit:
     name: Rust Security Audit
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -41,7 +41,7 @@ jobs:
 
   security-sast:
     name: SAST Scan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       security-events: write
@@ -73,7 +73,7 @@ jobs:
 
   security-dependencies:
     name: Dependency Audit
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -85,7 +85,7 @@ jobs:
 
   security-secrets:
     name: Secret Detection
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4

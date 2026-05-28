@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: contains(github.event.head_commit.message, 'release:') || contains(github.event.head_commit.message, 'chore(release)')
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -49,12 +49,12 @@ jobs:
 
   promote:
     needs: release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Promote to staging
-        uses: KooshaPari/phenotypeActions/promote@main
+        uses: KooshaPari/phenotypeActions/promote@48772d7560c964fff01a209742429f24283e96cf
         with:
           version: ${{ needs.release.outputs.version }}
           channel: beta
