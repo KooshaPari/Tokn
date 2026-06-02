@@ -1,3 +1,6 @@
+> **Work state:** ACTIVE · **Progress:** `█████░░░░░ 50%`
+> Rust token-ledger / usage accounting (tokenledger); 444 files, pre-1.0 · updated 2026-06-02
+
 ![Build Status](https://github.com/KooshaPari/Tokn/actions/workflows/quality-gate.yml/badge.svg)
 ![Security Audit](https://github.com/KooshaPari/Tokn/actions/workflows/security-guard.yml/badge.svg)
 ![Policy Compliance](https://github.com/KooshaPari/Tokn/actions/workflows/policy-gate.yml/badge.svg)
