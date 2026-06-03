@@ -1,5 +1,5 @@
-> **Work state:** ACTIVE · **Progress:** `█████░░░░░ 50%`
-> Rust token-ledger / usage accounting (tokenledger); 444 files, pre-1.0 · updated 2026-06-02
+> **Work state:** ACTIVE · **Progress:** `███████░░░ 65%`
+> Token-ledger / usage accounting (tokenledger) **and the canonical Phenotype Rust ROUTING substrate** — `tokenledger::routing` (hexagonal: pareto_router/ports/adapters). Consumed by OmniRoute per ADR-001. · updated 2026-06-03
 
 ![Build Status](https://github.com/KooshaPari/Tokn/actions/workflows/quality-gate.yml/badge.svg)
 ![Security Audit](https://github.com/KooshaPari/Tokn/actions/workflows/security-guard.yml/badge.svg)
