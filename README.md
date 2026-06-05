@@ -175,4 +175,4 @@ MIT License - see LICENSE file
 
 **Status**: Active development (agent provider expansion)  
 **Maintained by**: Phenotype Org  
-**Last Updated**: 2026-04-24
+**Last Updated**: 2026-06-03
