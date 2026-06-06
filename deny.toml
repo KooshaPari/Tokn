@@ -23,7 +23,11 @@ allow = [
     "Unlicense",
     "WTFPL",
 ]
-
+[bans]
+multiple-versions = "warn"
+wildcards = "warn"
+highlight = "all"
+workspace-default-features = "warn"
 [sources]
 unknown-git = "deny"
 allow-registry = ["https://github.com/rust-lang/crates.io-index"]
