@@ -1,16 +1,14 @@
 name: Release Drafter
 on:
   workflow_dispatch:
-
-permissions:
-  contents: read
-
-
-on:
   push:
     branches: [main]
   pull_request:
     types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

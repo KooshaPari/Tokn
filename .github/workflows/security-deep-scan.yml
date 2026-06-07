@@ -7,7 +7,6 @@ on:
     branches: [main, master]
   schedule:
     - cron: '0 0 * * *'  # Daily
-  security-events: write
 
 jobs:
   # 1. Dependency Vulnerability Scan (Snyk-style)
@@ -91,6 +90,7 @@ jobs:
           sarif_file: 'trivy-image-results.sarif'
 permissions:
   contents: read
+  security-events: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

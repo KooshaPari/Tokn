@@ -1,8 +1,6 @@
 name: OpenSSF Scorecard
 on:
   workflow_dispatch:
-permissions:
-  contents: read
   branch_protection_rule:
   schedule:
     - cron: '17 3 * * 6'

@@ -11,7 +11,7 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 
 permissions:
@@ -56,7 +56,7 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v4@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Promote to staging
-        uses: KooshaPari/phenotypeActions/promote@0000000000000000000000000000000000000000 # placeholder SHA; source 404s; no live equivalent (audit 2026-06-05 found no matching file in 15 live org repos; prior candidate KooshaPari/phenotypeActions/promote@0000000000000000000000000000000000000000 # placeholder SHA; source 404s; FORK from PhenoDevOps/.github/workflows/promote.yml@edbdfad00abfe2f691b553cce00f0fd9e3485d72)
+        uses: KooshaPari/phenotypeActions/promote@main
         with:
           version: ${{ needs.release.outputs.version }}
           channel: beta
