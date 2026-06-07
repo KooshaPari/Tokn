@@ -10,11 +10,14 @@ on:
 permissions:
   contents: read
   security-events: write
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 
 jobs:
   analyze:
-    uses: KooshaPari/phenoShared/.github/workflows/codeql.yml@main
+    uses: KooshaPari/phenoShared/.github/workflows/codeql.yml@72b9c6cbdb24c49189b0e7c7395d874830d1ed87
     permissions:
       contents: read
       actions: read

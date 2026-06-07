@@ -21,9 +21,6 @@ on:
       - "tokenledger/Cargo.lock"
       - "tokenledger/examples/**"
       - "tokenledger/pricing.example.json"
-permissions:
-  contents: read
-
 jobs:
   bench-perf-gate:
     runs-on: ubuntu-latest
@@ -32,13 +29,13 @@ jobs:
         working-directory: tokenledger
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v4@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cache cargo registry and target
-        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        uses: Swatinem/rust-cache@874b06e0d3f63371f9ddbee43d4c8ebc73021583 # v-latest
 
       - name: Run benchmark scenarios
         run: cargo run --quiet -- bench --scenario all --events ./examples/events.jsonl --pricing ./pricing.example.json --json-output > /tmp/tokenledger-bench.json
@@ -48,3 +45,10 @@ jobs:
 
       - name: Run strict perf gate (cold-backfill + warm-tail + burst)
         run: PERF_STRICT=1 PERF_BASELINE=./benchmarks/results/latest-summary.json ./scripts/perf_gate.sh
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
