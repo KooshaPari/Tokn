@@ -9,8 +9,13 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   release-drafter:
+    timeout-minutes: 30
     uses: KooshaPari/phenoShared/.github/workflows/reusable-release-drafter.yml@main
     permissions:
       contents: write

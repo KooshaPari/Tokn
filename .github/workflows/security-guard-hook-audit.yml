@@ -10,6 +10,11 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   guard:
+    timeout-minutes: 30
     uses: KooshaPari/phenoShared/.github/workflows/security-guard-hook-audit.yml@main

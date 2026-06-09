@@ -24,15 +24,20 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   bench-perf-gate:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: tokenledger
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@v4 # v4
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable

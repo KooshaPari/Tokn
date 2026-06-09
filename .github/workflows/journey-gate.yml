@@ -21,7 +21,10 @@
 name: Journey Gate
 
 on:
-  push:
+
+permissions:
+  contents: read
+push:
     branches: [main]
   pull_request:
     branches: [main]
@@ -46,6 +49,10 @@ on:
 
 env:
   PHENOTYPE_JOURNEY_STRICT: ${{ inputs.strict_mode || 'true' }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   journey-gate:
@@ -232,6 +239,7 @@ jobs:
   # Prevents a silent pass when a repo has no journey coverage yet.
   # --------------------------------------------------------------------------
   stub-mode:
+    timeout-minutes: 30
     name: Journey Gate — No Manifests Found
     runs-on: ubuntu-latest
     needs: journey-gate

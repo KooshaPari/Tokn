@@ -1,7 +1,10 @@
 name: cargo-deny
 
 on:
-  workflow_dispatch:
+
+permissions:
+  contents: read
+workflow_dispatch:
   pull_request:
     paths:
       - 'Cargo.toml'
@@ -15,8 +18,13 @@ on:
   schedule:
     - cron: '0 9 * * 1'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   cargo-deny:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

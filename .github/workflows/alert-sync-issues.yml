@@ -7,8 +7,13 @@ permissions:
   contents: read
 
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   sync:
+    timeout-minutes: 30
     uses: KooshaPari/phenoShared/.github/workflows/alert-sync-issues.yml@main
     with:
       auto-label: auto-alert-sync

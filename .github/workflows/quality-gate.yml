@@ -13,13 +13,18 @@ env:
   RUST_BACKTRACE: 1
   CARGO_TERM_COLOR: always
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   quality:
+    timeout-minutes: 30
     name: Quality Gate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@v4 # v4
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -39,11 +44,12 @@ jobs:
         run: cargo deny check
 
   docs:
+    timeout-minutes: 30
     name: Documentation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@v4 # v4
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable

@@ -1,11 +1,19 @@
 name: TruffleHog Secrets Scan
 on:
-  push:
+
+permissions:
+  contents: read
+push:
     branches: ["**"]
   pull_request:
     branches: ["**"]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   trufflehog:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

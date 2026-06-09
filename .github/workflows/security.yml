@@ -13,13 +13,18 @@ permissions:
   security-events: write
   actions: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   security-audit:
+    timeout-minutes: 30
     name: Rust Security Audit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@v4 # v4
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -36,6 +41,7 @@ jobs:
           arguments: --strict
 
   security-sast:
+    timeout-minutes: 30
     name: SAST Scan
     runs-on: ubuntu-latest
     permissions:
@@ -43,7 +49,7 @@ jobs:
       security-events: write
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@v4 # v4
 
       - name: Run Semgrep
         uses: returntocorp/semgrep-action@713efdd345f3035192eaa63f56867b88e63e4e5d # v1
@@ -68,11 +74,12 @@ jobs:
           sarif_file: 'trivy-results.sarif'
 
   security-dependencies:
+    timeout-minutes: 30
     name: Dependency Audit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@v4 # v4
 
       - name: Run cargo-outdated
         run: |
@@ -80,11 +87,12 @@ jobs:
           cargo outdated --exit-code 0 || true
 
   security-secrets:
+    timeout-minutes: 30
     name: Secret Detection
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@v4 # v4
 
       - name: Secrets scan (trufflehog)
         uses: trufflesecurity/trufflehog@3fc0c2aa6648d54242e4af6fbfde0701796e4fb0  # was: @main

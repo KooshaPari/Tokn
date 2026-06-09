@@ -12,12 +12,17 @@ permissions:
   security-events: write
 
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # 1. Dependency Vulnerability Scan (Snyk-style)
   dependency-scan:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@v4 # v4
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.36.0
@@ -35,9 +40,10 @@ jobs:
 
   # 2. Secret Scanning (GitLeaks)
   secret-scan:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@v4 # v4
         with:
           fetch-depth: 0
       
@@ -48,9 +54,10 @@ jobs:
 
   # 3. Code Security Analysis (CodeQL)
   codeql-analysis:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@v4 # v4
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
@@ -62,9 +69,10 @@ jobs:
 
   # 4. Container Security (if Dockerfile exists)
   container-scan:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@v4 # v4
 
       - name: Detect Dockerfile
         id: dockerfile

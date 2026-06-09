@@ -8,8 +8,13 @@ on:
 
 permissions: read-all
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   analysis:
+    timeout-minutes: 30
     name: Scorecard analysis
     runs-on: ubuntu-latest
     permissions:
@@ -19,7 +24,7 @@ jobs:
       actions: read
 
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@v4 # v4
         with:
           persist-credentials: false
 
