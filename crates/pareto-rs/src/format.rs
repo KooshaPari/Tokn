@@ -19,7 +19,7 @@ mod tests {
 
     #[test]
     fn test_round2_basic() {
-        assert!((round2(std::f64::consts::PI) - std::f64::consts::PI.round()).abs() < TOL_2);
+        assert!((round2(std::f64::consts::PI) - 314.0 / 100.0).abs() < TOL_2);
         assert_eq!(round2(1.234), 1.23);
         assert_eq!(round2(1.999), 2.00);
     }
