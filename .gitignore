@@ -1,8 +1,27 @@
+# Phenotype-org standard .gitignore — Rust
+# Source: https://github.com/KooshaPari/phenotype-tooling/blob/main/templates/gitignore-rust
+
+# Build artifacts
+/target/
+**/*.rs.bk
+Cargo.lock.bak
+
+# Editor
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Repo-specific lines preserved from prior .gitignore:
 target/
 docs/package-lock.json
 *.profraw
-
-# Added by Spec Kitty CLI (auto-managed)
 .opencode/
 .windsurf/
 .qwen/
@@ -11,9 +30,6 @@ docs/package-lock.json
 .amazonq/
 .github/copilot/
 .kittify/.dashboard
-
-
-# AI tool artifacts
 .claude/
 .codex/
 .cursor/
