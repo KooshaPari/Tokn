@@ -1,5 +1,6 @@
 use anyhow::Result;
 use clap::Parser;
+use clap_ext::prelude::setup_tracing;
 
 use tokenledger::analytics::{run_coverage, run_daily, run_monthly};
 use tokenledger::bench::run_bench;
@@ -14,6 +15,10 @@ use tokenledger::pricing::{
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
+    setup_tracing(cli.verbosity.to_filter());
+    if let Some(cfg) = &cli.config.config {
+        tracing::debug!(config = %cfg.display(), "config override");
+    }
     match cli.command {
         Command::Monthly(args) => run_monthly(args),
         Command::Daily(args) => run_daily(args),
