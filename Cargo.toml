@@ -24,3 +24,4 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 walkdir = "2.5"
 serde_yaml_ng = "0.10"
 tempfile = "3.14"
+pheno-cli-base = { path = "../pheno-cli-base" }
