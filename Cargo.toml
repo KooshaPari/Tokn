@@ -25,3 +25,4 @@ walkdir = "2.5"
 serde_yaml_ng = "0.10"
 tempfile = "3.14"
 pheno-cli-base = { path = "../pheno-cli-base" }
+pheno-otel = { path = "../pheno-otel" }
