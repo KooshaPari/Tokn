@@ -45,3 +45,7 @@ clean:
 # Documentation
 doc:
   cargo doc --no-deps --all
+
+# Measure code coverage (SSOT: see grade.sh for the canonical command)
+coverage:
+    cargo llvm-cov --workspace --fail-under-lines 85
