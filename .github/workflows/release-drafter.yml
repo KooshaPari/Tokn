@@ -1,17 +1,23 @@
 name: Release Drafter
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
 
 on:
   push:
     branches: [main]
   pull_request:
     types: [opened, reopened, synchronize]
-
-permissions:
-  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   release-drafter:
-    uses: KooshaPari/phenoShared/.github/workflows/reusable-release-drafter.yml@main
+    uses: KooshaPari/phenoShared/.github/workflows/reusable-release-drafter.yml@72b9c6cbdb24c49189b0e7c7395d874830d1ed87
     permissions:
       contents: write
       pull-requests: write

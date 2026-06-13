@@ -12,6 +12,9 @@ permissions:
   contents: read
   security-events: write
   actions: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   security-audit:
@@ -19,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v4@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -27,7 +30,7 @@ jobs:
       - name: Run cargo-audit
         uses: rustsec/audit-check@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
 
       - name: Run cargo-deny
         uses: cargo-bins/cargo-deny-action@91bf2b620e09e18d6eb78b92e7861937469acedb # v6
@@ -43,7 +46,7 @@ jobs:
       security-events: write
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v4@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Run Semgrep
         uses: returntocorp/semgrep-action@713efdd345f3035192eaa63f56867b88e63e4e5d # v1
@@ -55,7 +58,7 @@ jobs:
           upload-to-sarif: true
 
       - name: Run Trivy filesystem scan
-        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # was: @master
+        uses: aquasecurity/trivy-action@bfa4b33a029b9aa80ddb784b45574c30e072c59e # v-latest: @master
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -72,7 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v4@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Run cargo-outdated
         run: |
@@ -84,10 +87,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v4@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Secrets scan (trufflehog)
-        uses: trufflesecurity/trufflehog@3fc0c2aa6648d54242e4af6fbfde0701796e4fb0  # was: @main
+        uses: trufflesecurity/trufflehog@75add79b929b263dae147d2e5bcf0daf292165cf # v-latest: @main
         with:
           path: ./
           base: ${{ github.event.repository.default_branch }}
