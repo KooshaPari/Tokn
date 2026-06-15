@@ -26,6 +26,10 @@ clippy:
 test:
   cargo test --workspace
 
+# Coverage report (SSOT for how to measure coverage).
+coverage:
+  cargo tarpaulin --workspace
+
 # Build
 build:
   cargo build --release
