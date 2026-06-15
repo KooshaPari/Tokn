@@ -12,6 +12,11 @@ permissions:
   security-events: write
 
 
+
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   analyze:
     uses: KooshaPari/phenoShared/.github/workflows/codeql.yml@main
