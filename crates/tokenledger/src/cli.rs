@@ -1,5 +1,6 @@
 use chrono::{DateTime, Utc};
 use clap::{Args, Parser, Subcommand, ValueEnum};
+use clap_ext::prelude::{ConfigArg, Verbosity};
 use serde::Serialize;
 use std::path::PathBuf;
 
@@ -7,6 +8,14 @@ use std::path::PathBuf;
 #[command(name = "tokenledger")]
 #[command(about = "Fast token/session usage and blended cost analytics")]
 pub struct Cli {
+    /// Verbosity (-v, -vv, -vvv for more, -q to silence)
+    #[command(flatten)]
+    pub verbosity: Verbosity,
+
+    /// Optional config file override (PHENOTYPE_CONFIG env var)
+    #[command(flatten)]
+    pub config: ConfigArg,
+
     #[command(subcommand)]
     pub command: Command,
 }
