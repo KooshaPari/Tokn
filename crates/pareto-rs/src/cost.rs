@@ -165,3 +165,312 @@ pub fn build_pricing_audits(
     }
     audits
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::Utc;
+
+    fn test_rate() -> PricingRate {
+        PricingRate {
+            input_per_m: 2.5,
+            output_per_m: 10.0,
+            use_default: false,
+        }
+    }
+
+    #[test]
+    fn test_calc_total_cost_basic() {
+        let cost = calc_total_cost(1_000_000, 500_000, test_rate());
+        assert!((cost - 7.5).abs() < 0.001, "Expected ~7.5, got {}", cost);
+    }
+
+    #[test]
+    fn test_calc_total_cost_zero_tokens() {
+        let cost = calc_total_cost(0, 0, test_rate());
+        assert_eq!(cost, 0.0);
+    }
+
+    #[test]
+    fn test_calc_total_cost_default() {
+        let rate = PricingRate {
+            input_per_m: 0.0,
+            output_per_m: 0.0,
+            use_default: true,
+        };
+        let cost = calc_total_cost(1_000_000, 500_000, rate);
+        assert_eq!(cost, DEFAULT_CALL_COST);
+    }
+
+    #[test]
+    fn test_build_snapshot_basic() {
+        let ts = Utc::now();
+        let rate = test_rate();
+        let snapshot = build_snapshot(
+            "id-1".to_string(),
+            "openai",
+            "gpt-4o",
+            1_000_000,
+            500_000,
+            rate,
+            Some(150.0),
+            Some(RoutingCriteria::Cost),
+            Some(0.95),
+            ts,
+        );
+        assert_eq!(snapshot.id, "id-1");
+        assert_eq!(snapshot.provider, "openai");
+        assert_eq!(snapshot.model, "gpt-4o");
+        assert_eq!(snapshot.input_tokens, 1_000_000);
+        assert_eq!(snapshot.output_tokens, 500_000);
+        assert!((snapshot.total_cost - 7.5).abs() < 0.001);
+        assert_eq!(snapshot.latency_ms, Some(150.0));
+        assert_eq!(snapshot.routing_criteria, Some("cost".to_string()));
+        assert_eq!(snapshot.routing_score, Some(0.95));
+    }
+
+    #[test]
+    fn test_build_snapshot_default_rate() {
+        let ts = Utc::now();
+        let rate = PricingRate {
+            input_per_m: 0.0,
+            output_per_m: 0.0,
+            use_default: true,
+        };
+        let snapshot = build_snapshot(
+            "id-2".to_string(),
+            "openai",
+            "gpt-4o",
+            1_000_000,
+            500_000,
+            rate,
+            None,
+            None,
+            None,
+            ts,
+        );
+        assert_eq!(snapshot.total_cost, DEFAULT_CALL_COST);
+        assert_eq!(snapshot.input_cost, 0.0);
+        assert_eq!(snapshot.output_cost, 0.0);
+    }
+
+    #[test]
+    fn test_aggregate_costs_empty() {
+        let agg = aggregate_costs(&[]);
+        assert_eq!(agg.call_count, 0);
+        assert_eq!(agg.total_cost, 0.0);
+        assert_eq!(agg.total_input_tokens, 0);
+        assert_eq!(agg.total_output_tokens, 0);
+    }
+
+    #[test]
+    fn test_aggregate_costs_single() {
+        let ts = Utc::now();
+        let snapshot = CostSnapshot {
+            id: "s1".to_string(),
+            provider: "openai".to_string(),
+            model: "gpt-4o".to_string(),
+            input_tokens: 1_000_000,
+            output_tokens: 500_000,
+            input_cost: 2.5,
+            output_cost: 5.0,
+            total_cost: 7.5,
+            latency_ms: Some(100.0),
+            timestamp: ts,
+            routing_criteria: None,
+            routing_score: None,
+        };
+        let agg = aggregate_costs(&[snapshot]);
+        assert_eq!(agg.call_count, 1);
+        assert_eq!(agg.total_cost, 7.5);
+        assert_eq!(agg.total_input_tokens, 1_000_000);
+        assert_eq!(agg.total_output_tokens, 500_000);
+    }
+
+    #[test]
+    fn test_aggregate_costs_multiple() {
+        let ts = Utc::now();
+        let s1 = CostSnapshot {
+            id: "s1".to_string(),
+            provider: "openai".to_string(),
+            model: "gpt-4o".to_string(),
+            input_tokens: 1_000_000,
+            output_tokens: 500_000,
+            input_cost: 2.5,
+            output_cost: 5.0,
+            total_cost: 7.5,
+            latency_ms: Some(100.0),
+            timestamp: ts,
+            routing_criteria: None,
+            routing_score: None,
+        };
+        let s2 = CostSnapshot {
+            id: "s2".to_string(),
+            provider: "anthropic".to_string(),
+            model: "claude-3".to_string(),
+            input_tokens: 2_000_000,
+            output_tokens: 1_000_000,
+            input_cost: 6.0,
+            output_cost: 12.0,
+            total_cost: 18.0,
+            latency_ms: Some(200.0),
+            timestamp: ts,
+            routing_criteria: None,
+            routing_score: None,
+        };
+        let agg = aggregate_costs(&[s1, s2]);
+        assert_eq!(agg.call_count, 2);
+        assert_eq!(agg.total_cost, 25.5);
+        assert_eq!(agg.total_input_tokens, 3_000_000);
+        assert_eq!(agg.total_output_tokens, 1_500_000);
+    }
+
+    #[test]
+    fn test_aggregate_by_provider_empty() {
+        let result = aggregate_by_provider(&[]);
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn test_aggregate_by_provider_single_provider() {
+        let ts = Utc::now();
+        let s1 = CostSnapshot {
+            id: "s1".to_string(),
+            provider: "openai".to_string(),
+            model: "gpt-4o".to_string(),
+            input_tokens: 1_000_000,
+            output_tokens: 500_000,
+            input_cost: 2.5,
+            output_cost: 5.0,
+            total_cost: 7.5,
+            latency_ms: Some(100.0),
+            timestamp: ts,
+            routing_criteria: None,
+            routing_score: None,
+        };
+        let s2 = CostSnapshot {
+            id: "s2".to_string(),
+            provider: "openai".to_string(),
+            model: "gpt-4o".to_string(),
+            input_tokens: 2_000_000,
+            output_tokens: 1_000_000,
+            input_cost: 5.0,
+            output_cost: 10.0,
+            total_cost: 15.0,
+            latency_ms: Some(200.0),
+            timestamp: ts,
+            routing_criteria: None,
+            routing_score: None,
+        };
+        let result = aggregate_by_provider(&[s1, s2]);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].provider, "openai");
+        assert_eq!(result[0].call_count, 2);
+        assert_eq!(result[0].total_cost, 22.5);
+        assert_eq!(result[0].avg_latency_ms, Some(150.0));
+    }
+
+    #[test]
+    fn test_aggregate_by_provider_multiple_providers() {
+        let ts = Utc::now();
+        let s1 = CostSnapshot {
+            id: "s1".to_string(),
+            provider: "openai".to_string(),
+            model: "gpt-4o".to_string(),
+            input_tokens: 1_000_000,
+            output_tokens: 500_000,
+            input_cost: 2.5,
+            output_cost: 5.0,
+            total_cost: 7.5,
+            latency_ms: Some(100.0),
+            timestamp: ts,
+            routing_criteria: None,
+            routing_score: None,
+        };
+        let s2 = CostSnapshot {
+            id: "s2".to_string(),
+            provider: "anthropic".to_string(),
+            model: "claude-3".to_string(),
+            input_tokens: 2_000_000,
+            output_tokens: 1_000_000,
+            input_cost: 6.0,
+            output_cost: 12.0,
+            total_cost: 18.0,
+            latency_ms: None,
+            timestamp: ts,
+            routing_criteria: None,
+            routing_score: None,
+        };
+        let result = aggregate_by_provider(&[s1, s2]);
+        assert_eq!(result.len(), 2);
+        // Sorted by total cost descending
+        assert_eq!(result[0].provider, "anthropic");
+        assert_eq!(result[0].total_cost, 18.0);
+        assert_eq!(result[0].avg_latency_ms, None);
+        assert_eq!(result[1].provider, "openai");
+        assert_eq!(result[1].total_cost, 7.5);
+        assert_eq!(result[1].avg_latency_ms, Some(100.0));
+    }
+
+    #[test]
+    fn test_build_pricing_audits_with_prices() {
+        let ts = Utc::now();
+        let records = vec![RawHarnessRecord {
+            provider: "openai".to_string(),
+            model: "gpt-4o".to_string(),
+            input_tokens: 1_000_000,
+            output_tokens: 500_000,
+            latency_ms: Some(100.0),
+            success: true,
+            timestamp: ts,
+        }];
+        let prices = vec![ModelPricing {
+            provider: "openai".to_string(),
+            model: "gpt-4o".to_string(),
+            input_per_m: 2.5,
+            output_per_m: 10.0,
+        }];
+        let audits = build_pricing_audits(&records, &prices, OnUnpricedAction::Warn);
+        assert_eq!(audits.len(), 1);
+        assert_eq!(audits[0].total_cost, 7.5);
+        assert_eq!(audits[0].input_cost, 2.5);
+        assert_eq!(audits[0].output_cost, 5.0);
+    }
+
+    #[test]
+    fn test_build_pricing_audits_unpriced_warn() {
+        let ts = Utc::now();
+        let records = vec![RawHarnessRecord {
+            provider: "unknown".to_string(),
+            model: "unknown-model".to_string(),
+            input_tokens: 1_000_000,
+            output_tokens: 500_000,
+            latency_ms: Some(100.0),
+            success: true,
+            timestamp: ts,
+        }];
+        let prices = vec![];
+        let audits = build_pricing_audits(&records, &prices, OnUnpricedAction::Warn);
+        assert_eq!(audits.len(), 1);
+        assert_eq!(audits[0].total_cost, 0.0);
+        assert_eq!(audits[0].input_cost, 0.0);
+        assert_eq!(audits[0].output_cost, 0.0);
+    }
+
+    #[test]
+    fn test_build_pricing_audits_unpriced_error() {
+        let ts = Utc::now();
+        let records = vec![RawHarnessRecord {
+            provider: "unknown".to_string(),
+            model: "unknown-model".to_string(),
+            input_tokens: 1_000_000,
+            output_tokens: 500_000,
+            latency_ms: Some(100.0),
+            success: true,
+            timestamp: ts,
+        }];
+        let prices = vec![];
+        let audits = build_pricing_audits(&records, &prices, OnUnpricedAction::Error);
+        assert!(audits.is_empty());
+    }
+}

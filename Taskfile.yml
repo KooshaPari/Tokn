@@ -34,6 +34,11 @@ tasks:
     cmds:
       - cargo test
 
+  coverage:
+    desc: Coverage report (SSOT for how to measure coverage)
+    cmds:
+      - cargo tarpaulin --workspace
+
   run:sample:
     cmds:
       - cargo run -- monthly --events ./examples/events.jsonl --pricing ./pricing.example.json --month 2026-02
