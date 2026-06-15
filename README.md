@@ -197,3 +197,13 @@ MIT License - see LICENSE file
 **Status**: Active development (agent provider expansion)  
 **Maintained by**: Phenotype Org  
 **Last Updated**: 2026-04-24
+
+## Documentation
+
+This repository includes the following cross-cutting documents:
+
+- [`AGENTS.md`](AGENTS.md) — operating instructions for AI agents and human contributors
+- [`SPEC.md`](SPEC.md) — formal specification of behavior and contracts
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — system architecture and component overview
+- [`docs/`](docs/) — design notes, ADRs, and supporting documentation (see [`docs/index.md`](docs/index.md))
+
