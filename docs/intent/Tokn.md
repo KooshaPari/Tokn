@@ -28,10 +28,10 @@ device: macbook
 | Date | Source | File | Tag |
 | ---- | ------ | ---- | --- |
 | ? | claude-code | `docs/curated-prompts/claude-code/unknown/25f4c49c9df2fb14.md` | policy-setting |
-| 2026-04-28 | codex | `docs/curated-prompts/codex/2026-04/49219e7f41361c2c.md` | bugfix |
+| ? | claude-code | `docs/curated-prompts/claude-code/unknown/f8268a7556a337a6.md` | policy-setting |
 | ? | claude-code | `docs/curated-prompts/claude-code/unknown/5b58eeae93771af9.md` | repo-defining |
 | ? | claude-code | `docs/curated-prompts/claude-code/unknown/718fabb2419da968.md` | narrative |
-| ? | claude-code | `docs/curated-prompts/claude-code/unknown/f8268a7556a337a6.md` | policy-setting |
+| 2026-04-28 | codex | `docs/curated-prompts/codex/2026-04/49219e7f41361c2c.md` | bugfix |
 
 ## Bound Plans
 
