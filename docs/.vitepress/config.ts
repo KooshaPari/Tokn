@@ -1,15 +1,12 @@
 import { defineConfig } from 'vitepress'
 
-// Inlined from former cross-repo docs-hub/.vitepress/base.config import.
-// Resolves the VitePress `base` path for GitHub Pages project sites.
+// Resolves the VitePress `base` path for GitHub Pages project sites vs custom domains.
 function resolveDocsBase(): string {
-  const explicit = process.env.DOCS_BASE
+  const explicit = process.env.DOCS_BASE ?? process.env.VITEPRESS_BASE
   if (explicit) return explicit.endsWith('/') ? explicit : `${explicit}/`
-  const repo = process.env.GITHUB_REPOSITORY // "owner/repo"
-  if (repo && repo.includes('/')) {
-    const name = repo.split('/')[1]
-    return `/${name}/`
-  }
+  if (process.env.PHENOTYPE_CUSTOM_DOMAIN === 'true') return '/'
+  const repo = process.env.GITHUB_REPOSITORY?.split('/')[1]
+  if (process.env.GITHUB_PAGES === 'true' && repo) return `/${repo}/`
   return '/'
 }
 
