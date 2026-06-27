@@ -1,0 +1,20 @@
+# Tokn-wt-feat-clap-ext-adopt-rebased-2026-06-14
+
+## Summary
+Brief description of Tokn-wt-feat-clap-ext-adopt-rebased-2026-06-14 and its role in the fleet.
+
+## Stack
+- **Language:** Rust (edition 2021)
+- **Build:** cargo
+- **Test:** cargo test
+
+## Key files
+- `AGENTS.md` — agent governance
+- `SSOT.md` — single source of truth
+- `justfile` — build system
+- `deny.toml` — cargo-deny config
+
+## Conventions
+- Stdlib-only Python where possible
+- Cargo-deny on Rust crates
+- gitleaks on commit
