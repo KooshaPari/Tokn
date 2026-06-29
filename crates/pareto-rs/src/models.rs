@@ -206,7 +206,10 @@ mod tests {
 
     #[test]
     fn test_token_counts_default() {
-        let tc = TokenCounts { input: 0, output: 0 };
+        let tc = TokenCounts {
+            input: 0,
+            output: 0,
+        };
         assert_eq!(tc.input, 0);
         assert_eq!(tc.output, 0);
     }

@@ -13,4 +13,5 @@ pub mod models;
 pub mod orchestrate;
 pub mod pricing;
 pub mod routing;
+pub mod tenant;
 pub mod utils;
