@@ -865,6 +865,7 @@ pub fn normalize_ingest_record(
         session_id,
         timestamp,
         usage,
+        tenant_id: None,
     })
 }
 

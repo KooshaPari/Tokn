@@ -39,6 +39,8 @@ pub struct UsageEvent {
     pub session_id: String,
     pub timestamp: DateTime<Utc>,
     pub usage: TokenUsage,
+    #[serde(default)]
+    pub tenant_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -702,6 +704,7 @@ mod tests {
             session_id: "session123".to_string(),
             timestamp: now,
             usage,
+            tenant_id: None,
         };
         assert_eq!(event.provider, "openai");
         assert_eq!(event.model, "gpt-4");
