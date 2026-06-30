@@ -22,7 +22,7 @@ device: macbook
 
 ## Intent Statement
 
-<To be filled in by hand from the most recent binding prompt. This repo is bound to 5 prompts, 0 plans, and 0 agent responses captured between 2025-08 and 2026-06-17.>
+To be filled in by hand from the most recent binding prompt. This repo is bound to 5 prompts, 0 plans, and 0 agent responses captured between 2025-08 and 2026-06-17.
 
 
 ## Bound Prompts
