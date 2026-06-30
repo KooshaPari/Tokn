@@ -22,19 +22,19 @@ out_of_scope:
 
 ## In Scope
 
-<To be filled.>
+To be filled.
 
 ## Out of Scope
 
 | Not here | Lives in | Reason |
 | -------- | -------- | ------ |
-| <capability> | <other-repo-or-N/A> | <why> |
+| capability | other-repo-or-N/A | why |
 
 ## Boundary Crossings
 
 | Crossing | Direction | Surface | Status |
 | -------- | --------- | ------- | ------ |
-| <capability or interface> | <this-repo→other or other→this-repo> | <Trait / HTTP / CLI / file / event> | <green or amber or red> |
+| capability or interface | this-repo to other or other to this-repo | Trait / HTTP / CLI / file / event | green or amber or red |
 
 ## Last Boundary Review
 
