@@ -6,6 +6,7 @@ pub mod bench;
 pub mod benchmarks;
 pub mod cache;
 pub mod cli;
+pub mod clap_ext;
 pub mod cost;
 pub mod format;
 pub mod ingest;

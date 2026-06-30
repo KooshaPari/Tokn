@@ -1,6 +1,6 @@
 use anyhow::Result;
 use clap::Parser;
-use clap_ext::prelude::setup_tracing;
+use tokenledger::clap_ext::prelude::setup_tracing;
 
 use tokenledger::analytics::{run_coverage, run_daily, run_monthly};
 use tokenledger::bench::run_bench;
