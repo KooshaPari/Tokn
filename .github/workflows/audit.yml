@@ -7,24 +7,36 @@ on:
     branches: [main]
   schedule:
     - cron: '17 4 * * 1'
+
 permissions:
   contents: read
   security-events: write
 
-
-
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
 jobs:
   analyze:
-    uses: KooshaPari/phenoShared/.github/workflows/codeql.yml@main
+    name: Analyze Rust
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
     permissions:
       contents: read
       actions: read
       security-events: write
-    with:
-      languages: '["rust"]'
-      build-mode: 'manual'
-      build-command: 'cargo build --release || cargo build'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: rust
+          build-mode: manual
+
+      - name: Build Rust project
+        run: cargo build --release || cargo build
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
