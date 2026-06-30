@@ -1,10 +1,10 @@
-<!--
+!--
 propagated-from: KooshaPari/phenotype-registry @ chore/l7-010-taxonomy-rerender
 date: 2026-06-21
 source-commit: 2026-06-21-rerender
 do-not-edit-locally: regenerate via scripts/propagate-intent-to-repos.py
                      or update in the source-of-truth registry repo
--->
+--
 ---
 repo: "Tokn"
 aliases: []
@@ -51,11 +51,11 @@ See: [`docs/boundary/Tokn.md`](../boundary/Tokn.md)
 
 ## Ecosystem Role
 
-<See `ECOSYSTEM_MAP.md` for the canonical ecosystem role.>
+See `ECOSYSTEM_MAP.md` for the canonical ecosystem role.
 
 ## Open Questions
 
-- <To be filled from the latest prompt on this repo.>
+- To be filled from the latest prompt on this repo.
 
 ## Change Log
 
