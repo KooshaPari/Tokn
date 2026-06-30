@@ -13,9 +13,9 @@ archived: false
 last_boundary_review: 2026-06-21
 review_cadence: 30d
 in_scope:
-  - "<to be filled>"
+  - "to be filled"
 out_of_scope:
-  - "<to be filled>"
+  - "to be filled"
 ---
 
 # Boundary — Tokn
