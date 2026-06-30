@@ -42,8 +42,8 @@ pub mod prelude {
 
 /// Initialize tracing with the given filter level string.
 pub fn setup_tracing(filter_level: &str) {
-    use tracing_subscriber::fmt;
     use tracing_subscriber::EnvFilter;
+    use tracing_subscriber::fmt;
 
     let env_filter = EnvFilter::try_from_default_env()
         .or_else(|_| EnvFilter::try_new(filter_level))
