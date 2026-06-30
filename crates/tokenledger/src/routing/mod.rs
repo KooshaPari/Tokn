@@ -35,6 +35,7 @@
 
 pub mod adapters;
 pub mod mappings;
+pub mod pareto_frontier;
 pub mod pareto_router;
 pub mod ports;
 
@@ -43,6 +44,10 @@ pub use adapters::{
     AgentAPIAdapter, CLIProxyAdapter, HeliosHarnessAdapter, ThegentRoutingAdapter, UnifiedAdapter,
 };
 pub use mappings::resolve_trio;
+pub use pareto_frontier::{
+    ParetoCombo, ParetoObjective, ParetoOffer, ParetoResult, compute_combos, compute_pareto,
+    pareto_front_mask,
+};
 pub use pareto_router::ParetoRouter;
 pub use ports::{
     BenchmarkPort, MetricsPort, ModelMapping, ModelMappingPort, PortError, PortResult,
