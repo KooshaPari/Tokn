@@ -1,5 +1,6 @@
-/// Simple clap extensions for common CLI patterns.
-/// This is a minimal local implementation until the phenotype-cli clap_ext crate is published.
+//! Simple clap extensions for common CLI patterns.
+//! This is a minimal local implementation until the phenotype-cli clap_ext crate is published.
+
 use clap::Args;
 use std::path::PathBuf;
 
