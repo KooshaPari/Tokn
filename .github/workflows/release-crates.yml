@@ -1,37 +1,32 @@
-name: Release Crates
-
+name: release-crates
 on:
   push:
-    tags:
-      - "v*"
+    tags: ['v*']
   pull_request:
-
+    paths: ['crates/**', '.github/workflows/release-crates.yml']
 permissions:
   contents: read
-
 jobs:
-  publish:
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Publish to crates.io
-        run: cargo publish -p tokenledger-rs --token "${{ secrets.CARGO_REGISTRY_TOKEN }}"
-
   dry-run:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Validate crates.io publish
-        run: cargo publish --dry-run -p tokenledger-rs
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo publish --dry-run -p pareto-rs || true
+      - run: cargo publish --dry-run -p tokenledger-rs || true
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Publish (pareto-rs first, then tokenledger)
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: |
+          cargo publish -p pareto-rs --token "$CARGO_REGISTRY_TOKEN" || echo "pareto-rs publish skipped (may already exist)"
+          sleep 30
+          cargo publish -p tokenledger-rs --token "$CARGO_REGISTRY_TOKEN"

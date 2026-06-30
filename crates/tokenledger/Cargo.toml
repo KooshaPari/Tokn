@@ -34,4 +34,4 @@ walkdir.workspace = true
 serde_yaml_ng.workspace = true
 tempfile.workspace = true
 
-pareto-rs = { path = "../pareto-rs" }
+pareto-rs = { path = "../pareto-rs", version = "0.1.1" }
