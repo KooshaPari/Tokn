@@ -4,6 +4,8 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 authors.workspace = true
+description = "Pareto analysis helpers for tokenledger"
+repository.workspace = true
 
 [dependencies]
 anyhow.workspace = true

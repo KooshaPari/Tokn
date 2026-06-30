@@ -20,7 +20,13 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Publish to crates.io
+      - name: Publish pareto-rs to crates.io
+        run: cargo publish -p pareto-rs --token "${{ secrets.CARGO_REGISTRY_TOKEN }}" || echo "pareto-rs publish skipped (may exist)"
+
+      - name: Wait for crates.io indexing
+        run: sleep 30
+
+      - name: Publish tokenledger-rs to crates.io
         run: cargo publish -p tokenledger-rs --token "${{ secrets.CARGO_REGISTRY_TOKEN }}"
 
   dry-run:
@@ -33,5 +39,8 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Validate crates.io publish
+      - name: Validate pareto-rs publish
+        run: cargo publish --dry-run -p pareto-rs
+
+      - name: Validate tokenledger-rs publish
         run: cargo publish --dry-run -p tokenledger-rs
