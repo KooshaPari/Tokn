@@ -3,7 +3,7 @@
 use std::collections::{BTreeMap, HashMap};
 use std::hash::{Hash, Hasher};
 
-use anyhow::{Result, anyhow};
+use anyhow::{anyhow, Result};
 
 use crate::format::{round2, round4};
 use crate::models::*;
@@ -218,6 +218,18 @@ pub fn make_suggestions(global: &Acc, total_subscription: f64) -> Vec<String> {
 }
 
 // Helper function to get event pricing - uses utils functions
+/// Filter usage events by an optional tenant_id.
+/// Returns all events when `tenant_id` is `None`.
+pub fn filter_tenant<'a>(events: &'a [UsageEvent], tenant_id: Option<&str>) -> Vec<&'a UsageEvent> {
+    match tenant_id {
+        None => events.iter().collect(),
+        Some(tid) => events
+            .iter()
+            .filter(|e| e.tenant_id.as_deref() == Some(tid))
+            .collect(),
+    }
+}
+
 pub fn event_pricing<'a>(
     evt: &UsageEvent,
     pricing: &'a PricingBook,
@@ -368,5 +380,68 @@ mod tests {
         let cost = calc_variable_cost(&usage, &rate);
         // 0.5 (input) + 0.2 (tool_input) + 0.3 (tool_output) = 1.0
         assert!((cost - 1.0).abs() < 0.0001);
+    }
+
+    #[test]
+    fn test_filter_tenant_none_returns_all() {
+        let events = vec![
+            UsageEvent {
+                provider: "openai".into(),
+                model: "gpt-4".into(),
+                session_id: "s1".into(),
+                timestamp: Utc::now(),
+                usage: TokenUsage::default(),
+                tenant_id: Some("acme".into()),
+            },
+            UsageEvent {
+                provider: "anthropic".into(),
+                model: "claude-3".into(),
+                session_id: "s2".into(),
+                timestamp: Utc::now(),
+                usage: TokenUsage::default(),
+                tenant_id: None,
+            },
+        ];
+        let filtered = filter_tenant(&events, None);
+        assert_eq!(filtered.len(), 2);
+    }
+
+    #[test]
+    fn test_filter_tenant_matching() {
+        let events = vec![
+            UsageEvent {
+                provider: "openai".into(),
+                model: "gpt-4".into(),
+                session_id: "s1".into(),
+                timestamp: Utc::now(),
+                usage: TokenUsage::default(),
+                tenant_id: Some("acme".into()),
+            },
+            UsageEvent {
+                provider: "anthropic".into(),
+                model: "claude-3".into(),
+                session_id: "s2".into(),
+                timestamp: Utc::now(),
+                usage: TokenUsage::default(),
+                tenant_id: Some("globex".into()),
+            },
+        ];
+        let filtered = filter_tenant(&events, Some("acme"));
+        assert_eq!(filtered.len(), 1);
+        assert_eq!(filtered[0].tenant_id.as_deref(), Some("acme"));
+    }
+
+    #[test]
+    fn test_filter_tenant_no_match() {
+        let events = vec![UsageEvent {
+            provider: "openai".into(),
+            model: "gpt-4".into(),
+            session_id: "s1".into(),
+            timestamp: Utc::now(),
+            usage: TokenUsage::default(),
+            tenant_id: Some("acme".into()),
+        }];
+        let filtered = filter_tenant(&events, Some("nobody"));
+        assert!(filtered.is_empty());
     }
 }

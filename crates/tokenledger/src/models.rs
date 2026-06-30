@@ -5,7 +5,7 @@ use std::io::Write;
 
 use crate::cli::UiSnapshotMode;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct TokenUsage {
     #[serde(default)]
     pub input_tokens: u64,
@@ -39,6 +39,9 @@ pub struct UsageEvent {
     pub session_id: String,
     pub timestamp: DateTime<Utc>,
     pub usage: TokenUsage,
+    /// Optional tenant identifier for multi-tenant filtering (ADR-008).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tenant_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -702,6 +705,7 @@ mod tests {
             session_id: "session123".to_string(),
             timestamp: now,
             usage,
+            tenant_id: None,
         };
         assert_eq!(event.provider, "openai");
         assert_eq!(event.model, "gpt-4");
