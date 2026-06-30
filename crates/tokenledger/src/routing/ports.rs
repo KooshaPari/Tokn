@@ -23,6 +23,11 @@ pub enum PortError {
 
     #[error("Timeout: {0}")]
     Timeout(String),
+
+    /// Tenant resolution or authorization error.
+    /// Addresses audit finding L4: surface auth failures as typed errors.
+    #[error("Tenant error: {0}")]
+    Tenant(#[from] crate::tenant::TenantError),
 }
 
 pub type PortResult<T> = Result<T, PortError>;
