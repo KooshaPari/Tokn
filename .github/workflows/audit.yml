@@ -37,7 +37,7 @@ jobs:
           toolchain: stable
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@5f532563584d71861b6872b3d26457b7018f65af # v3
+        uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           build-mode: none
@@ -46,6 +46,6 @@ jobs:
         run: cargo build --release
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@5f532563584d71861b6872b3d26457b7018f65af # v3
+        uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{ matrix.language }}"
