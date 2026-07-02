@@ -21,6 +21,8 @@ targets = [
   "aarch64-apple-darwin",
   "x86_64-apple-darwin",
 ]
+install-path = "CARGO_HOME"
+pr-run-mode = "plan"
 [workspace.dependencies]
 anyhow = "1.0"
 chrono = { version = "0.4", features = ["serde"] }
