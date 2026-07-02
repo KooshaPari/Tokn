@@ -1,0 +1,51 @@
+name: Traceability
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  trace:
+    name: Trace push to AgilePlus
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Resolve commit metadata
+        id: meta
+        shell: bash
+        run: |
+          {
+            echo "sha=${GITHUB_SHA}"
+            echo "actor=${GITHUB_ACTOR}"
+            echo "event=${GITHUB_EVENT_NAME}"
+            echo "ref=${GITHUB_REF}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Record traceability event
+        if: github.event_name == 'push'
+        shell: bash
+        env:
+          REPO: ${{ github.repository }}
+          SHA: ${{ steps.meta.outputs.sha }}
+          ACTOR: ${{ steps.meta.outputs.actor }}
+          REF: ${{ steps.meta.outputs.ref }}
+        run: |
+          mkdir -p .phenotype/events
+          ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          printf 'repo: %s\nsha: %s\nactor: %s\nref: %s\nrecorded_at: %s\n' \
+            "$REPO" "$SHA" "$ACTOR" "$REF" "$ts" \
+            > ".phenotype/events/${SHA}.trace"
+          echo "Recorded traceability for $SHA"

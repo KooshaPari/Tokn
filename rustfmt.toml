@@ -1,0 +1,14 @@
+# Stable rustfmt options only
+max_width = 100
+chain_width = 60
+tab_spaces = 4
+hard_tabs = false
+newline_style = "Unix"
+fn_call_width = 60
+array_width = 60
+struct_lit_width = 18
+struct_variant_width = 35
+remove_nested_parens = true
+reorder_imports = true
+reorder_modules = true
+use_small_heuristics = "Default"

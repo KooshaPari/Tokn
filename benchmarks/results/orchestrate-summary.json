@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-02-21T11:02:35.517400Z",
+  "month_filter": null,
+  "events_out": "./artifacts/ingested.sample.jsonl",
+  "pricing": "pricing.example.json",
+  "on_unpriced": "error",
+  "duration_ms": 20043,
+  "ingest": {
+    "skipped": false,
+    "cache_enabled": true,
+    "cache_hit": false,
+    "cache_path": "./benchmarks/results/orchestrate-ingest-cache.json",
+    "duration_ms": 19797,
+    "summary_json_path": "./benchmarks/results/ingest-summary.json",
+    "summary": {
+      "providers": {
+        "codex": {
+          "scanned": 163118,
+          "emitted": 500,
+          "skipped": 162618
+        }
+      },
+      "incremental_sources_skipped": 0,
+      "emitted_total": 500,
+      "deduped_total": 0,
+      "output": "./artifacts/ingested.sample.jsonl",
+      "started_at": "2026-02-21T11:02:18.123787Z",
+      "finished_at": "2026-02-21T11:02:34.563161Z",
+      "duration_ms": 16439
+    }
+  },
+  "pricing_reconcile": {
+    "skipped": false,
+    "duration_ms": 36,
+    "run_summary_path": "./benchmarks/results/reconcile-20260221-110235/reconcile-summary.json",
+    "latest_summary_path": "./benchmarks/results/reconcile-latest-summary.json",
+    "summary": {
+      "pricing": "pricing.example.json",
+      "month_filter": null,
+      "workdir": "./benchmarks/results/reconcile-20260221-110235",
+      "allow_unpriced": false,
+      "dry_run": true,
+      "write_backup": false,
+      "allow_overwrite_model_rates": false,
+      "artifacts": {
+        "patch_path": "./benchmarks/results/reconcile-20260221-110235/pricing-patch.reconcile.json",
+        "unpriced_events_path": "./benchmarks/results/reconcile-20260221-110235/unpriced-events.reconcile.jsonl",
+        "backup_path": null
+      },
+      "coverage": {
+        "month": "2025-09",
+        "totals": {
+          "events": 500,
+          "tokens": 28616113
+        },
+        "priced_count": 500,
+        "unpriced_count": 0,
+        "missing_providers": [],
+        "missing_models_by_provider": {},
+        "suggested_provider_aliases": {},
+        "suggested_model_aliases_by_provider": {}
+      },
+      "pricing_apply": {
+        "changed": false,
+        "wrote_pricing": false,
+        "metadata_updated": false,
+        "summary": {
+          "providers_added": 0,
+          "models_added": 0,
+          "aliases_added": 0,
+          "models_skipped_existing": 0
+        }
+      },
+      "pricing_check": {
+        "passed": true,
+        "month": "2025-09",
+        "priced_count": 500,
+        "unpriced_count": 0,
+        "details": []
+      }
+    }
+  },
+  "monthly": {
+    "skipped": false,
+    "duration_ms": 27
+  },
+  "daily": {
+    "skipped": false,
+    "duration_ms": 35
+  },
+  "bench": {
+    "skipped": false,
+    "duration_ms": 118,
+    "latest_summary_path": "benchmarks/results/latest-summary.json",
+    "baseline_used": false,
+    "report": {
+      "scenario": "all",
+      "month": "2025-09",
+      "generated_at": "2026-02-21T11:02:35.495874Z",
+      "label": "orchestrate",
+      "results": [
+        {
+          "scenario": "cold-backfill",
+          "elapsed_ms": 23.555,
+          "events_processed": 500,
+          "events_per_sec": 21226.9536,
+          "correctness": {
+            "variable_cost_usd": 37.77,
+            "subscription_allocated_usd": 0.0,
+            "monthly_total_usd": 37.77,
+            "blended_usd_per_mtok": 1.3199,
+            "total_tokens": 28616113,
+            "total_mtok": 28.6161,
+            "input_tokens": 28387954,
+            "output_tokens": 228159,
+            "cache_write_tokens": 0,
+            "cache_read_tokens": 0,
+            "tool_input_tokens": 0,
+            "tool_output_tokens": 0,
+            "skipped_unpriced_count": 0
+          },
+          "elapsed_ms_delta": null,
+          "events_per_sec_delta": null,
+          "elapsed_regression": null,
+          "events_per_sec_regression": null
+        },
+        {
+          "scenario": "warm-tail",
+          "elapsed_ms": 48.896,
+          "events_processed": 2500,
+          "events_per_sec": 51128.9267,
+          "correctness": {
+            "variable_cost_usd": 188.85,
+            "subscription_allocated_usd": 0.0,
+            "monthly_total_usd": 188.85,
+            "blended_usd_per_mtok": 1.3199,
+            "total_tokens": 143080565,
+            "total_mtok": 143.0806,
+            "input_tokens": 141939770,
+            "output_tokens": 1140795,
+            "cache_write_tokens": 0,
+            "cache_read_tokens": 0,
+            "tool_input_tokens": 0,
+            "tool_output_tokens": 0,
+            "skipped_unpriced_count": 0
+          },
+          "elapsed_ms_delta": null,
+          "events_per_sec_delta": null,
+          "elapsed_regression": null,
+          "events_per_sec_regression": null
+        },
+        {
+          "scenario": "burst",
+          "elapsed_ms": 6.6473,
+          "events_processed": 500,
+          "events_per_sec": 75219.0756,
+          "correctness": {
+            "variable_cost_usd": 37.77,
+            "subscription_allocated_usd": 0.0,
+            "monthly_total_usd": 37.77,
+            "blended_usd_per_mtok": 1.3199,
+            "total_tokens": 28616113,
+            "total_mtok": 28.6161,
+            "input_tokens": 28387954,
+            "output_tokens": 228159,
+            "cache_write_tokens": 0,
+            "cache_read_tokens": 0,
+            "tool_input_tokens": 0,
+            "tool_output_tokens": 0,
+            "skipped_unpriced_count": 0
+          },
+          "elapsed_ms_delta": null,
+          "events_per_sec_delta": null,
+          "elapsed_regression": null,
+          "events_per_sec_regression": null
+        }
+      ]
+    }
+  },
+  "perf_gate": {
+    "skipped": false,
+    "duration_ms": 1
+  },
+  "ui_snapshot_path": "./benchmarks/results/ui-snapshot.json"
+}

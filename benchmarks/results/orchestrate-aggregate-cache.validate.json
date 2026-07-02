@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "entries": {
+    "month=2026-02|providers=|models=|on_unpriced=skip": {
+      "selector": {
+        "month_filter": "2026-02",
+        "providers": [],
+        "models": [],
+        "on_unpriced": "skip"
+      },
+      "pricing_hash": "552c2a913e28cbce",
+      "events_fingerprint": "1435d3774a89267c",
+      "monthly": {
+        "variable_cost_usd": 0.0,
+        "subscription_allocated_usd": 0.0,
+        "monthly_total_usd": 0.0,
+        "blended_usd_per_mtok": 0.0,
+        "total_tokens": 0,
+        "total_mtok": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cache_write_tokens": 0,
+        "cache_read_tokens": 0,
+        "tool_input_tokens": 0,
+        "tool_output_tokens": 0,
+        "session_count": 0,
+        "skipped_unpriced_count": 1,
+        "provider_breakdown": [],
+        "model_breakdown": [],
+        "suggestions": [
+          "Subscriptions dominate monthly cost (>70%): consolidate seats/plans or increase utilization with shared routing."
+        ]
+      },
+      "daily": {
+        "month": "2026-02",
+        "totals": {
+          "variable_cost_usd": 0.0,
+          "subscription_allocated_usd": 0.0,
+          "monthly_total_usd": 0.0,
+          "blended_usd_per_mtok": 0.0,
+          "total_tokens": 0,
+          "total_mtok": 0.0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "cache_write_tokens": 0,
+          "cache_read_tokens": 0,
+          "tool_input_tokens": 0,
+          "tool_output_tokens": 0,
+          "session_count": 0,
+          "skipped_unpriced_count": 1,
+          "provider_breakdown": [],
+          "model_breakdown": [],
+          "suggestions": [
+            "Subscriptions dominate monthly cost (>70%): consolidate seats/plans or increase utilization with shared routing."
+          ]
+        },
+        "days": [
+          {
+            "day": "2026-02-01",
+            "breakdown": {
+              "variable_cost_usd": 0.0,
+              "subscription_allocated_usd": 0.0,
+              "monthly_total_usd": 0.0,
+              "blended_usd_per_mtok": 0.0,
+              "total_tokens": 0,
+              "total_mtok": 0.0,
+              "input_tokens": 0,
+              "output_tokens": 0,
+              "cache_write_tokens": 0,
+              "cache_read_tokens": 0,
+              "tool_input_tokens": 0,
+              "tool_output_tokens": 0,
+              "session_count": 0,
+              "skipped_unpriced_count": 1,
+              "provider_breakdown": [],
+              "model_breakdown": [],
+              "suggestions": [
+                "Subscriptions dominate monthly cost (>70%): consolidate seats/plans or increase utilization with shared routing."
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

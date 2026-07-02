@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  tokenledger-cli:
+    image: tokenledger:latest
+    container_name: tokenledger-cli
+    restart: unless-stopped
+    # Tokenledger is a CLI tool, not a long-running server.
+    # This container can run periodic analysis commands or stay idle
+    # waiting for external CLI invocations.
+    command: tail -f /dev/null  # Keep container running
+    environment:
+      # CLI configuration
+      LOG_LEVEL: "info"
+
+      # Optional: pricing data sources or API keys
+      # PRICING_API_KEY: ${PRICING_API_KEY:-}
+    volumes:
+      - tokenledger-data:/data
+    networks:
+      - tokenledger-net
+    # Note: Tokenledger CLI does not expose an HTTP endpoint.
+    # Run commands via: docker compose exec tokenledger-cli tokenledger <command>
+
+  caddy:
+    image: caddy:latest
+    container_name: tokenledger-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+    environment:
+      # Not used by Tokenledger (CLI-only), but kept for consistency
+      HOSTNAME: ${HOSTNAME:-tokenledger.pheno.studio}
+    networks:
+      - tokenledger-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: tokenledger-cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CF_TUNNEL_TOKEN:-}
+    networks:
+      - tokenledger-net
+    depends_on:
+      - caddy
+    profiles:
+      - cloudflare
+
+volumes:
+  tokenledger-data:
+  caddy-data:
+  caddy-config:
+
+networks:
+  tokenledger-net:
+    driver: bridge

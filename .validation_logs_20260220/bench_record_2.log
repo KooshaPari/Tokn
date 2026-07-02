@@ -1,0 +1,15 @@
+=== CMD: task bench:record
+task: [bench:record] mkdir -p ./benchmarks/results
+REPORT_PATH="./benchmarks/results/bench-$(date +%Y%m%d-%H%M%S).json"
+cargo run -- bench --scenario all --events ./examples/events.jsonl --pricing ./pricing.example.json --json-output-path "$REPORT_PATH"
+echo "Wrote $REPORT_PATH"
+
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.12s
+     Running `target/debug/tokenledger bench --scenario all --events ./examples/events.jsonl --pricing ./pricing.example.json --json-output-path ./benchmarks/results/bench-20260220-082051.json`
+Benchmark report (scenario=all, month=2026-02)
+  Scenario        Elapsed (ms)             Events         Events/sec
+  cold-backfill         0.1628                  4         24571.3829
+  warm-tail             0.1412                 20        141634.0318
+  burst                 0.0266                  4        150472.1062
+Wrote ./benchmarks/results/bench-20260220-082051.json
+=== EXIT: 0

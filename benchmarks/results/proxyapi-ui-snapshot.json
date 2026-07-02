@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-02-21T11:16:23.216077Z",
+  "month": "2026-02",
+  "mode": "compact",
+  "totals": {
+    "cost_usd": 0.0,
+    "tokens": 0,
+    "blended_usd_per_mtok": 0.0,
+    "session_count": 0,
+    "skipped_unpriced_count": 1
+  },
+  "top_providers": [],
+  "top_models": [],
+  "suggestions": [
+    "Subscriptions dominate monthly cost (>70%): consolidate seats/plans or increase utilization with shared routing."
+  ],
+  "reconcile_latest_summary_path": "benchmarks/results/reconcile-latest-summary.json"
+}

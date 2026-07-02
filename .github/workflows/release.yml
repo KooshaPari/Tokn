@@ -1,0 +1,18 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  binaries:
+    uses: ./.github/workflows/binaries.yml
+    with:
+      ref: ${{ github.ref }}
+    secrets:
+      github_token: ${{ secrets.GITHUB_TOKEN }}

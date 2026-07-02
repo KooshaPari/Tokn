@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "generated_at": "2026-02-21T11:16:23.205401Z",
+    "month": "2026-02",
+    "source_events_count": 1
+  },
+  "missing_models_by_provider": {},
+  "missing_providers": {
+    "proxyapi": {
+      "model_aliases": {},
+      "models": {},
+      "observed_unpriced_models": [
+        "proxyapi-default"
+      ],
+      "subscription_usd_month": 0.0,
+      "suggested_provider_aliases": []
+    }
+  },
+  "suggested_aliases": {
+    "model_aliases_by_provider": {},
+    "provider_aliases": {
+      "proxyapi": []
+    }
+  }
+}

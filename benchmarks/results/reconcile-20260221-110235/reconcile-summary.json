@@ -1,0 +1,45 @@
+{
+  "pricing": "pricing.example.json",
+  "month_filter": null,
+  "workdir": "./benchmarks/results/reconcile-20260221-110235",
+  "allow_unpriced": false,
+  "dry_run": true,
+  "write_backup": false,
+  "allow_overwrite_model_rates": false,
+  "artifacts": {
+    "patch_path": "./benchmarks/results/reconcile-20260221-110235/pricing-patch.reconcile.json",
+    "unpriced_events_path": "./benchmarks/results/reconcile-20260221-110235/unpriced-events.reconcile.jsonl",
+    "backup_path": null
+  },
+  "coverage": {
+    "month": "2025-09",
+    "totals": {
+      "events": 500,
+      "tokens": 28616113
+    },
+    "priced_count": 500,
+    "unpriced_count": 0,
+    "missing_providers": [],
+    "missing_models_by_provider": {},
+    "suggested_provider_aliases": {},
+    "suggested_model_aliases_by_provider": {}
+  },
+  "pricing_apply": {
+    "changed": false,
+    "wrote_pricing": false,
+    "metadata_updated": false,
+    "summary": {
+      "providers_added": 0,
+      "models_added": 0,
+      "aliases_added": 0,
+      "models_skipped_existing": 0
+    }
+  },
+  "pricing_check": {
+    "passed": true,
+    "month": "2025-09",
+    "priced_count": 500,
+    "unpriced_count": 0,
+    "details": []
+  }
+}

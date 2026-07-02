@@ -1,0 +1,16 @@
+[package]
+name = "pareto-rs"
+description = "Pareto analysis helpers for tokenledger"
+repository = "https://github.com/KooshaPari/Tokn"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+chrono.workspace = true
+clap.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml_ng.workspace = true

@@ -1,0 +1,82 @@
+name: Build Release Binaries
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        required: false
+        type: string
+    secrets:
+      github_token:
+        required: false
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Git ref to build
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact_name: tokenledger-x86_64-unknown-linux-gnu
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            artifact_name: tokenledger-x86_64-apple-darwin
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact_name: tokenledger-x86_64-pc-windows-msvc.exe
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8
+        with:
+          toolchain: stable
+          targets: ${{ matrix.target }}
+
+      - name: Install protoc
+        shell: bash
+        run: |
+          if ! command -v protoc >/dev/null 2>&1; then
+            if [ "${RUNNER_OS}" = "Linux" ]; then
+              sudo apt-get update
+              sudo apt-get install -y protobuf-compiler
+            elif [ "${RUNNER_OS}" = "macOS" ]; then
+              brew install protobuf
+            fi
+          fi
+
+      - name: Build CLI
+        run: cargo build --release --locked --bin tokenledger -p tokenledger-rs --target ${{ matrix.target }}
+
+      - name: Package binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          if [ "${RUNNER_OS}" = "Windows" ]; then
+            cp "target/${{ matrix.target }}/release/tokenledger.exe" "dist/${{ matrix.artifact_name }}"
+          else
+            cp "target/${{ matrix.target }}/release/tokenledger" "dist/${{ matrix.artifact_name }}"
+            chmod +x "dist/${{ matrix.artifact_name }}"
+          fi
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/${{ matrix.artifact_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token || secrets.GITHUB_TOKEN }}

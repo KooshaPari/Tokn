@@ -1,0 +1,16 @@
+{
+  "providers": {
+    "codex": {
+      "scanned": 163118,
+      "emitted": 500,
+      "skipped": 162618
+    }
+  },
+  "incremental_sources_skipped": 0,
+  "emitted_total": 500,
+  "deduped_total": 0,
+  "output": "./artifacts/ingested.sample.jsonl",
+  "started_at": "2026-02-21T11:02:18.123787Z",
+  "finished_at": "2026-02-21T11:02:34.563161Z",
+  "duration_ms": 16439
+}

@@ -1,0 +1,13 @@
+{
+  "metadata": {
+    "generated_at": "2026-02-20T15:46:46.016771Z",
+    "month": "2026-02",
+    "source_events_count": 4
+  },
+  "missing_models_by_provider": {},
+  "missing_providers": {},
+  "suggested_aliases": {
+    "model_aliases_by_provider": {},
+    "provider_aliases": {}
+  }
+}

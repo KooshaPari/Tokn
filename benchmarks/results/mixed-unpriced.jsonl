@@ -1,0 +1,2 @@
+{"provider":"codex","model":"gpt-5","session_id":"ok","timestamp":"2026-02-20T00:00:00Z","usage":{"input_tokens":1000,"output_tokens":500}}
+{"provider":"codex","model":"nonexistent-model","session_id":"bad","timestamp":"2026-02-20T00:00:01Z","usage":{"input_tokens":1000,"output_tokens":500}}

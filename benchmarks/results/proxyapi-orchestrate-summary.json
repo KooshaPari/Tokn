@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-02-21T11:16:23.224794Z",
+  "month_filter": null,
+  "events_out": "./artifacts/proxyapi.orchestrated.sample.jsonl",
+  "pricing": "pricing.example.json",
+  "on_unpriced": "skip",
+  "duration_ms": 24,
+  "ingest": {
+    "skipped": true,
+    "cache_enabled": true,
+    "cache_hit": false,
+    "cache_path": "./benchmarks/results/proxyapi-orchestrate-ingest-cache.json",
+    "duration_ms": 0,
+    "summary_json_path": "./benchmarks/results/proxyapi-ingest-summary.json",
+    "summary": null
+  },
+  "pricing_reconcile": {
+    "skipped": false,
+    "duration_ms": 9,
+    "run_summary_path": "./benchmarks/results/reconcile-20260221-111623/reconcile-summary.json",
+    "latest_summary_path": "./benchmarks/results/reconcile-latest-summary.json",
+    "summary": {
+      "pricing": "pricing.example.json",
+      "month_filter": null,
+      "workdir": "./benchmarks/results/reconcile-20260221-111623",
+      "allow_unpriced": true,
+      "dry_run": true,
+      "write_backup": false,
+      "allow_overwrite_model_rates": false,
+      "artifacts": {
+        "patch_path": "./benchmarks/results/reconcile-20260221-111623/pricing-patch.reconcile.json",
+        "unpriced_events_path": "./benchmarks/results/reconcile-20260221-111623/unpriced-events.reconcile.jsonl",
+        "backup_path": null
+      },
+      "coverage": {
+        "month": "2026-02",
+        "totals": {
+          "events": 1,
+          "tokens": 1500
+        },
+        "priced_count": 0,
+        "unpriced_count": 1,
+        "missing_providers": [
+          "proxyapi"
+        ],
+        "missing_models_by_provider": {},
+        "suggested_provider_aliases": {
+          "proxyapi": []
+        },
+        "suggested_model_aliases_by_provider": {}
+      },
+      "pricing_apply": {
+        "changed": true,
+        "wrote_pricing": false,
+        "metadata_updated": false,
+        "summary": {
+          "providers_added": 1,
+          "models_added": 0,
+          "aliases_added": 0,
+          "models_skipped_existing": 0
+        }
+      },
+      "pricing_check": {
+        "passed": true,
+        "month": "2026-02",
+        "priced_count": 0,
+        "unpriced_count": 1,
+        "details": [
+          "proxyapi:proxyapi-default (events=1)"
+        ]
+      }
+    }
+  },
+  "monthly": {
+    "skipped": false,
+    "duration_ms": 1
+  },
+  "daily": {
+    "skipped": false,
+    "duration_ms": 0
+  },
+  "aggregate_cache": {
+    "enabled": true,
+    "cache_path": "./benchmarks/results/proxyapi-orchestrate-aggregate-cache.json",
+    "hit_count": 0,
+    "miss_count": 1,
+    "invalidate_count": 0
+  },
+  "bench": {
+    "skipped": false,
+    "duration_ms": 6,
+    "latest_summary_path": "benchmarks/results/latest-summary.json",
+    "baseline_used": false,
+    "report": {
+      "scenario": "all",
+      "month": "2026-02",
+      "generated_at": "2026-02-21T11:16:23.217721Z",
+      "label": "orchestrate",
+      "results": [
+        {
+          "scenario": "cold-backfill",
+          "elapsed_ms": 0.0385,
+          "events_processed": 1,
+          "events_per_sec": 26002.3922,
+          "correctness": {
+            "variable_cost_usd": 0.0,
+            "subscription_allocated_usd": 0.0,
+            "monthly_total_usd": 0.0,
+            "blended_usd_per_mtok": 0.0,
+            "total_tokens": 0,
+            "total_mtok": 0.0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cache_write_tokens": 0,
+            "cache_read_tokens": 0,
+            "tool_input_tokens": 0,
+            "tool_output_tokens": 0,
+            "skipped_unpriced_count": 1
+          },
+          "elapsed_ms_delta": null,
+          "events_per_sec_delta": null,
+          "elapsed_regression": null,
+          "events_per_sec_regression": null
+        },
+        {
+          "scenario": "warm-tail",
+          "elapsed_ms": 0.0095,
+          "events_processed": 5,
+          "events_per_sec": 523999.1616,
+          "correctness": {
+            "variable_cost_usd": 0.0,
+            "subscription_allocated_usd": 0.0,
+            "monthly_total_usd": 0.0,
+            "blended_usd_per_mtok": 0.0,
+            "total_tokens": 0,
+            "total_mtok": 0.0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cache_write_tokens": 0,
+            "cache_read_tokens": 0,
+            "tool_input_tokens": 0,
+            "tool_output_tokens": 0,
+            "skipped_unpriced_count": 5
+          },
+          "elapsed_ms_delta": null,
+          "events_per_sec_delta": null,
+          "elapsed_regression": null,
+          "events_per_sec_regression": null
+        },
+        {
+          "scenario": "burst",
+          "elapsed_ms": 0.0021,
+          "events_processed": 1,
+          "events_per_sec": 470588.2353,
+          "correctness": {
+            "variable_cost_usd": 0.0,
+            "subscription_allocated_usd": 0.0,
+            "monthly_total_usd": 0.0,
+            "blended_usd_per_mtok": 0.0,
+            "total_tokens": 0,
+            "total_mtok": 0.0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cache_write_tokens": 0,
+            "cache_read_tokens": 0,
+            "tool_input_tokens": 0,
+            "tool_output_tokens": 0,
+            "skipped_unpriced_count": 1
+          },
+          "elapsed_ms_delta": null,
+          "events_per_sec_delta": null,
+          "elapsed_regression": null,
+          "events_per_sec_regression": null
+        }
+      ]
+    }
+  },
+  "perf_gate": {
+    "skipped": false,
+    "duration_ms": 1
+  },
+  "ui_snapshot_path": "./benchmarks/results/proxyapi-ui-snapshot.json"
+}

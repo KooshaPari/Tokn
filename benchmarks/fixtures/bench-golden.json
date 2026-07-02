@@ -1,0 +1,83 @@
+{
+  "scenario": "all",
+  "month": "2026-02",
+  "generated_at": "2026-02-21T11:16:55.477018Z",
+  "label": null,
+  "results": [
+    {
+      "scenario": "cold-backfill",
+      "elapsed_ms": 0.3127,
+      "events_processed": 4,
+      "events_per_sec": 12793.2042,
+      "correctness": {
+        "variable_cost_usd": 27.47,
+        "subscription_allocated_usd": 50.0,
+        "monthly_total_usd": 77.47,
+        "blended_usd_per_mtok": 7.4134,
+        "total_tokens": 10450000,
+        "total_mtok": 10.45,
+        "input_tokens": 3150000,
+        "output_tokens": 1200000,
+        "cache_write_tokens": 430000,
+        "cache_read_tokens": 4870000,
+        "tool_input_tokens": 500000,
+        "tool_output_tokens": 300000,
+        "skipped_unpriced_count": 0
+      },
+      "elapsed_ms_delta": null,
+      "events_per_sec_delta": null,
+      "elapsed_regression": null,
+      "events_per_sec_regression": null
+    },
+    {
+      "scenario": "warm-tail",
+      "elapsed_ms": 0.1198,
+      "events_processed": 20,
+      "events_per_sec": 166957.4509,
+      "correctness": {
+        "variable_cost_usd": 137.35,
+        "subscription_allocated_usd": 250.0,
+        "monthly_total_usd": 387.35,
+        "blended_usd_per_mtok": 7.4134,
+        "total_tokens": 52250000,
+        "total_mtok": 52.25,
+        "input_tokens": 15750000,
+        "output_tokens": 6000000,
+        "cache_write_tokens": 2150000,
+        "cache_read_tokens": 24350000,
+        "tool_input_tokens": 2500000,
+        "tool_output_tokens": 1500000,
+        "skipped_unpriced_count": 0
+      },
+      "elapsed_ms_delta": null,
+      "events_per_sec_delta": null,
+      "elapsed_regression": null,
+      "events_per_sec_regression": null
+    },
+    {
+      "scenario": "burst",
+      "elapsed_ms": 0.0232,
+      "events_processed": 4,
+      "events_per_sec": 172666.8393,
+      "correctness": {
+        "variable_cost_usd": 27.47,
+        "subscription_allocated_usd": 50.0,
+        "monthly_total_usd": 77.47,
+        "blended_usd_per_mtok": 7.4134,
+        "total_tokens": 10450000,
+        "total_mtok": 10.45,
+        "input_tokens": 3150000,
+        "output_tokens": 1200000,
+        "cache_write_tokens": 430000,
+        "cache_read_tokens": 4870000,
+        "tool_input_tokens": 500000,
+        "tool_output_tokens": 300000,
+        "skipped_unpriced_count": 0
+      },
+      "elapsed_ms_delta": null,
+      "events_per_sec_delta": null,
+      "elapsed_regression": null,
+      "events_per_sec_regression": null
+    }
+  ]
+}
