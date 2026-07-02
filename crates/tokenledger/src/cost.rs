@@ -244,6 +244,7 @@ pub fn event_pricing<'a>(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use chrono::Utc;
 
     #[test]
     fn test_calc_variable_cost_basic() {
