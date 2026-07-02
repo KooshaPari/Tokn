@@ -387,6 +387,7 @@ mod tests {
                 tool_input_tokens: 0,
                 tool_output_tokens: 0,
             },
+            tenant_id: None,
         }];
 
         let report = build_coverage_report(&events, &pricing);
