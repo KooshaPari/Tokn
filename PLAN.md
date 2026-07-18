@@ -3,7 +3,7 @@
 ## Phase 1: Bootstrap Core
 
 - [x] P1.1 Define normalized event schema and pricing schema.
-- P1.2 Implement monthly aggregation and blended cost formulas.
+- [x] P1.2 Implement monthly aggregation and blended cost formulas.
 - P1.3 Implement table/json output and suggestion engine.
 
 ### P1.1 Schema Contract
