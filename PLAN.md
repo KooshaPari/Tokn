@@ -43,7 +43,7 @@ produce the event shape above and pricing lookup can resolve a canonical
 
 - [x] P3.1 Incremental tailing (file watchers / checkpoint offsets).
 - [x] P3.2 Sliding window metrics (5m/1h/24h).
-- P3.3 Budget guardrails (per-model/provider burn-rate alerts).
+- [x] P3.3 Budget guardrails (per-model/provider burn-rate alerts).
 
 ## Dependencies (DAG)
 
