@@ -5,6 +5,7 @@ pub mod cache;
 pub mod cli;
 pub mod cost;
 pub mod format;
+pub mod guardrails;
 pub mod ingest;
 pub mod models;
 pub mod orchestrate;
