@@ -36,6 +36,7 @@ fn monthly_aggregation_blends_variable_and_subscription_costs() {
                 model: "model-a".to_string(),
                 session_id: "session-1".to_string(),
                 timestamp: Utc::now(),
+                tenant_id: None,
                 usage: TokenUsage {
                     input_tokens: 1_000_000,
                     output_tokens: 1_000_000,
@@ -50,6 +51,7 @@ fn monthly_aggregation_blends_variable_and_subscription_costs() {
                 model: "model-a".to_string(),
                 session_id: "session-2".to_string(),
                 timestamp: Utc::now(),
+                tenant_id: None,
                 usage: TokenUsage {
                     input_tokens: 2_000_000,
                     output_tokens: 0,
