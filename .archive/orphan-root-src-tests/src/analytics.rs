@@ -1,5 +1,6 @@
 use anyhow::{anyhow, Result};
-use chrono::Datelike;
+use chrono::{DateTime, Datelike, Duration, Utc};
+use serde::Serialize;
 use std::collections::BTreeMap;
 
 use crate::cli::{CoverageArgs, DailyArgs, MonthlyArgs, OutputMode, QueryArgs};
@@ -10,6 +11,84 @@ use crate::utils::{
     print_coverage_table, print_daily_markdown, print_daily_table, render_cost_breakdown,
 };
 
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Serialize)]
+pub enum SlidingWindow {
+    FiveMinutes,
+    OneHour,
+    OneDay,
+}
+
+impl SlidingWindow {
+    pub const ALL: [Self; 3] = [Self::FiveMinutes, Self::OneHour, Self::OneDay];
+
+    pub fn duration(self) -> Duration {
+        match self {
+            Self::FiveMinutes => Duration::minutes(5),
+            Self::OneHour => Duration::hours(1),
+            Self::OneDay => Duration::hours(24),
+        }
+    }
+
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::FiveMinutes => "5m",
+            Self::OneHour => "1h",
+            Self::OneDay => "24h",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct SlidingWindowMetric {
+    pub window: String,
+    pub start: DateTime<Utc>,
+    pub end: DateTime<Utc>,
+    pub event_count: usize,
+    pub session_count: usize,
+    pub tokens: u64,
+    pub tokens_per_second: f64,
+    pub tokens_by_provider: BTreeMap<String, u64>,
+}
+
+pub fn build_sliding_window_metrics(
+    events: &[UsageEvent],
+    end: DateTime<Utc>,
+) -> Vec<SlidingWindowMetric> {
+    SlidingWindow::ALL
+        .into_iter()
+        .map(|window| {
+            let start = end - window.duration();
+            let selected = events
+                .iter()
+                .filter(|event| event.timestamp > start && event.timestamp <= end);
+            let mut sessions = std::collections::BTreeSet::new();
+            let mut tokens_by_provider = BTreeMap::new();
+            let mut event_count = 0;
+            let mut tokens = 0;
+
+            for event in selected {
+                event_count += 1;
+                sessions.insert(&event.session_id);
+                tokens += event.usage.total();
+                *tokens_by_provider
+                    .entry(event.provider.clone())
+                    .or_insert(0) += event.usage.total();
+            }
+
+            let seconds = window.duration().num_seconds() as f64;
+            SlidingWindowMetric {
+                window: window.label().to_string(),
+                start,
+                end,
+                event_count,
+                session_count: sessions.len(),
+                tokens,
+                tokens_per_second: tokens as f64 / seconds,
+                tokens_by_provider,
+            }
+        })
+        .collect()
+}
 
 pub fn run_monthly(args: MonthlyArgs) -> Result<()> {
     let report = build_monthly_report(&args.query, args.month.as_deref())?;
