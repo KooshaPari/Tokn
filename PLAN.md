@@ -36,7 +36,7 @@ produce the event shape above and pricing lookup can resolve a canonical
 
 - [x] P2.1 Claude adapter (`~/.claude/projects`) -> normalized events.
 - [x] P2.2 Codex adapter (`~/.codex/sessions`) -> normalized events.
-- P2.3 Cursor adapter (SQLite + logs) -> normalized events.
+- [x] P2.3 Cursor adapter (SQLite + logs) -> normalized events.
 - P2.4 Droid adapter (session logs) -> normalized events.
 
 ## Phase 3: Real-Time Runtime
