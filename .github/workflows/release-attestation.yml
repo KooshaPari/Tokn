@@ -48,9 +48,13 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p release-artifacts
-          # Copy all built executables
-          find target/release -maxdepth 1 -type f -executable \
-            -exec cp -t release-artifacts/ {} + 2>/dev/null || true
+          # Copy built executables; fail if none exist (no soft-fail empty stage).
+          mapfile -t bins < <(find target/release -maxdepth 1 -type f -executable ! -name '*.d' || true)
+          if [ "${#bins[@]}" -eq 0 ]; then
+            echo "::error::No executables found under target/release after build"
+            exit 1
+          fi
+          cp -t release-artifacts/ "${bins[@]}"
           # Source tarball
           tar \
             --exclude='./target' \
@@ -77,7 +81,7 @@ jobs:
         with:
           name: release-artifacts
           path: ${{ env.CARGO_WORKDIR }}/release-artifacts/
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 90
 
       - name: Attest build provenance (SLSA Build L2)

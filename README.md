@@ -19,8 +19,10 @@
 > human operator. Bug reports and contributions are still welcome, but please
 > expect AI-generated code, comments, and documentation throughout.
 <!-- AI-DD-META:END -->
-> **Work state:** ACTIVE · **Progress:** `████████░░ 70%` · **Workspace version:** `0.1.1` (not yet tagged / not published to crates.io)
+> **Work state:** ACTIVE · **Progress:** `█████████░ 80%` · **Workspace version:** `0.1.5` (next tag `v0.1.5`; local tags through `v0.1.4`; not published to crates.io)
 > Token-ledger / usage accounting (tokenledger) **and the canonical Phenotype Rust ROUTING substrate** — `tokenledger::routing` (hexagonal: pareto_router/ports/adapters). Consumed by OmniRoute per ADR-001. · updated 2026-07-18
+>
+> **Release prep (T1):** see [`docs/guides/cutting-a-release.md`](docs/guides/cutting-a-release.md) for exact tag / `gh release` commands.
 
 ![Build Status](https://github.com/KooshaPari/Tokn/actions/workflows/ci.yml/badge.svg)
 ![Security Audit](https://github.com/KooshaPari/Tokn/actions/workflows/audit.yml/badge.svg)
@@ -28,7 +30,7 @@
 
 # Tokn (tokenledger)
 
-**Status:** alpha · **crate versions:** `0.1.1` (workspace)
+**Status:** alpha · **crate versions:** `0.1.5` (workspace)
 
 Enterprise-grade token management and pricing governance system for AI coding agents.
 
@@ -210,6 +212,12 @@ MIT License - see LICENSE file
 **Maintained by**: Phenotype Org  
 **Last Updated**: 2026-07-18
 
+## Cutting a release
+
+See **[`docs/guides/cutting-a-release.md`](docs/guides/cutting-a-release.md)** for the
+operator checklist (annotate tag `v0.1.5`, push tag, verify `gh release` assets). Do not
+create the tag until `main` holds the release commit.
+
 ## Documentation
 
 This repository includes the following cross-cutting documents:
@@ -218,4 +226,5 @@ This repository includes the following cross-cutting documents:
 - [`SPEC.md`](SPEC.md) — formal specification of behavior and contracts
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — system architecture and component overview
 - [`docs/`](docs/) — design notes, ADRs, and supporting documentation (see [`docs/index.md`](docs/index.md))
+- [`docs/guides/cutting-a-release.md`](docs/guides/cutting-a-release.md) — how to cut `v0.1.5`
 

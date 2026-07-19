@@ -71,15 +71,25 @@ jobs:
           set -euo pipefail
           mkdir -p dist
           if [ "${RUNNER_OS}" = "Windows" ]; then
-            cp "target/${{ matrix.target }}/release/tokenledger.exe" "dist/${{ matrix.artifact_name }}"
+            src="target/${{ matrix.target }}/release/tokenledger.exe"
           else
-            cp "target/${{ matrix.target }}/release/tokenledger" "dist/${{ matrix.artifact_name }}"
+            src="target/${{ matrix.target }}/release/tokenledger"
+          fi
+          if [ ! -f "$src" ]; then
+            echo "::error::Built binary missing: $src"
+            exit 1
+          fi
+          cp "$src" "dist/${{ matrix.artifact_name }}"
+          if [ "${RUNNER_OS}" != "Windows" ]; then
             chmod +x "dist/${{ matrix.artifact_name }}"
           fi
+          ls -la "dist/${{ matrix.artifact_name }}"
 
+      # Fail hard if the packaged file is missing — never soft-fail empty assets.
       - name: Upload release asset
         uses: softprops/action-gh-release@v2
         with:
           files: dist/${{ matrix.artifact_name }}
+          fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.github_token || secrets.GITHUB_TOKEN }}

@@ -897,7 +897,7 @@ checksum = "7c87def4c32ab89d880effc9e097653c8da5d6ef28e6b539d313baaacfbafcbe"
 
 [[package]]
 name = "pareto-rs"
-version = "0.1.1"
+version = "0.1.5"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1581,7 +1581,7 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "tokenledger-rs"
-version = "0.1.1"
+version = "0.1.5"
 dependencies = [
  "anyhow",
  "async-trait",
