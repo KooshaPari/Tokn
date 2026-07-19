@@ -73,3 +73,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Security
+
+---
+
+## [0.1.5] - 2026-07-18
+
+### Added
+
+- Release cut guide: [`docs/guides/cutting-a-release.md`](docs/guides/cutting-a-release.md)
+  (tag + `gh release` commands for operators; no tag created in-repo)
+
+### Changed
+
+- **Version:** workspace `package.version` aligned to **0.1.5** (next release after
+  local tags `v0.1.2`–`v0.1.4`; crates were previously stuck at `0.1.1` in Cargo.toml)
+- **Release workflows:** `binaries.yml` fails hard if the packaged binary is missing
+  (`fail_on_unmatched_files: true`); attestation staging no longer soft-fails empty
+  executable copies
+- **crates.io publish:** `release-crates.yml` requires `CARGO_REGISTRY_TOKEN` on tag
+  publishes; soft-fail retained only for PR dry-runs under empty Actions billing and
+  for idempotent “already published” crate versions
+
+### Fixed
+
+- Ensure `aarch64-apple-darwin` remains in the binary matrix and release asset upload
+  path is verified before attach
