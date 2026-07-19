@@ -14,6 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      # Soft-fail (`|| true`): intentional while GH Actions billing is empty / dry-runs
+      # may fail without network registry access. TODO(T1): remove once release CI is
+      # funded and dry-run is a hard gate on PRs that touch crates/.
       - run: cargo publish --dry-run -p pareto-rs || true
       - run: cargo publish --dry-run -p tokenledger-rs || true
   publish:
@@ -27,6 +30,8 @@ jobs:
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
         run: |
+          # Soft-fail on pareto-rs only: crate may already be published at this version.
+          # TODO(T1): fail hard when CARGO_REGISTRY_TOKEN is present and version is new.
           cargo publish -p pareto-rs --token "$CARGO_REGISTRY_TOKEN" || echo "pareto-rs publish skipped (may already exist)"
           sleep 30
           cargo publish -p tokenledger-rs --token "$CARGO_REGISTRY_TOKEN"

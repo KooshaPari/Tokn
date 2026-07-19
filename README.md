@@ -19,39 +19,50 @@
 > human operator. Bug reports and contributions are still welcome, but please
 > expect AI-generated code, comments, and documentation throughout.
 <!-- AI-DD-META:END -->
-> **Work state:** ACTIVE · **Progress:** `███████░░░ 65%`
-> Token-ledger / usage accounting (tokenledger) **and the canonical Phenotype Rust ROUTING substrate** — `tokenledger::routing` (hexagonal: pareto_router/ports/adapters). Consumed by OmniRoute per ADR-001. · updated 2026-06-03
+> **Work state:** ACTIVE · **Progress:** `████████░░ 70%` · **Workspace version:** `0.1.1` (not yet tagged / not published to crates.io)
+> Token-ledger / usage accounting (tokenledger) **and the canonical Phenotype Rust ROUTING substrate** — `tokenledger::routing` (hexagonal: pareto_router/ports/adapters). Consumed by OmniRoute per ADR-001. · updated 2026-07-18
 
-![Build Status](https://github.com/KooshaPari/Tokn/actions/workflows/quality-gate.yml/badge.svg)
-![Security Audit](https://github.com/KooshaPari/Tokn/actions/workflows/security-guard.yml/badge.svg)
-![Policy Compliance](https://github.com/KooshaPari/Tokn/actions/workflows/policy-gate.yml/badge.svg)
+![Build Status](https://github.com/KooshaPari/Tokn/actions/workflows/ci.yml/badge.svg)
+![Security Audit](https://github.com/KooshaPari/Tokn/actions/workflows/audit.yml/badge.svg)
+![Policy Compliance](https://github.com/KooshaPari/Tokn/actions/workflows/deny.yml/badge.svg)
 
 # Tokn (tokenledger)
 
-**Status:** alpha
+**Status:** alpha · **crate versions:** `0.1.1` (workspace)
 
 Enterprise-grade token management and pricing governance system for AI coding agents.
 
 This repository works with Claude and other AI agents as autonomous software engineers.
 
+## Install
+
+```bash
+cargo install --path crates/tokenledger --locked
+```
+
+Installs the `tokenledger` binary from package `tokenledger-rs`. No crates.io publish required.
+
 ## Workspace
 
 This is a Rust workspace with two main crates:
 
-- **tokenledger** — Enterprise-grade token management and pricing governance system. Provides unified token and cost tracking across multiple AI provider APIs with optimization recommendations.
-- **ParetoRs** — Pareto-optimal cost engine for AI coding agents. Delivers cost optimization and resource allocation algorithms for multi-provider agent orchestration.
+- **tokenledger** (`crates/tokenledger`, package `tokenledger-rs`) — Enterprise-grade token management and pricing governance system. Provides unified token and cost tracking across multiple AI provider APIs with optimization recommendations.
+- **pareto-rs** (`crates/pareto-rs`) — Pareto-optimal cost engine for AI coding agents. Delivers cost optimization and resource allocation algorithms for multi-provider agent orchestration.
 
 ## Quick Start
 
 ```bash
+# Install CLI (from repo root)
+cargo install --path crates/tokenledger --locked
+
 # Development
-cargo run
+cargo run -p tokenledger-rs
 
 # Testing
-cargo test
+cargo test --workspace
 
 # Linting
-cargo clippy
+cargo clippy --workspace
 ```
 
 ## Environment
@@ -168,11 +179,12 @@ agentapi --cliproxy http://localhost:8317
 
 **Quick Commands**:
 ```bash
-cargo build                 # Development build
-cargo test                  # Test suite
-cargo clippy               # Lint check
-cargo audit                # Security scan
-cargo tarpaulin            # Coverage report
+cargo install --path crates/tokenledger --locked   # Install CLI
+cargo build --workspace                            # Development build
+cargo test --workspace                             # Test suite
+cargo clippy --workspace                           # Lint check
+cargo audit                                        # Security scan
+cargo tarpaulin                                    # Coverage report
 ```
 
 ## Integration & Adoption
@@ -196,7 +208,7 @@ MIT License - see LICENSE file
 
 **Status**: Active development (agent provider expansion)  
 **Maintained by**: Phenotype Org  
-**Last Updated**: 2026-04-24
+**Last Updated**: 2026-07-18
 
 ## Documentation
 
