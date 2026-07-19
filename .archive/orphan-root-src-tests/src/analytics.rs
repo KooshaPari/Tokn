@@ -10,6 +10,7 @@ use crate::utils::{
     print_coverage_table, print_daily_markdown, print_daily_table, render_cost_breakdown,
 };
 
+
 pub fn run_monthly(args: MonthlyArgs) -> Result<()> {
     let report = build_monthly_report(&args.query, args.month.as_deref())?;
     render_cost_breakdown(
