@@ -41,13 +41,13 @@ pub fn evaluate_budget_guardrails(
                     limit
                         .provider
                         .as_deref()
-                        .map_or(true, |provider| provider == event.provider)
+                        .is_none_or(|provider| provider == event.provider)
                 })
                 .filter(|event| {
                     limit
                         .model
                         .as_deref()
-                        .map_or(true, |model| model == event.model)
+                        .is_none_or(|model| model == event.model)
                 })
                 .map(|event| event.usage.total())
                 .sum::<u64>();

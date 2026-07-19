@@ -21,6 +21,7 @@ This index lists the design notes, ADRs, and supporting documentation maintained
 - [`document-index/`](document-index/) — Document Index (1 document)
 - [`fragemented/`](fragemented/) — Fragemented (3 documents)
 - [`governance/`](governance/) — Governance (1 document)
+- [`guides/`](guides/) — Guides (cutting a release)
 - [`integrations/`](integrations/) — Integrations (1 document)
 - [`journeys/`](journeys/) — Journeys (2 documents)
 - [`operations/`](operations/) — Operations (1 document)
