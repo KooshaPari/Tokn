@@ -57,12 +57,16 @@ fn cost_report_json_and_suggestions_are_stable() {
     let json = serde_json::to_value(&report).expect("cost report should serialize as JSON");
     assert_eq!(json["total_tokens"], 700_000);
     assert_eq!(json["provider_breakdown"][0]["name"], "provider-a");
-    assert!(report
-        .suggestions
-        .iter()
-        .any(|tip| tip.contains("Tool-token share is high")));
-    assert!(report
-        .suggestions
-        .iter()
-        .any(|tip| tip.contains("Blended variable $/MTok is high")));
+    assert!(
+        report
+            .suggestions
+            .iter()
+            .any(|tip| tip.contains("Tool-token share is high"))
+    );
+    assert!(
+        report
+            .suggestions
+            .iter()
+            .any(|tip| tip.contains("Blended variable $/MTok is high"))
+    );
 }

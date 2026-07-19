@@ -40,7 +40,10 @@ fn trailing_windows_use_exclusive_start_and_inclusive_end() {
     assert_eq!(metrics[0].event_count, 1);
     assert_eq!(metrics[0].session_count, 1);
     assert_eq!(metrics[0].tokens, 100);
-    assert_eq!(metrics[0].tokens_by_provider, BTreeMap::from([(String::from("claude"), 100)]));
+    assert_eq!(
+        metrics[0].tokens_by_provider,
+        BTreeMap::from([(String::from("claude"), 100)])
+    );
 
     assert_eq!(metrics[1].window, "1h");
     assert_eq!(metrics[1].event_count, 2);

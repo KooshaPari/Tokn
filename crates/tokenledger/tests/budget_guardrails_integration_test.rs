@@ -1,6 +1,6 @@
 use chrono::{Duration, TimeZone, Utc};
 use tokenledger::analytics::SlidingWindow;
-use tokenledger::guardrails::{evaluate_budget_guardrails, BudgetLimit};
+use tokenledger::guardrails::{BudgetLimit, evaluate_budget_guardrails};
 use tokenledger::models::{TokenUsage, UsageEvent};
 
 fn event(provider: &str, model: &str, tokens: u64, minutes_ago: i64) -> UsageEvent {
