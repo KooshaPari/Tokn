@@ -7,7 +7,7 @@ on:
         required: false
         type: string
     secrets:
-      github_token:
+      release_token:
         required: false
   workflow_dispatch:
     inputs:
@@ -92,4 +92,4 @@ jobs:
           files: dist/${{ matrix.artifact_name }}
           fail_on_unmatched_files: true
         env:
-          GITHUB_TOKEN: ${{ secrets.github_token || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.release_token || secrets.GITHUB_TOKEN }}
