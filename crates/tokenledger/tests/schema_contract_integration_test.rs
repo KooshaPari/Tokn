@@ -8,9 +8,7 @@ use std::collections::HashMap;
 
 use chrono::{DateTime, Utc};
 use serde_json::json;
-use tokenledger::models::{
-    ModelRate, PricingBook, ProviderPricing, TokenUsage, UsageEvent,
-};
+use tokenledger::models::{ModelRate, PricingBook, ProviderPricing, TokenUsage, UsageEvent};
 use tokenledger::utils::{resolve_model_alias, resolve_provider_alias, validate_aliases};
 
 #[test]
@@ -94,7 +92,10 @@ fn pricing_aliases_resolve_to_canonical_provider_and_model() {
         ProviderPricing {
             subscription_usd_month: 30.0,
             models,
-            model_aliases: HashMap::from([(String::from("sonnet"), String::from("claude-sonnet-4-5"))]),
+            model_aliases: HashMap::from([(
+                String::from("sonnet"),
+                String::from("claude-sonnet-4-5"),
+            )]),
         },
     );
     let pricing = PricingBook {
@@ -105,7 +106,10 @@ fn pricing_aliases_resolve_to_canonical_provider_and_model() {
 
     validate_aliases(&pricing).expect("all aliases point at declared entries");
     assert_eq!(resolve_provider_alias("anthropic", &pricing), "claude");
-    assert_eq!(resolve_model_alias("claude", "sonnet", &pricing), "claude-sonnet-4-5");
+    assert_eq!(
+        resolve_model_alias("claude", "sonnet", &pricing),
+        "claude-sonnet-4-5"
+    );
 }
 
 #[test]
