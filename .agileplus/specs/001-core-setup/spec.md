@@ -19,16 +19,19 @@ This spec tracks the core setup and compliance work for Tokn to achieve 100% gov
 ## Work Packages
 
 ### WP1: Repository Hygiene
+
 - Setup .github directory structure
 - Create PR template with checklists
 - Add CODEOWNERS file
 
 ### WP2: Error Monitoring
+
 - Integrate Sentry SDK
 - Configure error alerting
 - Set up error classification
 
 ### WP3: Analytics Instrumentation
+
 - Identify key user events
 - Instrument event tracking
 - Create analytics dashboard
