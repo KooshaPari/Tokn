@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 `<DONE>`
+=======
+>>>>>>> 5631926 (fix(tokenledger): resolve compile errors after utils.rs module split)
 # Unified E2E Research and Architecture (2026-02-21)
 
 ## Objective
