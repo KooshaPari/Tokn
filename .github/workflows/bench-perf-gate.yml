@@ -1,0 +1,48 @@
+name: Bench and Perf Gate
+
+on:
+  pull_request:
+    paths:
+      - "tokenledger/src/**"
+      - "tokenledger/benchmarks/**"
+      - "tokenledger/scripts/perf_gate.sh"
+      - "tokenledger/Cargo.toml"
+      - "tokenledger/Cargo.lock"
+      - "tokenledger/examples/**"
+      - "tokenledger/pricing.example.json"
+  push:
+    branches:
+      - main
+    paths:
+      - "tokenledger/src/**"
+      - "tokenledger/benchmarks/**"
+      - "tokenledger/scripts/perf_gate.sh"
+      - "tokenledger/Cargo.toml"
+      - "tokenledger/Cargo.lock"
+      - "tokenledger/examples/**"
+      - "tokenledger/pricing.example.json"
+
+jobs:
+  bench-perf-gate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tokenledger
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry and target
+        uses: Swatinem/rust-cache@v2
+
+      - name: Run benchmark scenarios
+        run: cargo run --quiet -- bench --scenario all --events ./examples/events.jsonl --pricing ./pricing.example.json --json-output > /tmp/tokenledger-bench.json
+
+      - name: Verify benchmark golden baseline lock
+        run: cargo run --quiet -- bench --scenario all --events ./examples/events.jsonl --pricing ./pricing.example.json --golden ./benchmarks/fixtures/bench-golden.json --golden-epsilon 0.0001 --json-output > /tmp/tokenledger-bench-golden-check.json
+
+      - name: Run strict perf gate (cold-backfill + warm-tail + burst)
+        run: PERF_STRICT=1 PERF_BASELINE=./benchmarks/results/latest-summary.json ./scripts/perf_gate.sh
