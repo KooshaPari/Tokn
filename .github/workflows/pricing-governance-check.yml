@@ -1,0 +1,68 @@
+name: Pricing Governance Check
+
+on:
+  pull_request:
+    paths:
+      - "tokenledger/src/**"
+      - "tokenledger/examples/**"
+      - "tokenledger/pricing.example.json"
+      - "tokenledger/Cargo.toml"
+      - "tokenledger/Cargo.lock"
+      - "tokenledger/Taskfile.yml"
+      - "tokenledger/README.md"
+      - "tokenledger/docs/**"
+      - "tokenledger/.github/workflows/pricing-governance-check.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "tokenledger/src/**"
+      - "tokenledger/examples/**"
+      - "tokenledger/pricing.example.json"
+      - "tokenledger/Cargo.toml"
+      - "tokenledger/Cargo.lock"
+      - "tokenledger/Taskfile.yml"
+      - "tokenledger/README.md"
+      - "tokenledger/docs/**"
+      - "tokenledger/.github/workflows/pricing-governance-check.yml"
+
+jobs:
+  pricing-governance-check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tokenledger
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry and target
+        uses: Swatinem/rust-cache@v2
+
+      - name: Pricing lint
+        run: cargo run -- pricing-lint --pricing ./pricing.example.json
+
+      - name: Pricing audit
+        run: cargo run -- pricing-audit --pricing ./pricing.example.json
+
+      - name: Pricing check
+        run: cargo run -- pricing-check --events ./examples/events.jsonl --pricing ./pricing.example.json --month 2026-02
+
+      - name: Orchestrate aggregate cache profile (sample data)
+        run: |
+          mkdir -p ./artifacts ./benchmarks/results
+          printf '%s\n' '{"provider":"proxyapi","model":"proxyapi-default","session_id":"ci-cache-profile","timestamp":"2026-02-01T00:00:00Z","usage":{"input_tokens":1000,"output_tokens":500,"cache_write_tokens":0,"cache_read_tokens":0,"tool_input_tokens":0,"tool_output_tokens":0}}' > ./artifacts/ci-cache-profile.sample.jsonl
+          cargo run -- orchestrate --skip-ingest --events-out ./artifacts/ci-cache-profile.sample.jsonl --month 2026-02 --pricing ./pricing.example.json --aggregate-cache-path ./benchmarks/results/orchestrate-aggregate-cache.ci.json --pipeline-summary-path ./benchmarks/results/orchestrate-cache-summary.ci.first.json --skip-pricing-reconcile --skip-bench --skip-gate --on-unpriced skip
+          cargo run -- orchestrate --skip-ingest --events-out ./artifacts/ci-cache-profile.sample.jsonl --month 2026-02 --pricing ./pricing.example.json --aggregate-cache-path ./benchmarks/results/orchestrate-aggregate-cache.ci.json --pipeline-summary-path ./benchmarks/results/orchestrate-cache-summary.ci.second.json --skip-pricing-reconcile --skip-bench --skip-gate --on-unpriced skip
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          first = json.loads(Path("./benchmarks/results/orchestrate-cache-summary.ci.first.json").read_text())["aggregate_cache"]
+          second = json.loads(Path("./benchmarks/results/orchestrate-cache-summary.ci.second.json").read_text())["aggregate_cache"]
+          assert first["enabled"] is True and first["miss_count"] >= 1, first
+          assert second["hit_count"] >= 1, second
+          print("orchestrate aggregate cache profile passed")
+          PY
