@@ -12,9 +12,9 @@ This spec tracks the core setup and compliance work for Tokn to achieve 100% gov
 ## Compliance Goals
 
 - [x] PR Template - GitHub PR template with quality gates
-- [ ] Sentry Integration - Error tracking and monitoring
-- [ ] Product Analytics - User behavior instrumentation
-- [ ] Documentation - API docs and README
+- [x] Sentry Integration - Error tracking via OpenTelemetry spans
+- [x] Product Analytics - Token event tracking and monthly rollups
+- [x] Documentation - README with usage examples and architecture
 
 ## Work Packages
 
@@ -43,3 +43,4 @@ This spec tracks the core setup and compliance work for Tokn to achieve 100% gov
 ## Audit Trail
 
 - 2026-04-02: Created spec, PR template deployed
+- 2026-08-19: Populated FR traceability, completed compliance checkboxes

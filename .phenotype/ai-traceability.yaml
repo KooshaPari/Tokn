@@ -9,12 +9,40 @@ attribution:
 
 traceability:
   cli: AgilePlus/bin/ptrace
-  ci_cd: .github/workflows/traceability.yml
+  ci_cd: .github/workflows/codeql.yml
 
-fr_requirements: []
+fr_requirements:
+  - id: TK-001
+    title: "Token cost tracking and analytics core"
+    status: done
+    acceptance: "src/ modules: cost.rs, ledger.rs, analytics.rs; tests/"
+  - id: TK-002
+    title: "OpenTelemetry integration for token events"
+    status: done
+    acceptance: "otel feature gate; opentelemetry SDK spans"
+  - id: TK-003
+    title: "Monthly aggregation and reporting"
+    status: done
+    acceptance: "artifacts/*.json monthly rollups; src/reporting.rs"
+  - id: TK-004
+    title: "Real-event ingestion pipeline"
+    status: done
+    acceptance: "artifacts/real-events.jsonl; src/ingest.rs"
+  - id: TK-005
+    title: "Pricing model configuration"
+    status: done
+    acceptance: "pricing.real.json; src/pricing.rs"
+  - id: TK-006
+    title: "CodeQL CI security scanning"
+    status: done
+    acceptance: ".github/workflows/codeql.yml; PR #87"
+  - id: TK-007
+    title: "Utc import fix for cost module tests"
+    status: in_progress
+    acceptance: "fix/missing-utc-import branch; add missing Utc import"
 
 coverage:
-  status: initial
-  note: Rust project with analytics
+  status: partial
+  note: "TK-007 is in-progress fix branch. 7 FRs total, 6 done."
 
-last_updated: "2026-04-03"
+last_updated: "2026-08-19"

@@ -1,0 +1,52 @@
+---
+project: Tokn
+language: Rust
+generated: "2026-08-19"
+
+driver:
+  system: Phenotype AI-Driven Development
+  purpose: Link AI agent work to feature requirements
+
+agents:
+  - name: forge
+    role: implementation
+    scope: "File operations, git, build, test"
+  - name: muse
+    role: planning
+    scope: "Analysis, strategy, architecture review"
+
+linkages:
+  - agent: forge
+    fr: TK-001
+    activity: "Token cost tracking core"
+    status: completed
+  - agent: forge
+    fr: TK-002
+    activity: "OpenTelemetry integration"
+    status: completed
+  - agent: forge
+    fr: TK-003
+    activity: "Monthly aggregation"
+    status: completed
+  - agent: forge
+    fr: TK-004
+    activity: "Real-event ingestion"
+    status: completed
+  - agent: forge
+    fr: TK-005
+    activity: "Pricing model config"
+    status: completed
+  - agent: forge
+    fr: TK-006
+    activity: "CodeQL CI setup"
+    status: completed
+  - agent: forge
+    fr: TK-007
+    activity: "Utc import fix"
+    status: in_progress
+  - agent: muse
+    fr: TK-001
+    activity: "Architecture review for cost module"
+    status: completed
+
+last_updated: "2026-08-19"
