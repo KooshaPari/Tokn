@@ -42,3 +42,5 @@ docs/package-lock.json
 .llmignore
 Tokn-wtrees/
 .grade-reports/
+artifacts/ 
+*.jsonl 
