@@ -1,0 +1,18 @@
+# cargo-mutants configuration
+# https://mutants.rs/
+
+# Exclude generated / non-functional files from mutation testing
+exclude_globs = [
+    "fuzz/**",
+    "benches/**",
+    "artifacts/**",
+    "tests/**",
+    "tests_fr_additional.rs",
+    "validate_governance.py",
+]
+
+# Maximum time per mutant before it is killed as unviable
+timeout = 120
+
+# Order mutants by estimated impact first
+order = "uniqueness"

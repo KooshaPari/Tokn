@@ -3,5 +3,15 @@ name = "fuzz"
 version = "0.0.0"
 publish = false
 edition = "2021"
+autobins = false
+
 [dependencies]
 libfuzzer-sys = "0.4"
+tokenledger = { path = "../crates/tokenledger" }
+
+[[bin]]
+name = "fuzz_parse"
+path = "fuzz_targets/fuzz_parse.rs"
+test = false
+doc = false
+bench = false

@@ -3,6 +3,7 @@
 
 # Build artifacts
 /target/
+/artifacts/
 **/*.rs.bk
 Cargo.lock.bak
 
