@@ -1,0 +1,15 @@
+{
+  "app": {
+    "name": "Tokn",
+    "description": "Tokn - Helios ecosystem component"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete"
+  }
+}
