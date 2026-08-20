@@ -1,0 +1,72 @@
+"area:agents":
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/tokn/agents/**
+
+"area:cli":
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/tokn/cli/**
+
+"area:environments":
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/tokn/environments/**
+
+"area:adapters":
+  - changed-files:
+      - any-glob-to-any-file:
+          - adapters/**
+          - registry.json
+
+"area:registry":
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/tokn/auth/**
+          - src/tokn/db/**
+          - src/tokn/publisher/**
+          - src/tokn/registry/**
+          - src/tokn/storage/**
+
+"area:viewer":
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/tokn/viewer/**
+          - apps/viewer/**
+
+"area:tests":
+  - changed-files:
+      - any-glob-to-any-file:
+          - tests/**
+
+"area:docs":
+  - changed-files:
+      - any-glob-to-any-file:
+          - docs/**
+          - examples/**
+          - "*.md"
+
+"area:ci":
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/**
+
+"area:package":
+  - changed-files:
+      - any-glob-to-any-file:
+          - pyproject.toml
+          - uv.lock
+
+"area:core":
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/tokn/models/**
+          - src/tokn/orchestrators/**
+          - src/tokn/verifier/**
+          - src/tokn/llms/**
+          - src/tokn/tasks/**
+          - src/tokn/trial/**
+          - src/tokn/metrics/**
+          - src/tokn/mappers/**
+          - src/tokn/utils/**
+          - src/tokn/*.py
