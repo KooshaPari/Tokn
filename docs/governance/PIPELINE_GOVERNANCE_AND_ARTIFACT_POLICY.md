@@ -92,7 +92,6 @@ Operational behavior:
 3. `invalidate_count`
 4. `enabled`
 5. `cache_path`
-<<<<<<< HEAD
 
 <!-- PHENOTYPE_GOVERNANCE_OVERLAY_V1 -->
 ## Phenotype Governance Overlay v1
@@ -104,5 +103,3 @@ Operational behavior:
 - Require policy gating, auditability, and traceable correlation IDs for agent and workflow actions.
 - Document architectural and protocol decisions before broad rollout changes.
 
-=======
->>>>>>> 5631926 (fix(tokenledger): resolve compile errors after utils.rs module split)

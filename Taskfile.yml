@@ -34,14 +34,11 @@ tasks:
     cmds:
       - cargo test
 
-<<<<<<< HEAD
   coverage:
     desc: Coverage report (SSOT for how to measure coverage)
     cmds:
       - cargo tarpaulin --workspace
 
-=======
->>>>>>> 5631926 (fix(tokenledger): resolve compile errors after utils.rs module split)
   run:sample:
     cmds:
       - cargo run -- monthly --events ./examples/events.jsonl --pricing ./pricing.example.json --month 2026-02
@@ -216,7 +213,6 @@ tasks:
   ledger:sql:validate:
     cmds:
       - python3 -c "import sqlite3; conn=sqlite3.connect(':memory:'); conn.executescript(open('./ledger/unified_model_provider_ledger.schema.sql','r',encoding='utf-8').read()); conn.executescript(open('./ledger/unified_model_provider_ledger.seed.sql','r',encoding='utf-8').read()); rows=conn.execute('SELECT COUNT(*) FROM unified_model_provider_ledger').fetchone()[0]; print(f'ledger_rows={rows}')"
-<<<<<<< HEAD
 
   grade:
     desc: Full grade (strictest — no caching)
@@ -244,5 +240,3 @@ tasks:
       - lefthook install
     status:
       - test -f .git/hooks/lefthook
-=======
->>>>>>> 5631926 (fix(tokenledger): resolve compile errors after utils.rs module split)

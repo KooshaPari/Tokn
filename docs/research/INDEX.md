@@ -1,10 +1,7 @@
 # Research Index
 
-<<<<<<< HEAD
 `<DONE>`
 
-=======
->>>>>>> 5631926 (fix(tokenledger): resolve compile errors after utils.rs module split)
 - `docs/research/USAGE_AUDIT_AND_MARKET_SCAN.md`
 - `docs/research/DEEP_RESEARCH_AND_OPTIMIZATION_PLAN.md`
 - `docs/research/UNIFIED_E2E_RESEARCH_AND_ARCHITECTURE_2026-02-21.md`

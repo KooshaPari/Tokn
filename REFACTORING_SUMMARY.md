@@ -89,7 +89,6 @@ main.rs (thin entry point)
 ```
 
 ## Known Issues / TODO
-<<<<<<< HEAD
 ### Compile-time Dependencies (RESOLVED)
 All 108 compile errors from the initial modularization have been fixed:
 - Test helper functions properly exported from utils
@@ -104,26 +103,6 @@ stub pricing patch JSON (fix merged in PR #168).
 - **Original**: 51 tests in monolithic main.rs
 - **Current**: 64 tests passing (55 unit + 9 integration), 0 failures
 - `cargo test` and `cargo clippy -- -D warnings` both pass clean
-=======
-### Compile-time Dependencies (108 errors remain)
-Due to the complexity of cross-module refactoring:
-1. Some test helper functions not properly exported from utils
-2. Circular import patterns between pricing/ingest/orchestrate
-3. Missing type/function re-exports for tests
-4. Some helper functions referenced but not exported (e.g., `execute_pricing_audit`)
-
-### Resolution Strategy
-The main issues are in how tests reference internal functions. To complete:
-1. Make all test helper functions public or move to utils module
-2. Add `pub use` re-exports for frequently used types
-3. Reorganize utils.rs test module to import from correct modules
-4. Ensure all functions called by tests are properly exported
-
-## Test Status
-- **Original**: 51 tests passing in monolithic main.rs
-- **After refactoring**: Needs import/export fixes for tests to compile
-- **Expected after fixes**: All 51 tests should pass (no logic changed)
->>>>>>> 5631926 (fix(tokenledger): resolve compile errors after utils.rs module split)
 
 ## Key Design Decisions
 1. **Models separate from CLI**: Data structures isolated from clap/CLI concerns
@@ -148,22 +127,7 @@ The main issues are in how tests reference internal functions. To complete:
 
 **Per-module max**: 3800 lines (utils) - still large but far better than 8759
 
-<<<<<<< HEAD
 ## Notes
 - No business logic changed in the structural refactoring
 - Module boundaries are clean and maintainable
 - Code is production-ready; all tests pass and clippy is clean
-=======
-## Next Steps
-1. Fix test imports by ensuring all test-called functions are in public scope
-2. Add re-export statements (`pub use`) for commonly accessed types
-3. Run `cargo test` - should pass all 51 tests
-4. Run `cargo clippy` - address any style/efficiency warnings
-5. Final commit: `refactor(tokenledger): split 8759-line main.rs into focused modules`
-
-## Notes
-- No business logic changed - purely structural refactoring
-- All tests should pass identically after import fixes
-- Code is production-ready once compile errors resolved
-- Module boundaries are clean and maintainable
->>>>>>> 5631926 (fix(tokenledger): resolve compile errors after utils.rs module split)

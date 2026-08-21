@@ -2,7 +2,6 @@
 
 ## Phase 1: Bootstrap Core
 
-<<<<<<< HEAD
 - [x] P1.1 Define normalized event schema and pricing schema.
 - [x] P1.2 Implement monthly aggregation and blended cost formulas.
 - [x] P1.3 Implement table/json output and suggestion engine.
@@ -45,24 +44,6 @@ produce the event shape above and pricing lookup can resolve a canonical
 - [x] P3.1 Incremental tailing (file watchers / checkpoint offsets).
 - [x] P3.2 Sliding window metrics (5m/1h/24h).
 - [x] P3.3 Budget guardrails (per-model/provider burn-rate alerts).
-=======
-- P1.1 Define normalized event schema and pricing schema.
-- P1.2 Implement monthly aggregation and blended cost formulas.
-- P1.3 Implement table/json output and suggestion engine.
-
-## Phase 2: Provider Adapters
-
-- P2.1 Claude adapter (`~/.claude/projects`) -> normalized events.
-- P2.2 Codex adapter (`~/.codex/sessions`) -> normalized events.
-- P2.3 Cursor adapter (SQLite + logs) -> normalized events.
-- P2.4 Droid adapter (session logs) -> normalized events.
-
-## Phase 3: Real-Time Runtime
-
-- P3.1 Incremental tailing (file watchers / checkpoint offsets).
-- P3.2 Sliding window metrics (5m/1h/24h).
-- P3.3 Budget guardrails (per-model/provider burn-rate alerts).
->>>>>>> 5631926 (fix(tokenledger): resolve compile errors after utils.rs module split)
 
 ## Dependencies (DAG)
 
