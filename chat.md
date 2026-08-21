@@ -304,14 +304,14 @@ Actions
 
 6. Ready-to-use “Scenario list” table (paste into Notion)
    Scenario Role Workflow Expected Class Priority Status Owner
-   S-01 Apply never for reasoner code_reasoner Route FQ P0 ☐ **_
-   S-02 Apply role only AP code_apply_patch Route/DAG AP P0 ☐ _**
+   S-01 Apply never for reasoner code*reasoner Route FQ P0 ☐ \*\**
+   S-02 Apply role only AP code*apply_patch Route/DAG AP P0 ☐ ***
    S-03 VF never primary critical agent_workflow Route FQ P0 ☐ **_
    S-04 C0 wins patch gen code_patch_generator Route C0 P1 ☐ _**
    S-05 CU multipliers under scarcity code_patch_generator Route CU low-mult P1 ☐ **_
    S-08 UB early-day scaffold code_scaffold_fast Route UB P1 ☐ _**
    S-09 UB late-day avoided code_scaffold_fast Route UF/MQ/SH P1 ☐ **_
-   S-23 Single-file DAG success small_transform(file) DAG patch:C0/MQ + apply:AP P0 ☐ _**
+   S-23 Single-file DAG success small_transform(file) DAG patch:C0/MQ + apply:AP P0 ☐ _\*\*
    S-24 Apply failure escalates file apply_patch DAG escalate reasoner P0 ☐ \_\_\_
 
 (Add the rest of S-06…S-26 as needed.)
@@ -1834,7 +1834,7 @@ def plan_shadow_from_remaining(actual_remaining: float, expected_remaining: floa
 ratio = actual_remaining / max(expected_remaining, eps)
 return 1.0 / max(ratio, eps)
 
-def compute_effective_cost_per_call(
+def compute*effective_cost_per_call(
 offer_row: pd.Series,
 plan_row: Optional[pd.Series],
 ctrl: Controls,
@@ -1843,7 +1843,7 @@ tok_out: float,
 cache_hit_tokens: float = 0.0
 ) -> float:
 """
-Supports: - payg_token pricing from offers columns: price_in/out, cache read/write - fixed bucket: monthly_fee / tokens_covered_est (if present) - daily bucket: daily cap + tokensUsedToday (if present) -> daily shadow + baseline EUC - copilot weighted units: overage _ multiplier _ unit shadow; 0x => small floor - volatile_free: floor + volatility penalty
+Supports: - payg_token pricing from offers columns: price_in/out, cache read/write - fixed bucket: monthly_fee / tokens_covered_est (if present) - daily bucket: daily cap + tokensUsedToday (if present) -> daily shadow + baseline EUC - copilot weighted units: overage * multiplier \_ unit shadow; 0x => small floor - volatile_free: floor + volatility penalty
 """
 budget_shadow = compute_budget_shadow(ctrl)
 
@@ -1989,7 +1989,7 @@ apply_ms = np.nan
     # bulk default
     return queue + ttft + out / max(tps, 1.0)
 
-def build_offline_quality_scores(
+def build*offline_quality_scores(
 offers: pd.DataFrame,
 bench_registry: pd.DataFrame,
 bench_results: pd.DataFrame,
@@ -1999,7 +1999,7 @@ subject_type: str = "offer"
 """
 Returns DataFrame with columns:
 subject_id, offline_quality_raw (z-summed), coverage (0..1), offline_quality (0..1)
-Strategy: - z-score per benchmark across available subjects - map each benchmark to benchmark_type_group - per subject, sum weights(group) _ mean(z in group) - impute missing groups by (global mean z for group = 0) -> effectively 0 contribution - coverage penalty: offline_adj = offline _ (0.6 + 0.4\*coverage) - squash with sigmoid to 0..1
+Strategy: - z-score per benchmark across available subjects - map each benchmark to benchmark_type_group - per subject, sum weights(group) * mean(z in group) - impute missing groups by (global mean z for group = 0) -> effectively 0 contribution - coverage penalty: offline*adj = offline * (0.6 + 0.4\*coverage) - squash with sigmoid to 0..1
 """
 if offers is None or offers.empty:
 return pd.DataFrame(columns=["subject_id", "offline_quality_raw", "coverage", "offline_quality"])
@@ -2107,7 +2107,7 @@ return pd.DataFrame(columns=["subject_id", "offline_quality_raw", "coverage", "o
 
     return out
 
-def blend_quality(offline_q: float, online_q: float, n: float, k: float) -> float:
+def blend*quality(offline_q: float, online_q: float, n: float, k: float) -> float:
 """
 Blend offline and online quality with ramp rho(n)=n/(n+k)
 """
@@ -2118,7 +2118,7 @@ return online_q
 if np.isnan(online_q):
 return offline_q
 rho = n / (n + k) if (n + k) > 0 else 0.0
-return (1 - rho) _ offline_q + rho _ online_q
+return (1 - rho) * offline*q + rho * online_q
 
 # ----------------------------
 
