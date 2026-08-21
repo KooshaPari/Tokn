@@ -149,14 +149,14 @@ pub enum ActorType {
 
 ### Query Patterns
 
-| Query         | Redis Command                  | PostgreSQL Query                           |
-| ------------- | ------------------------------ | ------------------------------------------ |
-| By JTI        | XRANGE audit JTI_START JTI_END | SELECT * FROM audit WHERE jti = $1         |
-| By Subject    | XREADGROUP filtered            | SELECT * FROM audit WHERE subject = $1     |
-| By Time Range | XREADGROUP with timestamp      | SELECT * WHERE timestamp BETWEEN $1 AND $2 |
-| By Actor      | XRANGE + filter                | SELECT * WHERE actor_id = $1               |
-| Failure Only  | XREADGROUP + filter            | SELECT * WHERE success = false             |
-| Recent Events | XREADGROUP last N              | SELECT * ORDER BY timestamp DESC LIMIT N   |
+| Query         | Redis Command                  | PostgreSQL Query                            |
+| ------------- | ------------------------------ | ------------------------------------------- |
+| By JTI        | XRANGE audit JTI_START JTI_END | SELECT \* FROM audit WHERE jti = $1         |
+| By Subject    | XREADGROUP filtered            | SELECT \* FROM audit WHERE subject = $1     |
+| By Time Range | XREADGROUP with timestamp      | SELECT \* WHERE timestamp BETWEEN $1 AND $2 |
+| By Actor      | XRANGE + filter                | SELECT \* WHERE actor_id = $1               |
+| Failure Only  | XREADGROUP + filter            | SELECT \* WHERE success = false             |
+| Recent Events | XREADGROUP last N              | SELECT \* ORDER BY timestamp DESC LIMIT N   |
 
 ### Rationale
 

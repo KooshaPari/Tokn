@@ -186,11 +186,10 @@ of this audit.
 | `crates/pareto-rs/src/models.rs`        |       388 |                     20 |
 | `crates/pareto-rs/src/cost.rs`          |       452 |                     14 |
 
-**Of the 33 source files in `crates/**/src/`, 19 have zero `#[test]`
-attributes.** The 1,757-line `ingest/mod.rs` (the single largest file in the
+**Of the 33 source files in `crates/**/src/`, 19 have zero `#[test]`attributes.** The 1,757-line`ingest/mod.rs`(the single largest file in the
 workspace) has **no unit tests at all** — it is a god module combining
 provider resolution, file I/O, deduplication, checkpoint resume, streaming
-emission, and command shelling. `orchestrate.rs` (695 LoC) and `cli.rs`
+emission, and command shelling.`orchestrate.rs`(695 LoC) and`cli.rs`
 (444 LoC) are likewise untested.
 
 The two root `tests/` files (`integration_test.rs` 249 LoC, `smoke_test.rs`

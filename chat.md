@@ -8,45 +8,45 @@ Goal: make your scenario worksheet executable by anyone with minimal interpretat
 
 1. Master Test Run Sheet (one per run)
 
-Title: Helios v1.1 Routing & Patch DAG Validation — Run #___
-Date: ___
-Operator: ___
+Title: Helios v1.1 Routing & Patch DAG Validation — Run #**_
+Date: _**
+Operator: \_\_\_
 Snapshot versions:
 
-OfferSnapshot: ___
+OfferSnapshot: \_\_\_
 
-EconomicsSnapshot: ___
+EconomicsSnapshot: \_\_\_
 
-TelemetrySnapshot: ___
+TelemetrySnapshot: \_\_\_
 
-QualitySnapshot: ___
+QualitySnapshot: \_\_\_
 
 Environment: ☐ Local sim ☐ Staging ☐ Prod shadow
 Budget mode: ☐ Green ☐ Amber ☐ Red
-Notes / known incidents: ___
+Notes / known incidents: \_\_\_
 
 Pass criteria for run:
 
 ☐ Zero invariant violations
 
-☐ ≥ ___ scenarios executed
+☐ ≥ \_\_\_ scenarios executed
 
-☐ ≥ ___% scenarios passed
+☐ ≥ \_\_\_% scenarios passed
 
 ☐ Any failures triaged with actionable root cause
 
 2. Scenario Execution Ticket Template (one per scenario)
 
-Title: [Helios] Scenario S-__ — short name
+Title: [Helios] Scenario S-** — short name
 Type: Test / Validation
 Priority: ☐ P0 ☐ P1 ☐ P2
-Owner: ___
+Owner: \_**
 Status: ☐ Not started ☐ Running ☐ Blocked ☐ Passed ☐ Failed ☐ Waived
 
 A) Scenario definition
 
-Scenario ID: S-__
-Role: ___
+Scenario ID: S-**
+Role: \_**
 Workflow: ☐ Route-only ☐ Patch DAG (Reason → Apply → Validate)
 Request summary:
 
@@ -56,36 +56,36 @@ needsJson: ☐ yes ☐ no
 
 requirePromptContract: ☐ none ☐ apply_v1
 
-minContextTokens: ___
+minContextTokens: \_\_\_
 
-minQuality: ___
+minQuality: \_\_\_
 
-maxCostUsd: ___
+maxCostUsd: \_\_\_
 
-tokenEstimate: tokIn ___ / tokOut ___
+tokenEstimate: tokIn **_ / tokOut _**
 
 B) Knobs set (fill exact values)
 Economics knobs
 
 global.budgetMonthlyUsd: 600
 
-global.budgetRemainingUsd: ___
+global.budgetRemainingUsd: \_\_\_
 
-global.budgetShadow: ___
+global.budgetShadow: \_\_\_
 
 Copilot plan (if relevant):
 
-unitsRemaining: ___ / ___
+unitsRemaining: **_ / _**
 
 unit multipliers used: ☐ yes confirmed ☐ not applicable
 
 Cerebras Code plan (if relevant):
 
-tokensRemainingToday: ___ / ___
+tokensRemainingToday: **_ / _**
 
-tpmRemaining: ___ (optional)
+tpmRemaining: \_\_\_ (optional)
 
-rpmRemaining: ___ (optional)
+rpmRemaining: \_\_\_ (optional)
 
 Telemetry knobs (key offers)
 
@@ -100,7 +100,7 @@ offerId class queueP95 ttftP95 itlP95 tpsP50 errorRate schemaAdh
 ---
 
 Quality knobs (role-specific)
-offerId class qualityScore(role) confidence(role) effective = score*conf
+offerId class qualityScore(role) confidence(role) effective = score\*conf
 
 ---
 
@@ -108,19 +108,19 @@ offerId class qualityScore(role) confidence(role) effective = score*conf
 
 C) Expected outcome (must be explicit)
 
-Expected chosen class: ___
-Expected forbidden classes (must not appear in candidates): ___
-Expected fallback chain template: ___
+Expected chosen class: **_
+Expected forbidden classes (must not appear in candidates): _**
+Expected fallback chain template: \_\_\_
 (e.g., “AP → AP → escalate reasoner”, or “FQ → FQ → MQ → C0”)
 
 D) Actual outcome (fill after running)
 
-Chosen offerId: ___
-Chosen class: ___
+Chosen offerId: **_
+Chosen class: _**
 Fallback chain (offerIds):
 
-Pareto set size: ___
-Pareto set classes present: ___
+Pareto set size: **_
+Pareto set classes present: _**
 
 Candidate set quick check
 
@@ -153,7 +153,7 @@ If Failed, what differed?
 
 ☐ quality scoring unexpected
 
-Notes / suspected root cause: ___
+Notes / suspected root cause: \_\_\_
 Artifacts attached:
 
 ☐ Route trace JSON
@@ -169,15 +169,15 @@ Artifacts attached:
 Title: [Helios][P0] Invariant violation — short
 Invariant ID: (e.g., INV-02 Apply role isolation)
 Severity: ☐ P0 Blocker
-Environment: ___
-When observed: timestamp ___
-Snapshot versions: offer ___ / econ ___ / tel ___ / qual ___
+Environment: **_
+When observed: timestamp _**
+Snapshot versions: offer **_ / econ _** / tel **_ / qual _**
 
 What happened
 
-Request: role ___, constraints ___
-Observed: ___
-Expected: ___
+Request: role **_, constraints _**
+Observed: **_
+Expected: _**
 
 Evidence
 
@@ -244,75 +244,75 @@ Escalation handling
 
 5. Summary Report Template (after the run)
 
-Title: Helios v1.1 Validation Summary — Run #___
+Title: Helios v1.1 Validation Summary — Run #\_\_\_
 
 Coverage
 
-Scenarios planned: ___
+Scenarios planned: \_\_\_
 
-Scenarios executed: ___
+Scenarios executed: \_\_\_
 
-Passed: ___
+Passed: \_\_\_
 
-Failed: ___
+Failed: \_\_\_
 
-Waived: ___
+Waived: \_\_\_
 
 Key failures (top 5)
 
-S-__ : ___
+S-** : \_**
 
-S-__ : ___
+S-** : \_**
 
 …
 
 Routing distribution notes
 
-Unexpected over-selection: ___
+Unexpected over-selection: \_\_\_
 
-Unexpected under-selection: ___
+Unexpected under-selection: \_\_\_
 
-VF appearances: ___
+VF appearances: \_\_\_
 
-AP usage: ___
+AP usage: \_\_\_
 
 Economics notes
 
-Copilot units behavior: ___
+Copilot units behavior: \_\_\_
 
-Cerebras daily cap behavior: ___
+Cerebras daily cap behavior: \_\_\_
 
-BudgetShadow behavior: ___
+BudgetShadow behavior: \_\_\_
 
 Speed/telemetry notes
 
-TTFT/ITL anomalies: ___
+TTFT/ITL anomalies: \_\_\_
 
-Queue spikes: ___
+Queue spikes: \_\_\_
 
-Flaky offers detected: ___
+Flaky offers detected: \_\_\_
 
 Actions
 
-☐ Promote offers: ___
+☐ Promote offers: \_\_\_
 
-☐ Keep in canary: ___
+☐ Keep in canary: \_\_\_
 
-☐ Disable offers: ___
+☐ Disable offers: \_\_\_
 
-☐ Policy changes needed: ___
+☐ Policy changes needed: \_\_\_
 
 6. Ready-to-use “Scenario list” table (paste into Notion)
    Scenario Role Workflow Expected Class Priority Status Owner
-   S-01 Apply never for reasoner code_reasoner Route FQ P0 ☐ ___
-   S-02 Apply role only AP code_apply_patch Route/DAG AP P0 ☐ ___
-   S-03 VF never primary critical agent_workflow Route FQ P0 ☐ ___
-   S-04 C0 wins patch gen code_patch_generator Route C0 P1 ☐ ___
-   S-05 CU multipliers under scarcity code_patch_generator Route CU low-mult P1 ☐ ___
-   S-08 UB early-day scaffold code_scaffold_fast Route UB P1 ☐ ___
-   S-09 UB late-day avoided code_scaffold_fast Route UF/MQ/SH P1 ☐ ___
-   S-23 Single-file DAG success small_transform(file) DAG patch:C0/MQ + apply:AP P0 ☐ ___
-   S-24 Apply failure escalates file apply_patch DAG escalate reasoner P0 ☐ ___
+   S-01 Apply never for reasoner code_reasoner Route FQ P0 ☐ **_
+   S-02 Apply role only AP code_apply_patch Route/DAG AP P0 ☐ _**
+   S-03 VF never primary critical agent_workflow Route FQ P0 ☐ **_
+   S-04 C0 wins patch gen code_patch_generator Route C0 P1 ☐ _**
+   S-05 CU multipliers under scarcity code_patch_generator Route CU low-mult P1 ☐ **_
+   S-08 UB early-day scaffold code_scaffold_fast Route UB P1 ☐ _**
+   S-09 UB late-day avoided code_scaffold_fast Route UF/MQ/SH P1 ☐ **_
+   S-23 Single-file DAG success small_transform(file) DAG patch:C0/MQ + apply:AP P0 ☐ _**
+   S-24 Apply failure escalates file apply_patch DAG escalate reasoner P0 ☐ \_\_\_
 
 (Add the rest of S-06…S-26 as needed.)
 
@@ -1714,7 +1714,7 @@ BENCH_GROUPS = [
 
 # ----------------------------
 
-def _safe_float(x, default=np.nan) -> float:
+def \_safe_float(x, default=np.nan) -> float:
 try:
 if x is None:
 return default
@@ -1724,10 +1724,10 @@ return float(x)
 except Exception:
 return default
 
-def _clamp(x: float, lo: float, hi: float) -> float:
+def \_clamp(x: float, lo: float, hi: float) -> float:
 return max(lo, min(hi, x))
 
-def _normalize_weights(w: Dict[str, float]) -> Dict[str, float]:
+def \_normalize_weights(w: Dict[str, float]) -> Dict[str, float]:
 s = sum(max(0.0, float(v)) for v in w.values())
 if s <= 0:
 return {k: 0.0 for k in w.keys()}
@@ -1825,8 +1825,8 @@ online_k: float # ramp parameter
 
 def compute_budget_shadow(ctrl: Controls) -> float:
 remaining = max(ctrl.budget_monthly_usd - ctrl.spend_to_date_usd, 0.0)
-frac_elapsed = _clamp(ctrl.day_of_month / max(ctrl.days_in_month, 1), 0.0, 1.0)
-expected_remaining = max(ctrl.budget_monthly_usd * (1 - frac_elapsed), 0.0)
+frac_elapsed = \_clamp(ctrl.day_of_month / max(ctrl.days_in_month, 1), 0.0, 1.0)
+expected_remaining = max(ctrl.budget_monthly_usd \* (1 - frac_elapsed), 0.0)
 ratio = remaining / max(expected_remaining, ctrl.budget_shadow_eps)
 return 1.0 / max(ratio, ctrl.budget_shadow_eps)
 
@@ -1843,7 +1843,7 @@ tok_out: float,
 cache_hit_tokens: float = 0.0
 ) -> float:
 """
-Supports: - payg_token pricing from offers columns: price_in/out, cache read/write - fixed bucket: monthly_fee / tokens_covered_est (if present) - daily bucket: daily cap + tokensUsedToday (if present) -> daily shadow + baseline EUC - copilot weighted units: overage * multiplier * unit shadow; 0x => small floor - volatile_free: floor + volatility penalty
+Supports: - payg_token pricing from offers columns: price_in/out, cache read/write - fixed bucket: monthly_fee / tokens_covered_est (if present) - daily bucket: daily cap + tokensUsedToday (if present) -> daily shadow + baseline EUC - copilot weighted units: overage _ multiplier _ unit shadow; 0x => small floor - volatile_free: floor + volatility penalty
 """
 budget_shadow = compute_budget_shadow(ctrl)
 
@@ -1960,7 +1960,7 @@ role_mode: str,
 tok_out_est: float
 ) -> float:
 """
-role_mode: - interactive: queue + ttft + out*itl - bulk: queue + ttft + out/tps - apply: apply_ms_per_file if present else interactive fallback
+role_mode: - interactive: queue + ttft + out\*itl - bulk: queue + ttft + out/tps - apply: apply_ms_per_file if present else interactive fallback
 """ # conservative defaults
 queue = 200.0
 ttft = 1200.0
@@ -1999,7 +1999,7 @@ subject_type: str = "offer"
 """
 Returns DataFrame with columns:
 subject_id, offline_quality_raw (z-summed), coverage (0..1), offline_quality (0..1)
-Strategy: - z-score per benchmark across available subjects - map each benchmark to benchmark_type_group - per subject, sum weights(group) * mean(z in group) - impute missing groups by (global mean z for group = 0) -> effectively 0 contribution - coverage penalty: offline_adj = offline * (0.6 + 0.4*coverage) - squash with sigmoid to 0..1
+Strategy: - z-score per benchmark across available subjects - map each benchmark to benchmark_type_group - per subject, sum weights(group) _ mean(z in group) - impute missing groups by (global mean z for group = 0) -> effectively 0 contribution - coverage penalty: offline_adj = offline _ (0.6 + 0.4\*coverage) - squash with sigmoid to 0..1
 """
 if offers is None or offers.empty:
 return pd.DataFrame(columns=["subject_id", "offline_quality_raw", "coverage", "offline_quality"])
@@ -2118,7 +2118,7 @@ return online_q
 if np.isnan(online_q):
 return offline_q
 rho = n / (n + k) if (n + k) > 0 else 0.0
-return (1 - rho) * offline_q + rho * online_q
+return (1 - rho) _ offline_q + rho _ online_q
 
 # ----------------------------
 
@@ -2307,8 +2307,8 @@ if not rr.empty:
 role_row = rr.iloc[0]
 
 role_speed_mode = str(role_row.get("speed_mode", "bulk") if role_row is not None else "bulk").strip().lower()
-role_min_quality = _safe_float(role_row.get("min_quality_default", 0.0) if role_row is not None else 0.0, 0.0)
-role_max_cost = _safe_float(role_row.get("max_cost_usd_default", np.inf) if role_row is not None else np.inf, np.inf)
+role_min_quality = \_safe_float(role_row.get("min_quality_default", 0.0) if role_row is not None else 0.0, 0.0)
+role_max_cost = \_safe_float(role_row.get("max_cost_usd_default", np.inf) if role_row is not None else np.inf, np.inf)
 
 colA, colB, colC = st.columns(3)
 with colA:
@@ -2338,12 +2338,12 @@ cache_hit_est = st.number_input("Estimated cache-hit tokens (input)", min_value=
 st.subheader("Quality model (benchmarks + online telemetry blend)")
 with st.expander("Role benchmark weights (type-group)", expanded=False):
 weights = {} # If roles table includes weights, use them; else defaults
-for g in BENCH_GROUPS:
+for g in BENCH*GROUPS:
 default = DEFAULT_ROLE_WEIGHTS.get(g, 0.0)
-if role_row is not None and f"w_{g}" in roles.columns:
+if role_row is not None and f"w*{g}" in roles.columns:
 default = _safe_float(role_row.get(f"w_{g}", default), default)
-weights[g] = st.number_input(f"w_{g}", min_value=0.0, value=float(default), step=0.01, key=f"w_{g}")
-weights = _normalize_weights(weights)
+weights[g] = st.number*input(f"w*{g}", min*value=0.0, value=float(default), step=0.01, key=f"w*{g}")
+weights = \_normalize_weights(weights)
 st.caption(f"Normalized (sum=1.0): {sum(weights.values()):.3f}")
 
 # Compute offline quality from benchmarks (optional)
@@ -2366,9 +2366,9 @@ If you store more signals (tests pass, escalation), add them.
 """
 if tele_row is None:
 return (np.nan, 0.0)
-err = _safe_float(tele_row.get("error_rate_total", tele_row.get("errorRate", np.nan)), np.nan)
-adh = _safe_float(tele_row.get("schema_adherence", tele_row.get("schemaAdherence", np.nan)), np.nan)
-n = _safe_float(tele_row.get("sample_n", tele_row.get("sampleN", 0)), 0.0)
+err = \_safe_float(tele_row.get("error_rate_total", tele_row.get("errorRate", np.nan)), np.nan)
+adh = \_safe_float(tele_row.get("schema_adherence", tele_row.get("schemaAdherence", np.nan)), np.nan)
+n = \_safe_float(tele_row.get("sample_n", tele_row.get("sampleN", 0)), 0.0)
 
     parts = []
     if not np.isnan(err):
@@ -2452,7 +2452,7 @@ break
 # Build indices table
 
 rows = []
-for _, o in eligible.iterrows():
+for \_, o in eligible.iterrows():
 offer_id = str(o.get("offer_id", "")).strip()
 if not offer_id:
 continue
@@ -2600,9 +2600,9 @@ c = min(r["cost_usd"] for r in rows)
 s = min(r["speed_score"] for r in rows)
 return {"quality": q, "cost_usd": c, "speed_score": s}
 
-def compute_combos(k: int) -> pd.DataFrame:
+def compute*combos(k: int) -> pd.DataFrame:
 combos = []
-items = [r for _, r in combo_base.iterrows()]
+items = [r for *, r in combo_base.iterrows()]
 for comb in itertools.combinations(items, k):
 m = combo_metrics(list(comb))
 combos.append({
@@ -2610,11 +2610,11 @@ combos.append({
 "offer_ids": " | ".join([c["offer_id"] for c in comb]),
 "providers": " | ".join([str(c["provider"]) for c in comb]),
 "models": " | ".join([str(c["model_id"]) for c in comb]),
-**m
+\*\*m
 })
 return pd.DataFrame(combos)
 
-if combo_base.empty or len(combo_base) < 2:
+if combo*base.empty or len(combo_base) < 2:
 st.info("Need at least 2 eligible offers to compute pairs.")
 else:
 if allow_pairs:
@@ -2628,7 +2628,7 @@ use_container_width=True, height=320)
 st.download_button(
 "Download pareto pairs (CSV)",
 data=pairs_df.to_csv(index=False).encode("utf-8"),
-file_name=f"pareto_pairs_{selected_role}.csv",
+file_name=f"pareto_pairs*{selected_role}.csv",
 mime="text/csv",
 )
 
@@ -2736,7 +2736,7 @@ last_migrated_at
 
 default_budget, days_in_month, etc.
 
-Principle: everything editable lives in CSV; everything computed lives in *_cache.csv.
+Principle: everything editable lives in CSV; everything computed lives in \*\_cache.csv.
 
 2. UI modules (tabs) = the “internal workbook”
 

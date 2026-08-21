@@ -83,8 +83,8 @@
 
 ### API Endpoints
 
-| Method   | Endpoint                | Description       | Status                   |
-| -------- | ----------------------- | ----------------- | ------------------------ |
+| Method   | Endpoint                | Description       | Status                    |
+| -------- | ----------------------- | ----------------- | ------------------------- |
 | {GET}    | {/api/v1/resource}      | {Get resource}    | {☐ Not Started / ☑ Done} |
 | {POST}   | {/api/v1/resource}      | {Create resource} | {☐ Not Started / ☑ Done} |
 | {PUT}    | {/api/v1/resource/{id}} | {Update resource} | {☐ Not Started / ☑ Done} |
@@ -113,7 +113,7 @@
 ### Database Migrations
 
 - [ ] {Migration: {description}}
-  - **File:** {alembic/versions/{hash}_{description}.py}
+  - **File:** {alembic/versions/{hash}\_{description}.py}
   - **Changes:** {tables/columns added/modified}
 
 ### Frontend Components

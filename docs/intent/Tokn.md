@@ -18,6 +18,7 @@ bound_prompts: 5
 bound_plans: 0
 bound_responses: 0
 device: macbook
+
 ---
 
 # Intent — Tokn

@@ -330,5 +330,5 @@ Pareto router → routing decisions
 ## 9. References
 
 - tokenledger/docs/plans/UNIFIED_ROUTING_ORCHESTRATION_PLAN.md
-- thegent/docs/governance/POLYGLOT_RUNTIME_...md
+- thegent/docs/governance/POLYGLOT*RUNTIME*...md
 - CLIProxy++ pkg/llmproxy/registry/pareto_router.go

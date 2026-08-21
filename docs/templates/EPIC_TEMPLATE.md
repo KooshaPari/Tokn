@@ -77,7 +77,7 @@ EPIC-{NNN}: {Epic Title}
 
 **Total Story Points:** {Sum of all points}
 **Completed Story Points:** {Sum of completed stories}
-**Completion Percentage:** {Completed / Total * 100}%
+**Completion Percentage:** {Completed / Total \* 100}%
 
 ---
 
@@ -120,13 +120,13 @@ EPIC-{NNN}: {Epic Title}
 
 ### Components
 
-| Component       | Description                        | Status          |
-| --------------- | ---------------------------------- | --------------- |
-| {Backend API}   | {FastAPI service}                  | {✓ Implemented} |
-| {Database}      | {PostgreSQL with graph extensions} | {✓ Implemented} |
-| {Graph Engine}  | {Neo4j or NetworkX}                | {☐ Planned}     |
+| Component       | Description                        | Status           |
+| --------------- | ---------------------------------- | ---------------- |
+| {Backend API}   | {FastAPI service}                  | {✓ Implemented}  |
+| {Database}      | {PostgreSQL with graph extensions} | {✓ Implemented}  |
+| {Graph Engine}  | {Neo4j or NetworkX}                | {☐ Planned}      |
 | {Frontend}      | {React + TypeScript}               | {⚙ In Progress} |
-| {Message Queue} | {Redis for async tasks}            | {✓ Implemented} |
+| {Message Queue} | {Redis for async tasks}            | {✓ Implemented}  |
 
 ### Key Technologies
 
