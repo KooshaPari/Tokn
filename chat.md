@@ -304,10 +304,10 @@ Actions
 
 6. Ready-to-use “Scenario list” table (paste into Notion)
    Scenario Role Workflow Expected Class Priority Status Owner
-   S-01 Apply never for reasoner code*reasoner Route FQ P0 ☐ \*\**
-   S-02 Apply role only AP code*apply_patch Route/DAG AP P0 ☐ ***
-   S-03 VF never primary critical agent_workflow Route FQ P0 ☐ **_
-   S-04 C0 wins patch gen code_patch_generator Route C0 P1 ☐ _**
+   S-01 Apply never for reasoner code\*reasoner Route FQ P0 ☐ \*\**
+   S-02 Apply role only AP code*apply*patch Route/DAG AP P0 ☐ **\*
+   S-03 VF never primary critical agent_workflow Route FQ P0 ☐ ***
+   S-04 C0 wins patch gen code*patch_generator Route C0 P1 ☐ ***
    S-05 CU multipliers under scarcity code_patch_generator Route CU low-mult P1 ☐ **_
    S-08 UB early-day scaffold code_scaffold_fast Route UB P1 ☐ _**
    S-09 UB late-day avoided code_scaffold_fast Route UF/MQ/SH P1 ☐ **_
