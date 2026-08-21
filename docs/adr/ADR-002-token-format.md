@@ -3,7 +3,7 @@
 **Status:** Proposed  
 **Date:** 2026-04-02  
 **Author:** Tokn Architecture Team  
-**Line Count Target:** 400+ lines  
+**Line Count Target:** 400+ lines
 
 ---
 
@@ -19,15 +19,15 @@ The Tokn system requires a standardized token format for authentication, authori
 
 ### Requirements
 
-| Requirement | Priority | Description |
-|-------------|----------|-------------|
-| R1. Cryptographic security | P0 | Resistant to known attacks (confusion, timing, etc.) |
-| R2. Standard compliance | P1 | Follows established specifications |
-| R3. Wide adoption | P1 | Supported by major platforms and libraries |
-| R4. Compact size | P2 | Minimal overhead for transmission |
-| R5. Extensibility | P2 | Support for custom claims and metadata |
-| R6. Performance | P2 | Fast validation at scale |
-| R7. Simplicity | P3 | Easy to implement correctly |
+| Requirement                | Priority | Description                                          |
+| -------------------------- | -------- | ---------------------------------------------------- |
+| R1. Cryptographic security | P0       | Resistant to known attacks (confusion, timing, etc.) |
+| R2. Standard compliance    | P1       | Follows established specifications                   |
+| R3. Wide adoption          | P1       | Supported by major platforms and libraries           |
+| R4. Compact size           | P2       | Minimal overhead for transmission                    |
+| R5. Extensibility          | P2       | Support for custom claims and metadata               |
+| R6. Performance            | P2       | Fast validation at scale                             |
+| R7. Simplicity             | P3       | Easy to implement correctly                          |
 
 ---
 
@@ -83,18 +83,21 @@ Tokn will adopt a **hybrid approach**:
 **Description:** Standard JWT with algorithm agility.
 
 **Pros:**
+
 - Universal support across all platforms and languages
 - Extensive tooling ecosystem
 - Well-documented and battle-tested
 - Easy third-party integration
 
 **Cons:**
+
 - Algorithm confusion vulnerabilities if not carefully implemented
 - Zoo of algorithms (some weak) creates decision fatigue
 - JWE complexity often leads to poor encryption practices
 - No built-in encrypted token format
 
 **Risk Assessment:**
+
 ```
 ┌──────────────────────────────────────────────────────────┐
 │ JWT Risk Mitigation                                      │
@@ -113,18 +116,21 @@ Tokn will adopt a **hybrid approach**:
 **Description:** PASETO v4 for all tokens.
 
 **Pros:**
+
 - Superior security design (no algorithm confusion)
 - Modern cryptography (XChaCha20-Poly1305, Ed25519)
 - Built-in encrypted tokens (local purpose)
 - Smaller implementation surface area
 
 **Cons:**
+
 - Limited ecosystem support (fewer libraries)
 - Newer standard (less battle-tested)
 - Barrier to external integration
 - May require education for API consumers
 
 **Risk Assessment:**
+
 ```
 ┌──────────────────────────────────────────────────────────┐
 │ PASETO Adoption Risks                                    │
@@ -143,11 +149,13 @@ Tokn will adopt a **hybrid approach**:
 **Description:** Branca encrypted token format.
 
 **Pros:**
+
 - Always encrypted (no signed-only option)
 - Simple format, easy to implement
 - Built-in timestamp for expiration
 
 **Cons:**
+
 - Very limited ecosystem adoption
 - No widespread library support
 - No standard for public key cryptography
@@ -160,11 +168,13 @@ Tokn will adopt a **hybrid approach**:
 **Description:** Bespoke token format designed for Tokn.
 
 **Pros:**
+
 - Perfect fit for requirements
 - No external dependencies
 - Full control over evolution
 
 **Cons:**
+
 - Security analysis burden entirely on us
 - No ecosystem support
 - Integration friction for consumers
@@ -176,15 +186,15 @@ Tokn will adopt a **hybrid approach**:
 
 ## Comparison Matrix
 
-| Criterion | JWT | PASETO | Branca | Custom |
-|-----------|-----|--------|--------|--------|
-| Security | ★★★☆ | ★★★★ | ★★★★ | ★★☆☆ |
-| Ecosystem | ★★★★ | ★★☆☆ | ★☆☆☆ | ☆☆☆☆ |
-| Performance | ★★★★ | ★★★★ | ★★★☆ | ★★★★ |
-| Simplicity | ★★☆☆ | ★★★★ | ★★★★ | ★★★☆ |
-| Extensibility | ★★★★ | ★★★☆ | ★★☆☆ | ★★★★ |
-| Future-proof | ★★★☆ | ★★★★ | ★★☆☆ | ★★☆☆ |
-| **Overall** | **★★★☆** | **★★★☆** | **★★☆☆** | **★★☆☆** |
+| Criterion     | JWT      | PASETO   | Branca   | Custom   |
+| ------------- | -------- | -------- | -------- | -------- |
+| Security      | ★★★☆     | ★★★★     | ★★★★     | ★★☆☆     |
+| Ecosystem     | ★★★★     | ★★☆☆     | ★☆☆☆     | ☆☆☆☆     |
+| Performance   | ★★★★     | ★★★★     | ★★★☆     | ★★★★     |
+| Simplicity    | ★★☆☆     | ★★★★     | ★★★★     | ★★★☆     |
+| Extensibility | ★★★★     | ★★★☆     | ★★☆☆     | ★★★★     |
+| Future-proof  | ★★★☆     | ★★★★     | ★★☆☆     | ★★☆☆     |
+| **Overall**   | **★★★☆** | **★★★☆** | **★★☆☆** | **★★☆☆** |
 
 ---
 
@@ -196,16 +206,16 @@ Tokn will adopt a **hybrid approach**:
 pub struct ExternalTokenConfig {
     /// Allowed algorithms (whitelist)
     pub allowed_algorithms: Vec<JwtAlgorithm>,
-    
+
     /// Default algorithm for signing
     pub default_signing_alg: JwtAlgorithm,
-    
+
     /// Key ID for JWKS
     pub key_id: String,
-    
+
     /// JWKS endpoint
     pub jwks_url: String,
-    
+
     /// Token TTL
     pub access_token_ttl: Duration,
     pub refresh_token_ttl: Duration,
@@ -234,17 +244,17 @@ impl Default for ExternalTokenConfig {
 pub struct InternalTokenConfig {
     /// PASETO version
     pub version: PasetoVersion,
-    
+
     /// Purpose (public for signed, local for encrypted)
     pub purpose: PasetoPurpose,
-    
+
     /// Symmetric key for local tokens (32 bytes)
     pub symmetric_key: Vec<u8>,
-    
+
     /// Asymmetric keypair for public tokens
     pub secret_key: AsymmetricSecretKey,
     pub public_key: AsymmetricPublicKey,
-    
+
     /// Token TTL
     pub ttl: Duration,
 }
@@ -277,26 +287,26 @@ impl AlgorithmWhitelist {
         let mut allowed = HashSet::new();
         allowed.insert("EdDSA".to_string());
         allowed.insert("RS256".to_string());
-        
+
         let mut key_type_map = HashMap::new();
         key_type_map.insert("EdDSA".to_string(), KeyType::AsymmetricEdwards);
         key_type_map.insert("RS256".to_string(), KeyType::AsymmetricRSA);
-        
+
         Self { allowed, key_type_map }
     }
-    
+
     pub fn validate(&self, alg: &str, key_type: &KeyType) -> Result<(), JwtError> {
         if !self.allowed.contains(alg) {
             return Err(JwtError::AlgorithmNotAllowed(alg.to_string()));
         }
-        
+
         let expected = self.key_type_map.get(alg)
             .ok_or(JwtError::UnknownAlgorithm(alg.to_string()))?;
-        
+
         if expected != key_type {
             return Err(JwtError::AlgorithmKeyMismatch);
         }
-        
+
         Ok(())
     }
 }
@@ -360,12 +370,12 @@ impl AlgorithmWhitelist {
 
 ### Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Complexity | Abstract token handling behind `TokenService` trait |
-| Documentation | Clear "internal vs external" guidance in docs |
-| Testing | Shared test fixtures with format-specific adapters |
-| Key management | Unified key rotation service |
+| Risk           | Mitigation                                          |
+| -------------- | --------------------------------------------------- |
+| Complexity     | Abstract token handling behind `TokenService` trait |
+| Documentation  | Clear "internal vs external" guidance in docs       |
+| Testing        | Shared test fixtures with format-specific adapters  |
+| Key management | Unified key rotation service                        |
 
 ---
 

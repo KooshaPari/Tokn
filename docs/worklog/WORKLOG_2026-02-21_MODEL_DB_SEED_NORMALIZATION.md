@@ -7,13 +7,16 @@
 ## Completed
 
 1. Added reproducible generator:
+
 - `scripts/build_model_seed.py`
 
 2. Generated review/query artifacts from `models.csv`:
+
 - `models_normalized.csv` (valid long-format CSV)
 - `models_schema_seed.sql` (DDL + inserts for SQL workflows)
 
 3. Added README instructions under:
+
 - `Model Database Seed (CSV + SQL)`
 
 ## Normalization rules

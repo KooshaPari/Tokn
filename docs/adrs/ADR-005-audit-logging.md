@@ -2,19 +2,21 @@
 
 **Status:** Accepted  
 **Date:** 2026-04-02  
-**Deciders:** Architecture Team  
+**Deciders:** Architecture Team
 
 ---
 
 ## Context
 
 We need a comprehensive audit logging system that captures all token operations for security, compliance, and debugging. The system must be:
+
 - Immutable once written
 - Queryable for investigations
 - Exportable to SIEM systems
 - Performance-efficient
 
 Previous approaches:
+
 - **Unstructured text logs** - Difficult to query, inconsistent
 - **Database append-only tables** - Not easily exportable
 - **Cloud-native logging only** - Lock-in concerns
@@ -34,27 +36,27 @@ pub struct AuditEvent {
     pub event_id: Uuid,
     pub event_type: AuditEventType,
     pub timestamp: DateTime<Utc>,
-    
+
     // Token Context
     pub jti: Option<String>,
     pub subject: Option<String>,
     pub tenant_id: Option<String>,
-    
+
     // Actor Context
     pub actor_id: Option<String>,
     pub actor_type: ActorType,
     pub source_ip: Option<IpAddr>,
     pub user_agent: Option<String>,
-    
+
     // Operation Details
     pub operation: OperationType,
     pub success: bool,
     pub error_code: Option<String>,
-    
+
     // Request Context
     pub request_id: Uuid,
     pub trace_id: Option<String>,
-    
+
     // Additional Data (flexible)
     pub metadata: HashMap<String, Value>,
 }
@@ -147,31 +149,32 @@ pub enum ActorType {
 
 ### Query Patterns
 
-| Query | Redis Command | PostgreSQL Query |
-|-------|---------------|------------------|
-| By JTI | XRANGE audit JTI_START JTI_END | SELECT * FROM audit WHERE jti = $1 |
-| By Subject | XREADGROUP filtered | SELECT * FROM audit WHERE subject = $1 |
-| By Time Range | XREADGROUP with timestamp | SELECT * WHERE timestamp BETWEEN $1 AND $2 |
-| By Actor | XRANGE + filter | SELECT * WHERE actor_id = $1 |
-| Failure Only | XREADGROUP + filter | SELECT * WHERE success = false |
-| Recent Events | XREADGROUP last N | SELECT * ORDER BY timestamp DESC LIMIT N |
+| Query         | Redis Command                  | PostgreSQL Query                           |
+| ------------- | ------------------------------ | ------------------------------------------ |
+| By JTI        | XRANGE audit JTI_START JTI_END | SELECT * FROM audit WHERE jti = $1         |
+| By Subject    | XREADGROUP filtered            | SELECT * FROM audit WHERE subject = $1     |
+| By Time Range | XREADGROUP with timestamp      | SELECT * WHERE timestamp BETWEEN $1 AND $2 |
+| By Actor      | XRANGE + filter                | SELECT * WHERE actor_id = $1               |
+| Failure Only  | XREADGROUP + filter            | SELECT * WHERE success = false             |
+| Recent Events | XREADGROUP last N              | SELECT * ORDER BY timestamp DESC LIMIT N   |
 
 ### Rationale
 
-| Aspect | Redis Streams | PostgreSQL | Kafka | Cloud Logging |
-|--------|--------------|-----------|-------|---------------|
-| **Write Performance** | ✅ Very High | ⚠️ Medium | ✅ High | ✅ High |
-| **Durability** | ⚠️ Configurable | ✅ Strong | ✅ Strong | ✅ Strong |
-| **Query Capability** | ⚠️ Limited | ✅ Full SQL | ❌ None | ⚠️ Limited |
-| **Export to SIEM** | ✅ Via consumer | ✅ Direct | ✅ Direct | ✅ Native |
-| **Cost** | Low | Medium | Medium | High |
-| **Complexity** | Medium | Low | High | Low |
+| Aspect                | Redis Streams   | PostgreSQL  | Kafka     | Cloud Logging |
+| --------------------- | --------------- | ----------- | --------- | ------------- |
+| **Write Performance** | ✅ Very High    | ⚠️ Medium   | ✅ High   | ✅ High       |
+| **Durability**        | ⚠️ Configurable | ✅ Strong   | ✅ Strong | ✅ Strong     |
+| **Query Capability**  | ⚠️ Limited      | ✅ Full SQL | ❌ None   | ⚠️ Limited    |
+| **Export to SIEM**    | ✅ Via consumer | ✅ Direct   | ✅ Direct | ✅ Native     |
+| **Cost**              | Low             | Medium      | Medium    | High          |
+| **Complexity**        | Medium          | Low         | High      | Low           |
 
 ---
 
 ## Consequences
 
 ### Positive
+
 - Dual-write ensures both performance and durability
 - Redis Streams provides high-throughput event capture
 - PostgreSQL enables rich querying for investigations
@@ -179,12 +182,14 @@ pub enum ActorType {
 - Immutable audit trail for compliance
 
 ### Negative
+
 - Additional infrastructure complexity
 - Dual-write latency (~1-2ms overhead)
 - Storage costs for both systems
 - Schema evolution requires migration
 
 ### Mitigation
+
 - Async dual-write to minimize latency impact
 - Automatic expiration of Redis events after PostgreSQL write
 - Regular archival of old audit data

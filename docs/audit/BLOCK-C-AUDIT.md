@@ -14,70 +14,70 @@
 
 ### 1.1 Headline numbers
 
-| Metric                                  | Value          |
-|-----------------------------------------|----------------|
-| Tracked files (git ls-files)            | **429**        |
-| Total commits on `main`                 | **148**        |
-| Commits since 2026-05-01                | **55**         |
-| Open PRs                                | **3**          |
-| Total PRs (all states)                  | **64**         |
-| Open branches (`origin`)                | **10** (incl. main) |
-| Tracked docs files (under `docs/`)      | **156** (.md + config) |
-| Top-level `.md` files                   | **25**         |
-| Lines of code (cloc, all langs)         | **58,212**     |
-| Rust source lines (cloc, `*.rs`)        | **14,201**     |
-| Rust files                              | **53**         |
-| Crates in workspace                     | **2** (`pareto-rs`, `tokenledger`) |
-| `crates/*/src/` total lines             | **10,480**     |
-| `pub fn` count in `crates/**`           | **233**        |
-| `#[test]` attributes in `crates/**`     | **91**         |
-| Files with `#[test]`                    | **14**         |
-| Integration tests (root `tests/`)       | 2 files (256 LoC) |
-| Total packages in `Cargo.lock`          | **255**        |
-| `cargo audit` vulnerabilities           | **0**          |
-| `cargo machete` unused deps             | **7**          |
+| Metric                              | Value                              |
+| ----------------------------------- | ---------------------------------- |
+| Tracked files (git ls-files)        | **429**                            |
+| Total commits on `main`             | **148**                            |
+| Commits since 2026-05-01            | **55**                             |
+| Open PRs                            | **3**                              |
+| Total PRs (all states)              | **64**                             |
+| Open branches (`origin`)            | **10** (incl. main)                |
+| Tracked docs files (under `docs/`)  | **156** (.md + config)             |
+| Top-level `.md` files               | **25**                             |
+| Lines of code (cloc, all langs)     | **58,212**                         |
+| Rust source lines (cloc, `*.rs`)    | **14,201**                         |
+| Rust files                          | **53**                             |
+| Crates in workspace                 | **2** (`pareto-rs`, `tokenledger`) |
+| `crates/*/src/` total lines         | **10,480**                         |
+| `pub fn` count in `crates/**`       | **233**                            |
+| `#[test]` attributes in `crates/**` | **91**                             |
+| Files with `#[test]`                | **14**                             |
+| Integration tests (root `tests/`)   | 2 files (256 LoC)                  |
+| Total packages in `Cargo.lock`      | **255**                            |
+| `cargo audit` vulnerabilities       | **0**                              |
+| `cargo machete` unused deps         | **7**                              |
 
 ### 1.2 Language breakdown (cloc, excludes `target/`, `.git/`, artifacts, validation logs)
 
-| Language             | Files | Blank  | Comment | Code    |
-|----------------------|------:|-------:|--------:|--------:|
-| Markdown             |   126 |  6 836 |      11 |  22 632 |
-| Rust                 |    53 |  1 523 |     793 |  14 201 |
-| JSON                 |    67 |      0 |       0 |  11 112 |
-| SQL                  |     4 |      9 |       9 |   3 563 |
-| CSV                  |     5 |      0 |       0 |   3 480 |
-| Python               |     4 |    184 |     111 |   1 112 |
-| YAML                 |    25 |    164 |     175 |     859 |
-| Bourne Shell         |     6 |     52 |      12 |     396 |
-| Bourne Again Shell   |     3 |     37 |      25 |     250 |
-| TOML                 |    13 |     44 |       9 |     232 |
-| SVG                  |    41 |      0 |       0 |     170 |
-| TypeScript           |     3 |      5 |       2 |      79 |
-| **SUM**              | **357** | **8 890** | **1 180** | **58 212** |
+| Language           |   Files |     Blank |   Comment |       Code |
+| ------------------ | ------: | --------: | --------: | ---------: |
+| Markdown           |     126 |     6 836 |        11 |     22 632 |
+| Rust               |      53 |     1 523 |       793 |     14 201 |
+| JSON               |      67 |         0 |         0 |     11 112 |
+| SQL                |       4 |         9 |         9 |      3 563 |
+| CSV                |       5 |         0 |         0 |      3 480 |
+| Python             |       4 |       184 |       111 |      1 112 |
+| YAML               |      25 |       164 |       175 |        859 |
+| Bourne Shell       |       6 |        52 |        12 |        396 |
+| Bourne Again Shell |       3 |        37 |        25 |        250 |
+| TOML               |      13 |        44 |         9 |        232 |
+| SVG                |      41 |         0 |         0 |        170 |
+| TypeScript         |       3 |         5 |         2 |         79 |
+| **SUM**            | **357** | **8 890** | **1 180** | **58 212** |
 
 Key ratio: **Markdown 22,632 / Rust 14,201 ≈ 1.6x** — the spec/docs layer is
 larger than the code it specifies.
 
 ### 1.3 Workspace structure (top-level dir distribution)
 
-| Path                          | Files |
-|-------------------------------|------:|
-| `docs/`                       |  156  |
-| `benchmarks/`                 |   73  |
-| `crates/`                     |   37  |
-| `src/`                        |   29  |
-| `.github/`                    |   16  |
-| `.validation_logs_20260220/`  |    8  |
-| `FRs/`                        |    8  |
-| `ledger/`                     |    7  |
-| `scripts/`                    |    5  |
-| `artifacts/`                  |    5  |
-| `.agileplus/`                 |    3  |
-| `.serena/`                    |    2  |
-| `tests/`                      |    2  |
-| `examples/`                   |    2  |
-| `benches/`                    |    1  |
-| (other meta)                  |   75  |
+| Path                         | Files |
+| ---------------------------- | ----: |
+| `docs/`                      |   156 |
+| `benchmarks/`                |    73 |
+| `crates/`                    |    37 |
+| `src/`                       |    29 |
+| `.github/`                   |    16 |
+| `.validation_logs_20260220/` |     8 |
+| `FRs/`                       |     8 |
+| `ledger/`                    |     7 |
+| `scripts/`                   |     5 |
+| `artifacts/`                 |     5 |
+| `.agileplus/`                |     3 |
+| `.serena/`                   |     2 |
+| `tests/`                     |     2 |
+| `examples/`                  |     2 |
+| `benches/`                   |     1 |
+| (other meta)                 |    75 |
 
 ---
 
@@ -110,7 +110,7 @@ test surface is described qualitatively in §5.
 1. **`pheno-cli-base` is declared but never resolved.**
    `Cargo.toml:27` declares `pheno-cli-base = { path = "../pheno-cli-base" }`
    in `[workspace.dependencies]`. The path target does not exist
-   (`ls pheno-cli-base` → *File Not Found*). Neither member crate references
+   (`ls pheno-cli-base` → _File Not Found_). Neither member crate references
    `pheno-cli-base` in its `[dependencies]`, so cargo silently skips it. The
    build passes by accident. If a member crate ever adds
    `pheno-cli-base.workspace = true`, the workspace will not resolve.
@@ -132,16 +132,17 @@ test surface is described qualitatively in §5.
 
 The repo contains **two complete copies of the `tokenledger` crate source**:
 
-| Location                       | Files | Lines (sum) |
-|--------------------------------|------:|------------:|
-| `crates/tokenledger/src/`      |    29 |   ~10 067   |
-| `src/` (repo root)             |    29 |   ~10 067   |
+| Location                  | Files | Lines (sum) |
+| ------------------------- | ----: | ----------: |
+| `crates/tokenledger/src/` |    29 |     ~10 067 |
+| `src/` (repo root)        |    29 |     ~10 067 |
 
 Verified by reading both copies of the largest file
 `crates/tokenledger/src/ingest/mod.rs` (1,825 lines) vs
 `src/ingest/mod.rs` (1,825 lines) — **byte-for-byte identical, first diff: none**.
 
 History (from `git log --all -- src/lib.rs`):
+
 - `4a0255d` "feat: Add benchmarks module with AA/OpenRouter API clients,
   85+ metrics, hexagonal routing" — added to top-level `src/`
 - `5631926` "fix(tokenledger): resolve compile errors after utils.rs module
@@ -151,6 +152,7 @@ History (from `git log --all -- src/lib.rs`):
   duplication is asymmetric.
 
 **Consequences:**
+
 - Any contributor editing `src/cli.rs` thinks they have changed the binary;
   in fact the binary is built from `crates/tokenledger/src/cli.rs`. The two
   trees will silently drift.
@@ -169,20 +171,20 @@ of this audit.
 
 **Severity:** MEDIUM–HIGH (test coverage gaps, debt hotspot)
 
-| File                                        | Lines | `#[test]` count |
-|---------------------------------------------|------:|----------------:|
-| `crates/tokenledger/src/ingest/mod.rs`      | **1 757** |          **0** |
-| `crates/tokenledger/src/bench.rs`           |     652 |            0   |
-| `crates/tokenledger/src/utils.rs`           |     653 |            7   |
-| `crates/tokenledger/src/models.rs`          |     705 |           12   |
-| `crates/tokenledger/src/orchestrate.rs`     |     695 |          **0** |
-| `crates/tokenledger/src/cli.rs`             |     444 |          **0** |
-| `crates/tokenledger/src/pricing.rs`         |     562 |          **0** |
-| `crates/tokenledger/src/cache.rs`           |     381 |            8   |
-| `crates/tokenledger/src/benchmarks/*`       |   1 700 |            5 (across 5 files) |
-| `crates/tokenledger/src/routing/*`          |     962 |            3 (only `mappings.rs`) |
-| `crates/pareto-rs/src/models.rs`            |     388 |           20   |
-| `crates/pareto-rs/src/cost.rs`              |     452 |           14   |
+| File                                    |     Lines |        `#[test]` count |
+| --------------------------------------- | --------: | ---------------------: |
+| `crates/tokenledger/src/ingest/mod.rs`  | **1 757** |                  **0** |
+| `crates/tokenledger/src/bench.rs`       |       652 |                      0 |
+| `crates/tokenledger/src/utils.rs`       |       653 |                      7 |
+| `crates/tokenledger/src/models.rs`      |       705 |                     12 |
+| `crates/tokenledger/src/orchestrate.rs` |       695 |                  **0** |
+| `crates/tokenledger/src/cli.rs`         |       444 |                  **0** |
+| `crates/tokenledger/src/pricing.rs`     |       562 |                  **0** |
+| `crates/tokenledger/src/cache.rs`       |       381 |                      8 |
+| `crates/tokenledger/src/benchmarks/*`   |     1 700 |     5 (across 5 files) |
+| `crates/tokenledger/src/routing/*`      |       962 | 3 (only `mappings.rs`) |
+| `crates/pareto-rs/src/models.rs`        |       388 |                     20 |
+| `crates/pareto-rs/src/cost.rs`          |       452 |                     14 |
 
 **Of the 33 source files in `crates/**/src/`, 19 have zero `#[test]`
 attributes.** The 1,757-line `ingest/mod.rs` (the single largest file in the
@@ -210,7 +212,7 @@ CLI invocation. There is **no coverage gate** in the workspace
   there is both `docs/fragmented/` style elsewhere and a `docs/fragemented/`
   directory which is a typo).
 - The real spec (`SPEC.md`, 3,164 lines) is rich but the architecture doc
-  that should *index* it is a hollow shell.
+  that should _index_ it is a hollow shell.
 - The `README.md:1-21` advertises this as an "AI-Agent-Only Repository"
   with "slop issues expected" and a 65% progress bar. The README at
   `README.md:23` claims `tokenledger::routing` is the "canonical Phenotype
@@ -249,9 +251,9 @@ CLI invocation. There is **no coverage gate** in the workspace
   - Streaming emission + dedup
   - Statistics aggregation
   - Shell-out to `claude`/`codex`/`gemini` (search for `ProcessCommand`)
-  `ingest/{aggregation,parser,validation}.rs` are **declared as submodules**
-  (line 16–18) but each is a 8–11-line stub that re-exports nothing
-  substantive. They look like scaffolding from an in-progress split.
+    `ingest/{aggregation,parser,validation}.rs` are **declared as submodules**
+    (line 16–18) but each is a 8–11-line stub that re-exports nothing
+    substantive. They look like scaffolding from an in-progress split.
 - **`orchestrate.rs:695`** is the second god module. Combine with
   `ingest/mod.rs` and the orchestration + ingest story is 2,452 lines in
   two files with **zero unit tests**.
@@ -298,16 +300,16 @@ matched at the time of this audit.
 
 ### 5.2 `cargo machete` — unused dependencies
 
-| Crate          | Unused dep      | Notes                                       |
-|----------------|-----------------|---------------------------------------------|
-| `pareto-rs`    | `anyhow`        | Not imported; crate uses `thiserror` only   |
-| `pareto-rs`    | `thiserror`     | Not imported anywhere in `pareto-rs/src`    |
-| `pareto-rs`    | `tokio`         | Not imported; `pareto-rs` is synchronous    |
-| `pareto-rs`    | `tracing`       | Not imported                                |
-| `pareto-rs`    | `walkdir`       | Not imported                                |
-| `tokenledger-rs` | `tempfile`   | Not imported in non-test code                |
+| Crate            | Unused dep           | Notes                                                   |
+| ---------------- | -------------------- | ------------------------------------------------------- |
+| `pareto-rs`      | `anyhow`             | Not imported; crate uses `thiserror` only               |
+| `pareto-rs`      | `thiserror`          | Not imported anywhere in `pareto-rs/src`                |
+| `pareto-rs`      | `tokio`              | Not imported; `pareto-rs` is synchronous                |
+| `pareto-rs`      | `tracing`            | Not imported                                            |
+| `pareto-rs`      | `walkdir`            | Not imported                                            |
+| `tokenledger-rs` | `tempfile`           | Not imported in non-test code                           |
 | `tokenledger-rs` | `tracing-subscriber` | Not imported; PR #61 will add `clap_ext::setup_tracing` |
-| `fuzz`         | `libfuzzer-sys` | No `fuzz/src/` exists                       |
+| `fuzz`           | `libfuzzer-sys`      | No `fuzz/src/` exists                                   |
 
 These inflate the dep graph and CI cache. 7 declarations, ~0 actual harm
 (no runtime cost for unused prod deps, but ~50–80 transitive packages
@@ -355,20 +357,20 @@ to land.
 
 ### 6.1 Hot modules with **zero** `#[test]` attributes
 
-| File                                              | LoC  | Risk                                                          |
-|---------------------------------------------------|-----:|---------------------------------------------------------------|
-| `crates/tokenledger/src/ingest/mod.rs`            | 1757 | Dedup, checkpoint, I/O all untested                           |
-| `crates/tokenledger/src/orchestrate.rs`           |  695 | Multi-provider orchestration logic untested                   |
-| `crates/tokenledger/src/cli.rs`                   |  444 | All CLI args, validation untested                             |
-| `crates/tokenledger/src/pricing.rs`               |  562 | Pricing math is the core value prop — untested                |
-| `crates/tokenledger/src/bench.rs`                 |  652 | Benchmark harness — untested                                 |
-| `crates/tokenledger/src/analytics.rs`             |  119 | Analytics — untested                                          |
-| `crates/tokenledger/src/routing/adapters.rs`      |  323 | **Hexagonal** adapters — untested (only `mappings.rs` has 3)  |
-| `crates/tokenledger/src/routing/ports.rs`         |  198 | Port traits — untested                                        |
-| `crates/tokenledger/src/routing/pareto_router.rs` |  190 | Core Pareto router — untested                                 |
-| `crates/tokenledger/src/benchmarks/cli.rs`        |  112 | Benchmarks CLI — untested                                     |
-| `crates/tokenledger/src/benchmarks/store.rs`      |  278 | Benchmark storage — untested                                  |
-| `crates/tokenledger/src/ingest/{aggregation,parser,validation}.rs` | 8–11 each | Stubs; not implemented at all |
+| File                                                               |       LoC | Risk                                                         |
+| ------------------------------------------------------------------ | --------: | ------------------------------------------------------------ |
+| `crates/tokenledger/src/ingest/mod.rs`                             |      1757 | Dedup, checkpoint, I/O all untested                          |
+| `crates/tokenledger/src/orchestrate.rs`                            |       695 | Multi-provider orchestration logic untested                  |
+| `crates/tokenledger/src/cli.rs`                                    |       444 | All CLI args, validation untested                            |
+| `crates/tokenledger/src/pricing.rs`                                |       562 | Pricing math is the core value prop — untested               |
+| `crates/tokenledger/src/bench.rs`                                  |       652 | Benchmark harness — untested                                 |
+| `crates/tokenledger/src/analytics.rs`                              |       119 | Analytics — untested                                         |
+| `crates/tokenledger/src/routing/adapters.rs`                       |       323 | **Hexagonal** adapters — untested (only `mappings.rs` has 3) |
+| `crates/tokenledger/src/routing/ports.rs`                          |       198 | Port traits — untested                                       |
+| `crates/tokenledger/src/routing/pareto_router.rs`                  |       190 | Core Pareto router — untested                                |
+| `crates/tokenledger/src/benchmarks/cli.rs`                         |       112 | Benchmarks CLI — untested                                    |
+| `crates/tokenledger/src/benchmarks/store.rs`                       |       278 | Benchmark storage — untested                                 |
+| `crates/tokenledger/src/ingest/{aggregation,parser,validation}.rs` | 8–11 each | Stubs; not implemented at all                                |
 
 ### 6.2 Root `tests/`
 
@@ -417,11 +419,11 @@ prior refactor — likely the source of the `src/` duplication).**
 
 ### 7.2 Open PRs
 
-| #   | Title                                              | Branch                                  | Additions | Deletions | Files | Age       |
-|----:|----------------------------------------------------|-----------------------------------------|----------:|----------:|------:|-----------|
-| 64  | consolidate: Tokn                                  | `integration/consolidate`               |         0 |        11 |     1 | < 1 day   |
-| 61  | feat: adopt clap-ext (Verbosity, ConfigArg, setup_tracing) | `feat/clap-ext-adopt-2026-06-11` |        16 |         0 |     4 | 3 days    |
-| 59  | chore(workflows): hygiene pass                     | `chore/workflow-hygiene-20260606-Tokn`  |       213 |       104 |    29 | 8 days    |
+|   # | Title                                                      | Branch                                 | Additions | Deletions | Files | Age     |
+| --: | ---------------------------------------------------------- | -------------------------------------- | --------: | --------: | ----: | ------- |
+|  64 | consolidate: Tokn                                          | `integration/consolidate`              |         0 |        11 |     1 | < 1 day |
+|  61 | feat: adopt clap-ext (Verbosity, ConfigArg, setup_tracing) | `feat/clap-ext-adopt-2026-06-11`       |        16 |         0 |     4 | 3 days  |
+|  59 | chore(workflows): hygiene pass                             | `chore/workflow-hygiene-20260606-Tokn` |       213 |       104 |    29 | 8 days  |
 
 **PR #64 is suspect** — 0 additions, 11 deletions, 1 file changed,
 created the same day this audit ran. Looks like a "consolidate" smoke
@@ -450,30 +452,36 @@ Normal aging.
 ## 8. Other findings (misc)
 
 ### 8.1 `pheno-cli-base` — phantom workspace dep
+
 See §2.1. Add to `[workspace.dependencies]` is a no-op without a
 member consumer, but is a footgun.
 
 ### 8.2 `.validation_logs_20260220/` tracked
+
 8 files of CI logs are committed. These should be in `.gitignore` and
 cleaned up.
 
 ### 8.3 `benchmarks/results/` (35+ JSONL/JSON result files) tracked
+
 The `benchmarks/results/` directory is heavy with old benchmark
 snapshots from February 2026. Treat as a candidate for `git rm -r
 --cached benchmarks/results/` if these aren't meant to be source of
 truth.
 
 ### 8.4 Lockfile committed
+
 `Cargo.lock` is committed. Good — this is a binary, not a library
 caller, so pinning is the right call.
 
 ### 8.5 Single maintainer
+
 All 148 commits and 64 PRs are by `KooshaPari` (the only author/bot
 account visible). The README explicitly states "AI-DD metaproject"
 maintained by AI agents only. This is a **bus factor = 1** risk that
 the spec should call out.
 
 ### 8.6 Empty L1 / modularization run
+
 `MODULARIZATION_STATUS.md` and `REFACTORING_SUMMARY.md` (both at
 repo root) likely narrate the half-done split of `src/ingest.rs` into
 `ingest/{mod,aggregation,parser,validation}.rs`. The 8/8/11-line stubs
@@ -514,18 +522,18 @@ $ gh pr list --state open
 
 ## 10. Summary scorecard
 
-| Dimension                          | Grade | Notes                                              |
-|------------------------------------|:-----:|----------------------------------------------------|
-| **Builds clean**                   |   A   | `cargo build --workspace` passes in 1m 06s         |
-| **Security CVEs**                  |   A   | 0 advisories from 1,132-entry RustSec DB           |
-| **Dependency hygiene**             |   B   | 7 unused deps; all versions current                |
-| **Hexagonal architecture**         |   B-  | `routing/` is exemplary; `ingest/` is a god module|
-| **SOLID / modularity**             |   C+  | Two 1.7k-LoC+ files; many flat `pub mod` exports   |
-| **Test coverage**                  |   C-  | 19 of 33 src files have 0 tests; `ingest` 0 tests  |
-| **Spec/doc alignment**             |   C   | 22k LoC of MD vs 14k LoC of Rust; `ARCHITECTURE.md` is a template skeleton |
-| **Branch/PR hygiene**              |   B   | 3 OPEN PRs, 1 suspect (PR #64, 0/-11/1 file)       |
-| **Repo hygiene (gitignore, dup)**  |   D   | 10k LoC of `src/` duplication; CI logs committed   |
-| **Bus factor**                     |   D   | Single maintainer, "AI-only" workflow              |
+| Dimension                         | Grade | Notes                                                                      |
+| --------------------------------- | :---: | -------------------------------------------------------------------------- |
+| **Builds clean**                  |   A   | `cargo build --workspace` passes in 1m 06s                                 |
+| **Security CVEs**                 |   A   | 0 advisories from 1,132-entry RustSec DB                                   |
+| **Dependency hygiene**            |   B   | 7 unused deps; all versions current                                        |
+| **Hexagonal architecture**        |  B-   | `routing/` is exemplary; `ingest/` is a god module                         |
+| **SOLID / modularity**            |  C+   | Two 1.7k-LoC+ files; many flat `pub mod` exports                           |
+| **Test coverage**                 |  C-   | 19 of 33 src files have 0 tests; `ingest` 0 tests                          |
+| **Spec/doc alignment**            |   C   | 22k LoC of MD vs 14k LoC of Rust; `ARCHITECTURE.md` is a template skeleton |
+| **Branch/PR hygiene**             |   B   | 3 OPEN PRs, 1 suspect (PR #64, 0/-11/1 file)                               |
+| **Repo hygiene (gitignore, dup)** |   D   | 10k LoC of `src/` duplication; CI logs committed                           |
+| **Bus factor**                    |   D   | Single maintainer, "AI-only" workflow                                      |
 
 **Overall:** Repo is buildable and CVE-free, but carries a 10k-LoC
 duplicate source tree, a 1,757-line god module with zero tests, and a
@@ -561,4 +569,4 @@ low points.
 
 ---
 
-*End of Block-C audit. File added (not modified) per audit protocol.*
+_End of Block-C audit. File added (not modified) per audit protocol._

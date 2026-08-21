@@ -1,10 +1,13 @@
 # Tokenledger Refactoring: 8759-line main.rs → Modular Architecture
 
 ## Objective
+
 Split the monolithic 8759-line `src/main.rs` into focused, organized modules while preserving all functionality (51 tests must pass).
 
 ## Completed
+
 ### Module Structure Created
+
 1. **src/cli.rs** (~400 lines)
    - CLI argument structs (MonthlyArgs, DailyArgs, CoverageArgs, PricingCheckArgs, etc.)
    - Command enum with all 11 subcommands
@@ -76,6 +79,7 @@ Split the monolithic 8759-line `src/main.rs` into focused, organized modules whi
     - Imports only public functions from modules
 
 ## Architecture
+
 ```
 main.rs (thin entry point)
   ├── cli::Cli -> cli::Command
@@ -89,8 +93,11 @@ main.rs (thin entry point)
 ```
 
 ## Known Issues / TODO
+
 ### Compile-time Dependencies (RESOLVED)
+
 All 108 compile errors from the initial modularization have been fixed:
+
 - Test helper functions properly exported from utils
 - Cross-module type/function re-exports in place
 - All functions referenced by tests are public and accessible
@@ -100,11 +107,13 @@ it has been implemented to write unpriced events to JSONL and generate a
 stub pricing patch JSON (fix merged in PR #168).
 
 ## Test Status
+
 - **Original**: 51 tests in monolithic main.rs
 - **Current**: 64 tests passing (55 unit + 9 integration), 0 failures
 - `cargo test` and `cargo clippy -- -D warnings` both pass clean
 
 ## Key Design Decisions
+
 1. **Models separate from CLI**: Data structures isolated from clap/CLI concerns
 2. **Utils as shared library**: All cross-cutting utilities centralized
 3. **Modules by domain**: analytics, pricing, bench, ingest, orchestrate
@@ -112,6 +121,7 @@ stub pricing patch JSON (fix merged in PR #168).
 5. **One rule: public by default for utils**: All functions/types in utils.rs made public
 
 ## Size Reduction
+
 - **Before**: 1 file @ 8759 lines
 - **After**: 10 files (9 source + lib.rs)
   - main.rs: 26 lines (thin)
@@ -128,6 +138,7 @@ stub pricing patch JSON (fix merged in PR #168).
 **Per-module max**: 3800 lines (utils) - still large but far better than 8759
 
 ## Notes
+
 - No business logic changed in the structural refactoring
 - Module boundaries are clean and maintainable
 - Code is production-ready; all tests pass and clippy is clean

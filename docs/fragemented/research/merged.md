@@ -57,15 +57,18 @@ Each provider adapter must emit normalized JSONL records directly consumable by 
 ## Fork/import policy per provider
 
 1. Import upstream parser/lib when:
+
 - data contract is stable,
 - dependency/license is acceptable,
 - integration surface is small.
 
 2. Fork adapter slice when:
+
 - parser quality is good but tightly coupled to its own CLI/UI,
 - only a narrow extraction layer is needed.
 
 3. Re-implement in-house when:
+
 - upstream churn is high or project is abandonware,
 - licensing blocks intended distribution,
 - parser logic is smaller than integration overhead.
@@ -74,15 +77,19 @@ Each provider adapter must emit normalized JSONL records directly consumable by 
 
 1. Pin every external import/fork to explicit commit/tag.
 2. Keep one adapter directory per provider with:
+
 - source attribution,
 - patch log,
 - update script/checklist,
 - fixture corpus.
+
 3. Run adapter conformance tests into normalized golden JSONL.
 4. Enforce bench gates on:
+
 - cold backfill,
 - warm tail,
 - burst ingest.
+
 5. Treat model-provider mapping and pricing mapping as separate audited layers.
 
 ## Performance-first implementation guidance
@@ -96,6 +103,7 @@ Each provider adapter must emit normalized JSONL records directly consumable by 
 ### Disk cache
 
 1. Add optional disk-backed cache layer for:
+
 - normalized-event dedupe indexes,
 - monthly aggregate materializations,
 - provider model metadata snapshots.
@@ -111,9 +119,11 @@ Each provider adapter must emit normalized JSONL records directly consumable by 
 ## Pricing methodology alignment (subscription + token-based providers)
 
 1. Token-priced providers:
+
 - direct `USD / Mtok` using configured input/output/cache/tool rates.
 
 2. Subscription/session-priced providers:
+
 - derive effective monthly budget:
   - either explicit user-entered monthly USD value, or
   - programmatic derivation from plan price and billing metadata.
@@ -121,17 +131,20 @@ Each provider adapter must emit normalized JSONL records directly consumable by 
 - compute effective blended `USD / Mtok` per model and provider.
 
 3. Keep both in one comparable surface:
+
 - `effective_cost_usd`
 - `effective_usd_per_mtok`
 - `blended_provider_usd_per_mtok`
 - `blended_global_usd_per_mtok`
 
 4. Mark derivation method in output metadata:
+
 - `pricing_mode = token|subscription_derived|subscription_manual`
 
 ## Concrete next steps (execution order)
 
 1. Build real adapters:
+
 - `~/.claude`
 - `~/.codex`
 - Cursor DB/logs
@@ -140,6 +153,7 @@ Each provider adapter must emit normalized JSONL records directly consumable by 
 2. Emit normalized JSONL directly to `tokenledger ingest`.
 3. Add fixture-backed conformance tests for each adapter.
 4. Add benchmark harness perf gates and enforce in CI:
+
 - cold backfill,
 - warm tail,
 - burst.
@@ -338,14 +352,13 @@ Optimization levers:
 
 ## Files
 
-* `ADAPTER_BASE_LIBS_AND_FORK_STRATEGY_2026-02-21.md`
-* `DEEP_RESEARCH_AND_OPTIMIZATION_PLAN.md`
-* `INDEX.md`
-* `UNIFIED_E2E_RESEARCH_AND_ARCHITECTURE_2026-02-21.md`
-* `USAGE_AUDIT_AND_MARKET_SCAN.md`
+- `ADAPTER_BASE_LIBS_AND_FORK_STRATEGY_2026-02-21.md`
+- `DEEP_RESEARCH_AND_OPTIMIZATION_PLAN.md`
+- `INDEX.md`
+- `UNIFIED_E2E_RESEARCH_AND_ARCHITECTURE_2026-02-21.md`
+- `USAGE_AUDIT_AND_MARKET_SCAN.md`
 
 ## Subdirectories
-
 
 ---
 
@@ -374,31 +387,37 @@ Define an end-to-end architecture for usage/cost analytics across Cursor, Droid,
 ## Reference Architecture
 
 1. Ingest adapters:
+
 - Claude JSONL
 - Codex JSONL
 - Cursor logs + real SQLite tables
 - Droid JSON/JSONL
 
 2. Normalization:
+
 - Canonical `UsageEvent`
 - Provider/model alias resolution
 - Contract and conformance tests
 
 3. Pricing engine:
+
 - Coverage/patch/apply/check lifecycle
 - Metadata audit and provenance controls
 - Recompute-friendly immutable token events
 
 4. Analytics:
+
 - Monthly/daily blended economics
 - Per-provider and per-model drilldown
 - Suggestions/optimization signals
 
 5. Snapshot/UI:
+
 - Compact snapshot JSON for statusbar/extension use
 - Optional richer local API later if needed
 
 6. Perf and governance:
+
 - Bench (cold/warm/burst), baseline and trend checks
 - Correctness goldens
 - Reconcile and pipeline artifacts per run
@@ -406,15 +425,19 @@ Define an end-to-end architecture for usage/cost analytics across Cursor, Droid,
 ## Integration Model for CodexBar/OpenCode-style UX
 
 1. Producer:
+
 - `tokenledger orchestrate --ui-snapshot-path <path>`
 
 2. Consumer:
+
 - Extension polls snapshot file at low interval (1-5s) or on fs-watch.
 
 3. Contract:
+
 - fixed schema versioning recommended before publishing external extension.
 
 4. Overhead controls:
+
 - snapshot generation only when flag enabled,
 - small payload (totals + top rows + suggestions),
 - no daemon/network required for baseline integration.
@@ -423,8 +446,10 @@ Define an end-to-end architecture for usage/cost analytics across Cursor, Droid,
 
 1. Real Cursor SQLite adapter with deterministic table mapping.
 2. Disk-backed caches:
+
 - parsed normalized event cache,
 - aggregate snapshot cache keyed by month/filter/pricing hash.
+
 3. UI payload schema version + compatibility policy.
 4. Orchestrate pipeline summary artifact for machine consumers (in addition to reconcile summary).
 

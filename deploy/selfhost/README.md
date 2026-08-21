@@ -53,6 +53,7 @@ EOF
 ```
 
 Add to `.gitignore`:
+
 ```
 .env.selfhost
 .env.*.local
@@ -110,10 +111,10 @@ docker compose exec tokenledger-cli tokenledger --help
 
 ## Environment Variables
 
-| Variable | Description |
-|----------|-------------|
-| `HOSTNAME` | Domain for Caddy status page (no API) |
-| `CF_TUNNEL_TOKEN` | Cloudflare Tunnel token (optional) |
+| Variable          | Description                           |
+| ----------------- | ------------------------------------- |
+| `HOSTNAME`        | Domain for Caddy status page (no API) |
+| `CF_TUNNEL_TOKEN` | Cloudflare Tunnel token (optional)    |
 
 ## Managing the Stack
 

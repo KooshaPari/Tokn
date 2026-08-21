@@ -11,39 +11,39 @@
 
 ## Build State
 
-| Dimension | Status |
-|---|---|
-| Build | PASS — `cargo build --workspace` succeeds |
-| Test | PASS — `cargo test --workspace` passes |
-| Format | PASS — `cargo fmt --all` clean |
-| Lint | PASS — `cargo clippy --workspace --all-targets -- -D warnings` clean |
-| Audit | PASS — `cargo-audit` green |
-| Docs | PASS — docs build (VitePress) green |
+| Dimension | Status                                                               |
+| --------- | -------------------------------------------------------------------- |
+| Build     | PASS — `cargo build --workspace` succeeds                            |
+| Test      | PASS — `cargo test --workspace` passes                               |
+| Format    | PASS — `cargo fmt --all` clean                                       |
+| Lint      | PASS — `cargo clippy --workspace --all-targets -- -D warnings` clean |
+| Audit     | PASS — `cargo-audit` green                                           |
+| Docs      | PASS — docs build (VitePress) green                                  |
 
 ## Quality Gates
 
-| Gate | State | Notes |
-|---|---|---|
-| CI/CD | PASS | `.github/workflows/ci.yml` (Rust CI + governance validation + docs build) |
-| Security | PASS | TruffleHog (default branch scan) |
-| Governance | PASS | `LICENSE-MIT`, `LICENSE-APACHE`, `AGENTS.md`, `CODEOWNERS`, `SECURITY.md` |
-| Reusable workflows | N/A | Not yet using `phenoShared` reusables |
+| Gate               | State | Notes                                                                     |
+| ------------------ | ----- | ------------------------------------------------------------------------- |
+| CI/CD              | PASS  | `.github/workflows/ci.yml` (Rust CI + governance validation + docs build) |
+| Security           | PASS  | TruffleHog (default branch scan)                                          |
+| Governance         | PASS  | `LICENSE-MIT`, `LICENSE-APACHE`, `AGENTS.md`, `CODEOWNERS`, `SECURITY.md` |
+| Reusable workflows | N/A   | Not yet using `phenoShared` reusables                                     |
 
 ## Worktrees / Stashes
 
-| Type | Count | State |
-|---|---|---|
-| Worktrees | 4 | Triage pending per E.4.2 (1 is `Tokn/Tokn/Tokn-wtrees/...` nested — bug per E.4.3) |
-| Stashes | 0 | None |
+| Type      | Count | State                                                                              |
+| --------- | ----- | ---------------------------------------------------------------------------------- |
+| Worktrees | 4     | Triage pending per E.4.2 (1 is `Tokn/Tokn/Tokn-wtrees/...` nested — bug per E.4.3) |
+| Stashes   | 0     | None                                                                               |
 
 ## Branches / PRs
 
-| Branch / PR | Status | Action |
-|---|---|---|
-| `main` | Default | Current |
-| PR #59 (`chore(workflows): hygiene pass`) | OPEN | Human review per E.4.1; classify CRITICAL/NORMAL/SKIP per file |
-| 3 active wtrees (`ci/best-practices-2026-06-08` w/ 51 commits, 2 others) | OPEN | Cherry-pick to new `chore/ci-best-practices-2026-06-11` etc. per E.4.2 |
-| Nested `Tokn/Tokn/Tokn-wtrees/reproducible-2026-06-08` | BUG | `git worktree remove` + recreate at canonical path per E.4.3 |
+| Branch / PR                                                              | Status  | Action                                                                 |
+| ------------------------------------------------------------------------ | ------- | ---------------------------------------------------------------------- |
+| `main`                                                                   | Default | Current                                                                |
+| PR #59 (`chore(workflows): hygiene pass`)                                | OPEN    | Human review per E.4.1; classify CRITICAL/NORMAL/SKIP per file         |
+| 3 active wtrees (`ci/best-practices-2026-06-08` w/ 51 commits, 2 others) | OPEN    | Cherry-pick to new `chore/ci-best-practices-2026-06-11` etc. per E.4.2 |
+| Nested `Tokn/Tokn/Tokn-wtrees/reproducible-2026-06-08`                   | BUG     | `git worktree remove` + recreate at canonical path per E.4.3           |
 
 ## Next Steps
 

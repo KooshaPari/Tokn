@@ -1,6 +1,5 @@
 # Work Audit — Tokn
 
-
 **Category: ARCHITECTURE**
 **Index:** See `docs/worklogs/WORK_LOG.md`
 
@@ -12,19 +11,20 @@ This log records research completions, architectural decisions, issues discovere
 
 All entries MUST be organized into one of these categories:
 
-| Category | File | Purpose |
-|----------|------|---------|
-| ARCHITECTURE | worklogs/ARCHITECTURE.md | ADRs, library extraction, major refactors |
-| DUPLICATION | worklogs/DUPLICATION.md | Cross-project code duplication |
-| DEPENDENCIES | worklogs/DEPENDENCIES.md | External deps, forks, modernization |
-| INTEGRATION | worklogs/INTEGRATION.md | External integrations, bridge contracts |
-| PERFORMANCE | worklogs/PERFORMANCE.md | Optimization, benchmarking, profiling |
-| RESEARCH | worklogs/RESEARCH.md | Starred repo analysis, technology research |
-| GOVERNANCE | worklogs/GOVERNANCE.md | Policy, evidence, quality gates, process |
+| Category     | File                     | Purpose                                    |
+| ------------ | ------------------------ | ------------------------------------------ |
+| ARCHITECTURE | worklogs/ARCHITECTURE.md | ADRs, library extraction, major refactors  |
+| DUPLICATION  | worklogs/DUPLICATION.md  | Cross-project code duplication             |
+| DEPENDENCIES | worklogs/DEPENDENCIES.md | External deps, forks, modernization        |
+| INTEGRATION  | worklogs/INTEGRATION.md  | External integrations, bridge contracts    |
+| PERFORMANCE  | worklogs/PERFORMANCE.md  | Optimization, benchmarking, profiling      |
+| RESEARCH     | worklogs/RESEARCH.md     | Starred repo analysis, technology research |
+| GOVERNANCE   | worklogs/GOVERNANCE.md   | Policy, evidence, quality gates, process   |
 
 ## When to Write
 
 Write an entry for:
+
 - Research completions (starred repos, tech eval, design exploration)
 - Significant decisions made (why we chose X over Y)
 - Issues found (duplication >50 LOC, performance bottlenecks, governance gaps)
@@ -34,6 +34,7 @@ Write an entry for:
 ## Format
 
 Each entry should include:
+
 - **Date** (YYYY-MM-DD)
 - **Category** (from table above)
 - **Title** (concise, searchable)

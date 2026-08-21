@@ -45,6 +45,7 @@ Tokens contain only what's necessary. No PII in tokens. No session state in toke
 ### In Scope
 
 **Token Management:**
+
 - JWT generation and validation
 - OAuth 2.0 / OIDC support
 - API key management
@@ -52,18 +53,21 @@ Tokens contain only what's necessary. No PII in tokens. No session state in toke
 - Refresh token rotation
 
 **Token Lifecycle:**
+
 - Automatic rotation
 - Expiration management
 - Revocation handling
 - Token binding (device, IP)
 
 **Security Features:**
+
 - Token signing (RS256, ES256)
 - Encryption at rest
 - Key management integration
 - Audit logging
 
 **SDK and Integration:**
+
 - Language SDKs (Rust, TypeScript, Go, Python)
 - Middleware for web frameworks
 - CLI tools for token operations
@@ -165,11 +169,13 @@ Tokn/
 ### Security Process
 
 **All Changes:**
+
 - Security review for any crypto changes
 - Penetration testing for major releases
 - CVE monitoring and response plan
 
 **Vulnerability Response:**
+
 - 24-hour response for critical vulnerabilities
 - Coordinated disclosure process
 - Automated patch notification
@@ -225,7 +231,7 @@ Tokn/
 
 ---
 
-*This charter governs Tokn, the token management infrastructure. Secure tokens enable secure systems.*
+_This charter governs Tokn, the token management infrastructure. Secure tokens enable secure systems._
 
-*Last Updated: April 2026*
-*Next Review: July 2026*
+_Last Updated: April 2026_
+_Next Review: July 2026_

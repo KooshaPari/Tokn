@@ -21,24 +21,24 @@ Multilingual tokenization presents unique challenges that differ significantly f
 
 ### Language Categories
 
-| Category | Languages | Characteristics | Tokenization Challenge |
-|----------|-----------|-----------------|------------------------|
-| **Latin-based** | English, Spanish, French | Small alphabets, spaces | Baseline case |
-| **Cyrillic** | Russian, Ukrainian | Moderate alphabet | Similar to Latin |
-| **CJK** | Chinese, Japanese, Korean | Large character sets | Vocabulary pressure |
-| **Arabic/Hebrew** | Arabic, Hebrew | RTL, contextual forms | Normalization |
-| **Indic** | Hindi, Bengali, Tamil | Complex scripts | Preprocessing |
-| **Southeast Asian** | Thai, Khmer, Lao | No spaces | Segmentation |
-| **African** | Amharic, Somali | Limited resources | Training data |
+| Category            | Languages                 | Characteristics         | Tokenization Challenge |
+| ------------------- | ------------------------- | ----------------------- | ---------------------- |
+| **Latin-based**     | English, Spanish, French  | Small alphabets, spaces | Baseline case          |
+| **Cyrillic**        | Russian, Ukrainian        | Moderate alphabet       | Similar to Latin       |
+| **CJK**             | Chinese, Japanese, Korean | Large character sets    | Vocabulary pressure    |
+| **Arabic/Hebrew**   | Arabic, Hebrew            | RTL, contextual forms   | Normalization          |
+| **Indic**           | Hindi, Bengali, Tamil     | Complex scripts         | Preprocessing          |
+| **Southeast Asian** | Thai, Khmer, Lao          | No spaces               | Segmentation           |
+| **African**         | Amharic, Somali           | Limited resources       | Training data          |
 
 ### Current State of Multilingual Tokenization
 
-| Approach | Example | Pros | Cons |
-|----------|---------|------|------|
-| Separate per-language | Early MT systems | Optimal per language | No cross-lingual transfer |
-| Shared BPE | XLM-RoBERTa | Transfer learning | Vocabulary competition |
-| BBPE universal | GPT-4, XLM-R | No OOV | Longer sequences for some |
-| Script-aware | Specialized systems | Cultural alignment | Complex implementation |
+| Approach              | Example             | Pros                 | Cons                      |
+| --------------------- | ------------------- | -------------------- | ------------------------- |
+| Separate per-language | Early MT systems    | Optimal per language | No cross-lingual transfer |
+| Shared BPE            | XLM-RoBERTa         | Transfer learning    | Vocabulary competition    |
+| BBPE universal        | GPT-4, XLM-R        | No OOV               | Longer sequences for some |
+| Script-aware          | Specialized systems | Cultural alignment   | Complex implementation    |
 
 ### Research Findings
 
@@ -151,12 +151,12 @@ impl LanguageHint {
 
 While the core BBPE algorithm is universal, pre-tokenization can optimize for specific languages:
 
-| Language | Optimization | Benefit |
-|----------|--------------|---------|
-| CJK | Character-level seeding | Better bigram coverage |
-| Thai | Dictionary segmentation | Handles lack of spaces |
-| Arabic | Bidi handling | Correct RTL processing |
-| Code | Identifier splitting | Better compression |
+| Language | Optimization            | Benefit                |
+| -------- | ----------------------- | ---------------------- |
+| CJK      | Character-level seeding | Better bigram coverage |
+| Thai     | Dictionary segmentation | Handles lack of spaces |
+| Arabic   | Bidi handling           | Correct RTL processing |
+| Code     | Identifier splitting    | Better compression     |
 
 ### Why Not Language-Specific Tokenizers?
 
@@ -171,12 +171,12 @@ Approaches like separate Chinese-only or English-only tokenizers were rejected:
 
 For multilingual use cases, we recommend the Extended tier (100K):
 
-| Size | CJK Coverage | Latin Coverage | Use Case |
-|------|--------------|----------------|----------|
-| 32K | Poor | Good | Single language |
-| 50K | Fair | Excellent | 2-3 languages |
-| 100K | Good | Excellent | Multilingual |
-| 250K | Excellent | Excellent | Research (XLM-R) |
+| Size | CJK Coverage | Latin Coverage | Use Case         |
+| ---- | ------------ | -------------- | ---------------- |
+| 32K  | Poor         | Good           | Single language  |
+| 50K  | Fair         | Excellent      | 2-3 languages    |
+| 100K | Good         | Excellent      | Multilingual     |
+| 250K | Excellent    | Excellent      | Research (XLM-R) |
 
 ---
 
@@ -187,11 +187,13 @@ For multilingual use cases, we recommend the Extended tier (100K):
 **Description**: Separate tokenizer implementations per script family.
 
 **Pros**:
+
 - Optimal tokenization per script
 - Smaller vocabularies possible
 - Cultural/linguistic accuracy
 
 **Cons**:
+
 - Requires language detection
 - Complex deployment
 - No cross-script transfer
@@ -204,10 +206,12 @@ For multilingual use cases, we recommend the Extended tier (100K):
 **Description**: Adjust vocabulary slots per language based on training data distribution.
 
 **Pros**:
+
 - Optimal allocation for training corpus
 - Better compression for dominant languages
 
 **Cons**:
+
 - Requires language-tagged training data
 - Unfair to low-resource languages
 - Hard to predict behavior
@@ -219,10 +223,12 @@ For multilingual use cases, we recommend the Extended tier (100K):
 **Description**: Use character-level tokenization for Chinese/Japanese.
 
 **Pros**:
+
 - Perfect CJK coverage
 - Simple for those languages
 
 **Cons**:
+
 - Poor for other languages
 - No subword structure
 - Large vocabularies
@@ -270,44 +276,44 @@ For multilingual use cases, we recommend the Extended tier (100K):
 
 ### Language Support Matrix
 
-| Language | Script | Pre-tokenization | Status |
-|----------|--------|------------------|--------|
-| English | Latin | Whitespace | ✅ Supported |
-| Spanish | Latin | Whitespace | ✅ Supported |
-| French | Latin | Whitespace | ✅ Supported |
-| German | Latin | Whitespace | ✅ Supported |
-| Russian | Cyrillic | Whitespace | ✅ Supported |
-| Chinese | Han | Character + BBPE | ✅ Supported |
-| Japanese | Han/Hiragana/Katakana | Character + BBPE | ✅ Supported |
-| Korean | Hangul | Jamo/Whitespace | ✅ Supported |
-| Arabic | Arabic | Whitespace + Bidi | ✅ Supported |
-| Hebrew | Hebrew | Whitespace + Bidi | ✅ Supported |
-| Hindi | Devanagari | Whitespace | ✅ Supported |
-| Thai | Thai | Dictionary-based | 🚧 Planned |
-| Vietnamese | Latin (extended) | Whitespace | ✅ Supported |
-| All others | Various | BBPE fallback | ✅ Supported |
+| Language   | Script                | Pre-tokenization  | Status       |
+| ---------- | --------------------- | ----------------- | ------------ |
+| English    | Latin                 | Whitespace        | ✅ Supported |
+| Spanish    | Latin                 | Whitespace        | ✅ Supported |
+| French     | Latin                 | Whitespace        | ✅ Supported |
+| German     | Latin                 | Whitespace        | ✅ Supported |
+| Russian    | Cyrillic              | Whitespace        | ✅ Supported |
+| Chinese    | Han                   | Character + BBPE  | ✅ Supported |
+| Japanese   | Han/Hiragana/Katakana | Character + BBPE  | ✅ Supported |
+| Korean     | Hangul                | Jamo/Whitespace   | ✅ Supported |
+| Arabic     | Arabic                | Whitespace + Bidi | ✅ Supported |
+| Hebrew     | Hebrew                | Whitespace + Bidi | ✅ Supported |
+| Hindi      | Devanagari            | Whitespace        | ✅ Supported |
+| Thai       | Thai                  | Dictionary-based  | 🚧 Planned   |
+| Vietnamese | Latin (extended)      | Whitespace        | ✅ Supported |
+| All others | Various               | BBPE fallback     | ✅ Supported |
 
 ### Normalization Pipeline
 
 ```rust
 pub fn normalize(text: &str, config: &NormalizationConfig) -> String {
     let mut result = text.to_string();
-    
+
     if config.unicode_normalization {
         // NFKC: Compatibility decomposition + canonical composition
         result = result.nfkc().collect();
     }
-    
+
     if config.case_folding {
         result = result.to_lowercase();
     }
-    
+
     if config.strip_accents {
         result = result.chars()
             .filter(|c| !is_combining_mark(*c))
             .collect();
     }
-    
+
     result
 }
 ```
@@ -360,17 +366,18 @@ pub struct LanguageConfig {
 
 1. [TOKENIZATION_ALGORITHMS_SOTA.md](./TOKENIZATION_ALGORITHMS_SOTA.md) - Algorithm analysis
 2. [CODE_TOKENIZATION_SOTA.md](./CODE_TOKENIZATION_SOTA.md) - Code-specific handling
-3. **Conneau, A., et al. (2020).** Unsupervised Cross-lingual Representation Learning at Scale. *ACL* (XLM-R).
-4. **Rust, P., et al. (2023).** How Good is Your Tokenizer? On the Language Specificity of Multilingual Tokenizers. *ACL*.
+3. **Conneau, A., et al. (2020).** Unsupervised Cross-lingual Representation Learning at Scale. _ACL_ (XLM-R).
+4. **Rust, P., et al. (2023).** How Good is Your Tokenizer? On the Language Specificity of Multilingual Tokenizers. _ACL_.
 5. **Unicode Standard Annex #15:** Unicode Normalization Forms. https://unicode.org/reports/tr15/
 
 ---
 
 **Notes:**
+
 - BBPE naturally handles all scripts through UTF-8 byte encoding
 - Language-specific optimizations are additive, not required
 - Unicode normalization is applied before tokenization
 
 ---
 
-*End of Document - 328 lines*
+_End of Document - 328 lines_

@@ -3,6 +3,7 @@
 <!-- Slop issues are expected and intentionally present as part of an HITL-less -->
 <!-- /minimized AI-DD metaproject of learning, refining, and building brute-force -->
 <!-- training for both agents and the human operator. -->
+
 ![Downloads](https://img.shields.io/github/downloads/KooshaPari/Tokn/total?style=flat-square&label=downloads&color=blue)
 ![GitHub release](https://img.shields.io/github/v/release/KooshaPari/Tokn?style=flat-square&label=release)
 ![License](https://img.shields.io/github/license/KooshaPari/Tokn?style=flat-square)
@@ -18,7 +19,9 @@
 > on learning, refining, and brute-force training both the agents and the
 > human operator. Bug reports and contributions are still welcome, but please
 > expect AI-generated code, comments, and documentation throughout.
+
 <!-- AI-DD-META:END -->
+
 > **Work state:** ACTIVE · **Progress:** `█████████░ 80%` · **Workspace version:** `0.1.5` (next tag `v0.1.5`; local tags through `v0.1.4`; not published to crates.io)
 > Token-ledger / usage accounting (tokenledger) **and the canonical Phenotype Rust ROUTING substrate** — `tokenledger::routing` (hexagonal: pareto_router/ports/adapters). Consumed by OmniRoute per ADR-001. · updated 2026-07-18
 >
@@ -101,15 +104,15 @@ export ANTHROPIC_API_KEY="sk-..."
 
 ## Library Preferences (DO NOT REINVENT)
 
-| Need | Use | NOT |
-|------|-----|-----|
-| Async runtime | tokio | custom async |
-| HTTP client | reqwest | custom wrappers |
-| Logging | tracing | print() or log::logger |
-| CLI | clap | manual arg parsing |
-| Validation | validator | manual if/else |
-| Database | sqlx | raw SQL strings |
-| Rate limiting | governor | custom rate limiter |
+| Need          | Use       | NOT                    |
+| ------------- | --------- | ---------------------- |
+| Async runtime | tokio     | custom async           |
+| HTTP client   | reqwest   | custom wrappers        |
+| Logging       | tracing   | print() or log::logger |
+| CLI           | clap      | manual arg parsing     |
+| Validation    | validator | manual if/else         |
+| Database      | sqlx      | raw SQL strings        |
+| Rate limiting | governor  | custom rate limiter    |
 
 ---
 
@@ -125,11 +128,11 @@ export ANTHROPIC_API_KEY="sk-..."
 
 ## Verifiable Constraints
 
-| Metric | Threshold | Enforcement |
-|--------|-----------|-------------|
-| Test coverage | >= 80% | cargo-tarpaulin |
-| Security findings | 0 high/critical | cargo-audit |
-| Clippy warnings | 0 | CI gate |
+| Metric            | Threshold       | Enforcement     |
+| ----------------- | --------------- | --------------- |
+| Test coverage     | >= 80%          | cargo-tarpaulin |
+| Security findings | 0 high/critical | cargo-audit     |
+| Clippy warnings   | 0               | CI gate         |
 
 ---
 
@@ -141,11 +144,11 @@ tokenledger is a **token and cost tracking system** for AI coding agents. The co
 
 ### Key Interfaces
 
-| Interface | Responsibility |
-|-----------|---------------|
-| CLI commands | report, costs, optimize |
+| Interface       | Responsibility             |
+| --------------- | -------------------------- |
+| CLI commands    | report, costs, optimize    |
 | Provider traits | Multi-provider abstraction |
-| Storage | SQLite, PostgreSQL support |
+| Storage         | SQLite, PostgreSQL support |
 
 ---
 
@@ -174,12 +177,14 @@ agentapi --cliproxy http://localhost:8317
 **AgilePlus Tracking**: All work tracked in `/repos/AgilePlus`. Review `CLAUDE.md` for development policies.
 
 **Quality Standards**:
+
 - **Zero new lint suppressions** without inline justification
 - **80% test coverage minimum** (cargo-tarpaulin)
 - **Zero high/critical security findings** (cargo-audit)
 - **Max 40 lines per function**, zero placeholder TODOs
 
 **Quick Commands**:
+
 ```bash
 cargo install --path crates/tokenledger --locked   # Install CLI
 cargo build --workspace                            # Development build
@@ -227,4 +232,3 @@ This repository includes the following cross-cutting documents:
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — system architecture and component overview
 - [`docs/`](docs/) — design notes, ADRs, and supporting documentation (see [`docs/index.md`](docs/index.md))
 - [`docs/guides/cutting-a-release.md`](docs/guides/cutting-a-release.md) — how to cut `v0.1.5`
-

@@ -15,7 +15,6 @@ This document scaffolds the functional requirements for Tokn. Requirements are i
 - **TOKN-005:** Audit logging for token lifecycle
 - **TOKN-006:** Multi-tenant token isolation
 
-
 ## Test Coverage
 
 All requirements must have corresponding tests. Track coverage in PR reviews.

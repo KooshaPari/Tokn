@@ -2,19 +2,21 @@
 
 **Status:** Accepted  
 **Date:** 2026-04-02  
-**Deciders:** Architecture Team  
+**Deciders:** Architecture Team
 
 ---
 
 ## Context
 
 We need to support multiple tenants on a single Tokn deployment with strict isolation. Each tenant must have:
+
 - Isolated token namespaces
 - Separate cryptographic keys
 - Independent rate limits
 - Isolated audit logs
 
 Previous approaches:
+
 - **Database schema isolation** - Complex migration, resource inefficiency
 - **Separate deployments** - Operational overhead, high cost
 - **Tenant ID in JWT** - Cannot trust unverified claims
@@ -107,17 +109,17 @@ impl TenantMiddleware {
             .and_then(|v| v.to_str().ok())
             .map(String::from)
             .unwrap_or_else(|| self.default_tenant.clone());
-        
+
         // Validate tenant
         let tenant = self.tenant_resolver
             .get_tenant(&tenant_id)
             .await?
             .ok_or(TenantError::TenantNotFound(tenant_id.clone()))?;
-        
+
         if !tenant.active {
             return Err(TenantError::TenantInactive(tenant_id));
         }
-        
+
         // Build tenant context
         Ok(TenantContext {
             tenant_id: tenant.id,
@@ -140,7 +142,7 @@ impl KeyService {
             .get_tenant(tenant_id)
             .await?
             .ok_or(KeyError::TenantNotFound)?;
-        
+
         self.get_signing_key(&tenant.key_id, alg).await
     }
 }
@@ -148,11 +150,11 @@ impl KeyService {
 
 ### Header Specification
 
-| Header | Required | Format | Description |
-|--------|----------|--------|-------------|
-| **X-Tokn-Tenant-ID** | Yes | String (max 64 chars) | Tenant identifier |
-| **X-Tokn-Tenant-Key** | Conditional | String | Tenant API key for authentication |
-| **X-Tokn-Request-ID** | No | UUID | Request correlation ID |
+| Header                | Required    | Format                | Description                       |
+| --------------------- | ----------- | --------------------- | --------------------------------- |
+| **X-Tokn-Tenant-ID**  | Yes         | String (max 64 chars) | Tenant identifier                 |
+| **X-Tokn-Tenant-Key** | Conditional | String                | Tenant API key for authentication |
+| **X-Tokn-Request-ID** | No          | UUID                  | Request correlation ID            |
 
 ### Validation Rules
 
@@ -187,6 +189,7 @@ impl TenantValidation {
 ## Consequences
 
 ### Positive
+
 - Simple header-based tenant identification
 - Strong isolation via per-tenant resources
 - No database schema complexity
@@ -194,12 +197,14 @@ impl TenantValidation {
 - Independent tenant configuration
 
 ### Negative
+
 - Header spoofing risk (mitigated by validation)
 - Cross-tenant requests require explicit trust
 - Tenant isolation relies on application-level checks
 - Need for tenant-aware debugging tools
 
 ### Mitigation
+
 - Validate tenant ID against API key or JWT claim
 - Implement tenant isolation tests
 - Add tenant ID to all log entries

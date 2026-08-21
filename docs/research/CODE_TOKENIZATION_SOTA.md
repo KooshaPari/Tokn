@@ -29,18 +29,19 @@ Code tokenization presents unique challenges distinct from natural language proc
 
 Code differs from natural language in several key aspects:
 
-| Aspect | Natural Language | Programming Languages |
-|--------|------------------|----------------------|
-| **Vocabulary** | Large, evolving | Constrained keywords + user-defined |
-| **Structure** | Linear text | Hierarchical (AST) |
-| **Whitespace** | Usually ignored | Semantically significant (Python) |
-| **Identifiers** | N/A | Critical, user-defined, compositional |
-| **Precision** | Approximate acceptable | Exact syntax required |
-| **Multilingual** | Many natural languages | 500+ programming languages |
+| Aspect           | Natural Language       | Programming Languages                 |
+| ---------------- | ---------------------- | ------------------------------------- |
+| **Vocabulary**   | Large, evolving        | Constrained keywords + user-defined   |
+| **Structure**    | Linear text            | Hierarchical (AST)                    |
+| **Whitespace**   | Usually ignored        | Semantically significant (Python)     |
+| **Identifiers**  | N/A                    | Critical, user-defined, compositional |
+| **Precision**    | Approximate acceptable | Exact syntax required                 |
+| **Multilingual** | Many natural languages | 500+ programming languages            |
 
 ### 1.2 Code Tokenization Challenges
 
 #### 1.2.1 Identifiers
+
 ```python
 # Standard BPE may produce suboptimal tokenization
 def calculateTotalPrice():  # ["calculate", "Total", "Price"]
@@ -51,6 +52,7 @@ def calculate_total_price():  # ["calculate", "_", "total", "_", "price"]
 ```
 
 #### 1.2.2 Whitespace and Indentation
+
 ```python
 # Python: indentation indicates block structure
 def hello():
@@ -61,6 +63,7 @@ def hello():
 ```
 
 #### 1.2.3 String Literals and Comments
+
 ```python
 code = """
 def func():  # This is a comment
@@ -72,6 +75,7 @@ def func():  # This is a comment
 ```
 
 #### 1.2.4 Special Characters
+
 ```python
 # Operators and symbols are dense
 result = (a + b) * c / d % e  # Many single-char tokens
@@ -86,11 +90,11 @@ list comprehension: [x for x in items if x > 0]
 
 Applying standard BPE to code works but has inefficiencies:
 
-| Tokenizer | Tokens/Code Ratio | Vocabulary Coverage |
-|-----------|-------------------|---------------------|
-| GPT-2 BPE | 1.8 | 85% |
-| GPT-4 BBPE | 2.0 | 95% |
-| CodeBERT | 1.5 | 92% |
+| Tokenizer  | Tokens/Code Ratio | Vocabulary Coverage |
+| ---------- | ----------------- | ------------------- |
+| GPT-2 BPE  | 1.8               | 85%                 |
+| GPT-4 BBPE | 2.0               | 95%                 |
+| CodeBERT   | 1.5               | 92%                 |
 
 ### 2.2 Limitations
 
@@ -102,6 +106,7 @@ Applying standard BPE to code works but has inefficiencies:
 ### 2.3 Adaptations
 
 #### 2.3.1 Pre-tokenization for Code
+
 ```python
 # Better pre-tokenization patterns
 CODE_PATTERNS = [
@@ -117,6 +122,7 @@ CODE_PATTERNS = [
 ```
 
 #### 2.3.2 Identifier Splitting
+
 ```python
 import re
 
@@ -155,26 +161,26 @@ def codebert_preprocess(code):
     # 1. Replace string literals with <STR>
     code = re.sub(r'"[^"]*"', '<STR>', code)
     code = re.sub(r"'[^']*'", '<STR>', code)
-    
+
     # 2. Replace numbers with <NUM>
     code = re.sub(r'\b\d+\b', '<NUM>', code)
-    
+
     # 3. Preserve structure with BPE
     tokens = bpe_tokenize(code)
-    
+
     return tokens
 ```
 
 #### Special Tokens
 
-| Token | Purpose |
-|-------|---------|
-| `<s>` | Start of sequence |
-| `</s>` | End of sequence |
-| `<pad>` | Padding |
-| `<mask>` | Masked token (MLM) |
-| `<STR>` | String literal placeholder |
-| `<NUM>` | Number placeholder |
+| Token    | Purpose                    |
+| -------- | -------------------------- |
+| `<s>`    | Start of sequence          |
+| `</s>`   | End of sequence            |
+| `<pad>`  | Padding                    |
+| `<mask>` | Masked token (MLM)         |
+| `<STR>`  | String literal placeholder |
+| `<NUM>`  | Number placeholder         |
 
 ### 3.2 CodeT5 Tokenizer
 
@@ -187,12 +193,12 @@ def codet5_tokenize(code):
     # 1. Parse to identify user-defined identifiers
     ast = parse(code)
     identifiers = extract_user_identifiers(ast)
-    
+
     # 2. Split identifiers into subwords
     for id in identifiers:
         subwords = split_identifier(id.name)  # camelCase/snake_case
         id.tokens = subwords
-    
+
     # 3. Serialize AST with identifier subwords
     return serialize_with_identifiers(ast)
 ```
@@ -228,14 +234,14 @@ def foo(a, b):
 
 ### 3.4 Comparison: Code-Specific Tokenizers
 
-| Feature | CodeBERT | CodeT5 | GraphCodeBERT |
-|---------|----------|--------|---------------|
-| **Base tokenizer** | RoBERTa BPE | T5 SentencePiece | RoBERTa BPE |
-| **Identifier handling** | Standard BPE | Split + recover | Standard BPE |
-| **AST awareness** | No | Yes | Yes |
-| **Data flow** | No | No | Yes |
-| **Vocab size** | 50K | 32K | 50K |
-| **Pre-training data** | CodeSearchNet | CodeSearchNet | CodeSearchNet |
+| Feature                 | CodeBERT      | CodeT5           | GraphCodeBERT |
+| ----------------------- | ------------- | ---------------- | ------------- |
+| **Base tokenizer**      | RoBERTa BPE   | T5 SentencePiece | RoBERTa BPE   |
+| **Identifier handling** | Standard BPE  | Split + recover  | Standard BPE  |
+| **AST awareness**       | No            | Yes              | Yes           |
+| **Data flow**           | No            | No               | Yes           |
+| **Vocab size**          | 50K           | 32K              | 50K           |
+| **Pre-training data**   | CodeSearchNet | CodeSearchNet    | CodeSearchNet |
 
 ---
 
@@ -329,13 +335,13 @@ def add(x, y):  # Adds two numbers
 
 ### 4.4 AST Tokenization Libraries
 
-| Library | Language | Features | Performance |
-|---------|----------|----------|-------------|
+| Library     | Language       | Features     | Performance    |
+| ----------- | -------------- | ------------ | -------------- |
 | tree-sitter | Multi-language | Fast parsing | 10K+ files/sec |
-| libclang | C/C++ | Accurate | Moderate |
-| parso | Python | Round-trip | Moderate |
-| esprima | JavaScript | Fast | Fast |
-| javalang | Java | Simplified | Moderate |
+| libclang    | C/C++          | Accurate     | Moderate       |
+| parso       | Python         | Round-trip   | Moderate       |
+| esprima     | JavaScript     | Fast         | Fast           |
+| javalang    | Java           | Simplified   | Moderate       |
 
 ### 4.5 Example: Tree-sitter Integration
 
@@ -391,15 +397,15 @@ def preserve_indentation(code):
         # Count leading whitespace
         stripped = line.lstrip()
         indent = len(line) - len(stripped)
-        
+
         # Emit indent tokens
         if indent > 0:
             tokens.append(f'<INDENT:{indent}>')
-        
+
         # Tokenize the rest
         tokens.extend(tokenize_line(stripped))
         tokens.append('<NEWLINE>')
-    
+
     return tokens
 ```
 
@@ -411,21 +417,21 @@ Alternative: Track relative indentation changes:
 # Using INDENT/DEDENT tokens (like Python lexer)
 def foo():
     if True:     # INDENT
-        pass     # 
+        pass     #
     bar()        # DEDENT
 
-# Tokens: [def, foo, (, ), :, NEWLINE, INDENT, if, True, :, NEWLINE, 
+# Tokens: [def, foo, (, ), :, NEWLINE, INDENT, if, True, :, NEWLINE,
 #          INDENT, pass, NEWLINE, DEDENT, bar, (, ), NEWLINE, DEDENT]
 ```
 
 ### 5.4 Semantic vs Cosmetic Whitespace
 
-| Type | Handling | Example |
-|------|----------|---------|
-| **Semantic** | Preserve exactly | Python indentation |
-| **Formatting** | Normalize | Spaces between operators |
-| **Optional** | Remove | Trailing whitespace |
-| **Structural** | Tokenize | Newlines, blank lines |
+| Type           | Handling         | Example                  |
+| -------------- | ---------------- | ------------------------ |
+| **Semantic**   | Preserve exactly | Python indentation       |
+| **Formatting** | Normalize        | Spaces between operators |
+| **Optional**   | Remove           | Trailing whitespace      |
+| **Structural** | Tokenize         | Newlines, blank lines    |
 
 ---
 
@@ -433,12 +439,12 @@ def foo():
 
 ### 6.1 Comment Types in Code
 
-| Type | Purpose | Tokenization Strategy |
-|------|---------|----------------------|
-| **Line comments** | Implementation notes | Separate or remove |
-| **Block comments** | Section headers | Special token or remove |
-| **Docstrings** | API documentation | Separate stream |
-| **Inline comments** | Explanations | Remove or separate |
+| Type                | Purpose              | Tokenization Strategy   |
+| ------------------- | -------------------- | ----------------------- |
+| **Line comments**   | Implementation notes | Separate or remove      |
+| **Block comments**  | Section headers      | Special token or remove |
+| **Docstrings**      | API documentation    | Separate stream         |
+| **Inline comments** | Explanations         | Remove or separate      |
 
 ### 6.2 Comment Separation
 
@@ -446,13 +452,13 @@ def foo():
 def extract_comments(code):
     """Separate code, comments, and docstrings."""
     import ast
-    
+
     tree = ast.parse(code)
-    
+
     code_tokens = []
     comment_tokens = []
     docstring_tokens = []
-    
+
     for node in ast.walk(tree):
         if isinstance(node, ast.Expr) and isinstance(node.value, ast.Str):
             # Docstring
@@ -460,11 +466,11 @@ def extract_comments(code):
         elif isinstance(node, ast.FunctionDef):
             # Function code (without docstring)
             code_tokens.extend(tokenize(node))
-    
+
     # Extract line comments with regex
     line_comments = re.findall(r'#(.*)$', code, re.MULTILINE)
     comment_tokens.extend(line_comments)
-    
+
     return {
         'code': code_tokens,
         'comments': comment_tokens,
@@ -493,6 +499,7 @@ Doc stream:     ["", "This function does foo", ""]
 ### 7.1 C/C++ Tokenization
 
 Unique aspects:
+
 - Preprocessor directives (`#include`, `#define`)
 - Pointer syntax (`*`, `&`)
 - Template syntax (`<`, `>` ambiguity)
@@ -512,6 +519,7 @@ T* getPtr() { return new T; }
 ### 7.2 Java Tokenization
 
 Unique aspects:
+
 - Annotations (`@Override`)
 - Generic types (similar to C++ templates)
 - Package declarations
@@ -528,6 +536,7 @@ public List<String> getNames() throws IOException {
 ### 7.3 JavaScript/TypeScript Tokenization
 
 Unique aspects:
+
 - Template literals with embedded expressions
 - Arrow functions (`=>`)
 - Async/await keywords
@@ -548,6 +557,7 @@ const fn = (x) => x * 2;
 ### 7.4 Go Tokenization
 
 Unique aspects:
+
 - Explicit error handling patterns
 - Goroutine/channel syntax (`go`, `<-`)
 - Struct tags
@@ -564,6 +574,7 @@ func getData() (string, error) {
 ### 7.5 Rust Tokenization
 
 Unique aspects:
+
 - Ownership syntax (`&`, `&mut`, `'`)
 - Macro syntax (`!`)
 - Lifetime parameters
@@ -586,10 +597,10 @@ fn process<'a>(data: &'a str) -> &'a str {
 
 Train a single tokenizer on code from multiple languages:
 
-| Vocabulary Type | Size | Coverage |
-|-----------------|------|----------|
-| Single language | 30K | High |
-| Top 5 languages | 50K | Medium |
+| Vocabulary Type    | Size  | Coverage         |
+| ------------------ | ----- | ---------------- |
+| Single language    | 30K   | High             |
+| Top 5 languages    | 50K   | Medium           |
 | All 500+ languages | 100K+ | Low per-language |
 
 ### 8.2 Language-Agnostic Tokenization
@@ -610,13 +621,13 @@ Use special tokens to indicate language:
 
 ### 8.3 Polyglot Models
 
-| Model | Languages | Tokenization |
-|-------|-----------|--------------|
-| CodeBERT | Python, Java, JS, Go, Ruby | BPE |
-| CodeT5 | Same as CodeBERT | SentencePiece |
-| UniXcoder | 6 languages | BPE |
-| StarCoder | 80+ languages | BPE |
-| CodeLlama | 500+ languages | BPE |
+| Model     | Languages                  | Tokenization  |
+| --------- | -------------------------- | ------------- |
+| CodeBERT  | Python, Java, JS, Go, Ruby | BPE           |
+| CodeT5    | Same as CodeBERT           | SentencePiece |
+| UniXcoder | 6 languages                | BPE           |
+| StarCoder | 80+ languages              | BPE           |
+| CodeLlama | 500+ languages             | BPE           |
 
 ---
 
@@ -640,21 +651,21 @@ def calculateTotalPrice(items):
 
 ### 9.2 Vocabulary Size Impact
 
-| Vocab Size | F1 (code search) | Memory | Speed |
-|------------|------------------|--------|-------|
-| 10K | 0.62 | Low | Fast |
-| 30K | 0.68 | Medium | Medium |
-| 50K | 0.71 | High | Medium |
-| 100K | 0.72 | Very high | Slow |
+| Vocab Size | F1 (code search) | Memory    | Speed  |
+| ---------- | ---------------- | --------- | ------ |
+| 10K        | 0.62             | Low       | Fast   |
+| 30K        | 0.68             | Medium    | Medium |
+| 50K        | 0.71             | High      | Medium |
+| 100K       | 0.72             | Very high | Slow   |
 
 ### 9.3 Preprocessing Overhead
 
-| Step | Overhead | Benefit |
-|------|----------|---------|
-| AST parsing | 5-20ms/file | Structure awareness |
-| Identifier split | 1ms/file | Better vocabulary |
-| Comment removal | 0.5ms/file | Reduced noise |
-| String normalization | 0.5ms/file | Generalization |
+| Step                 | Overhead    | Benefit             |
+| -------------------- | ----------- | ------------------- |
+| AST parsing          | 5-20ms/file | Structure awareness |
+| Identifier split     | 1ms/file    | Better vocabulary   |
+| Comment removal      | 0.5ms/file  | Reduced noise       |
+| String normalization | 0.5ms/file  | Generalization      |
 
 ---
 
@@ -683,12 +694,12 @@ def identifier_fidelity(original, reconstructed):
 
 ### 10.3 Downstream Task Performance
 
-| Task | Metric | Baseline (BPE) | Code-specific |
-|------|--------|----------------|---------------|
-| Code completion | Accuracy | 0.35 | 0.42 |
-| Bug detection | F1 | 0.78 | 0.82 |
-| Clone detection | F1 | 0.89 | 0.91 |
-| Summarization | BLEU | 0.15 | 0.18 |
+| Task            | Metric   | Baseline (BPE) | Code-specific |
+| --------------- | -------- | -------------- | ------------- |
+| Code completion | Accuracy | 0.35           | 0.42          |
+| Bug detection   | F1       | 0.78           | 0.82          |
+| Clone detection | F1       | 0.89           | 0.91          |
+| Summarization   | BLEU     | 0.15           | 0.18          |
 
 ---
 
@@ -696,40 +707,43 @@ def identifier_fidelity(original, reconstructed):
 
 ### 11.1 Code Tokenization Strategy
 
-| Component | Recommendation | Priority |
-|-----------|----------------|----------|
-| **Base algorithm** | BBPE | P0 |
-| **Pre-tokenization** | Language-specific patterns | P0 |
-| **Identifier handling** | camelCase/snake_case splitting | P1 |
-| **Indentation** | Preserve for Python/whitespace langs | P1 |
-| **Comments** | Separate stream or remove | P2 |
-| **AST integration** | Optional post-processing | P2 |
+| Component               | Recommendation                       | Priority |
+| ----------------------- | ------------------------------------ | -------- |
+| **Base algorithm**      | BBPE                                 | P0       |
+| **Pre-tokenization**    | Language-specific patterns           | P0       |
+| **Identifier handling** | camelCase/snake_case splitting       | P1       |
+| **Indentation**         | Preserve for Python/whitespace langs | P1       |
+| **Comments**            | Separate stream or remove            | P2       |
+| **AST integration**     | Optional post-processing             | P2       |
 
 ### 11.2 Language Support Priorities
 
-| Priority | Language | Rationale |
-|----------|----------|-----------|
-| P0 | Python | Whitespace significance |
-| P0 | JavaScript/TypeScript | Popularity |
-| P0 | Rust | Tokn implementation lang |
-| P1 | Java | Enterprise usage |
-| P1 | Go | Systems programming |
-| P1 | C/C++ | Legacy systems |
-| P2 | Other 500+ languages | Community demand |
+| Priority | Language              | Rationale                |
+| -------- | --------------------- | ------------------------ |
+| P0       | Python                | Whitespace significance  |
+| P0       | JavaScript/TypeScript | Popularity               |
+| P0       | Rust                  | Tokn implementation lang |
+| P1       | Java                  | Enterprise usage         |
+| P1       | Go                    | Systems programming      |
+| P1       | C/C++                 | Legacy systems           |
+| P2       | Other 500+ languages  | Community demand         |
 
 ### 11.3 Implementation Phases
 
 **Phase 1: Foundation**
+
 - BBPE with code-optimized pre-tokenization
 - Language detection
 - Basic identifier splitting
 
 **Phase 2: Enhancement**
+
 - Indentation preservation modes
 - Comment handling options
 - Multi-language vocabulary
 
 **Phase 3: Advanced**
+
 - AST-based features
 - Data flow integration
 - Custom language definitions
@@ -740,37 +754,37 @@ def identifier_fidelity(original, reconstructed):
 
 ### Primary Sources
 
-1. **Feng, Z., et al. (2020).** CodeBERT: A Pre-Trained Model for Programming and Natural Languages. *Proceedings of EMNLP*, 1536-1547. https://doi.org/10.18653/v1/2020.emnlp-main.204
+1. **Feng, Z., et al. (2020).** CodeBERT: A Pre-Trained Model for Programming and Natural Languages. _Proceedings of EMNLP_, 1536-1547. https://doi.org/10.18653/v1/2020.emnlp-main.204
 
-2. **Wang, Y., et al. (2021).** CodeT5: Identifier-aware Unified Pre-trained Encoder-Decoder Models for Code Understanding and Generation. *Proceedings of EMNLP*, 8696-8708. https://doi.org/10.18653/v1/2021.emnlp-main.685
+2. **Wang, Y., et al. (2021).** CodeT5: Identifier-aware Unified Pre-trained Encoder-Decoder Models for Code Understanding and Generation. _Proceedings of EMNLP_, 8696-8708. https://doi.org/10.18653/v1/2021.emnlp-main.685
 
-3. **Guo, D., et al. (2021).** GraphCodeBERT: Pre-training Code Representations with Data Flow. *Proceedings of ICLR*. https://openreview.net/forum?id=jLoC4ez43PZ
+3. **Guo, D., et al. (2021).** GraphCodeBERT: Pre-training Code Representations with Data Flow. _Proceedings of ICLR_. https://openreview.net/forum?id=jLoC4ez43PZ
 
 ### Language-Specific Tokenization
 
-4. **Ahmad, W. U., et al. (2021).** PLBART: A Sequence-to-Sequence Model for Program and Natural Language Processing. *arXiv preprint arXiv:2103.06333*.
+4. **Ahmad, W. U., et al. (2021).** PLBART: A Sequence-to-Sequence Model for Program and Natural Language Processing. _arXiv preprint arXiv:2103.06333_.
 
-5. **Chakraborty, S., et al. (2022).** NatGen: Generative Pre-training by "Naturalizing" Source Code. *Proceedings of ESEC/FSE*, 18-29.
+5. **Chakraborty, S., et al. (2022).** NatGen: Generative Pre-training by "Naturalizing" Source Code. _Proceedings of ESEC/FSE_, 18-29.
 
 ### AST and Structure
 
-6. **Hellendoorn, V. J., et al. (2019).** Global Relational Models of Source Code. *Proceedings of ICLR*. https://openreview.net/forum?id=B1lnbRNtwr
+6. **Hellendoorn, V. J., et al. (2019).** Global Relational Models of Source Code. _Proceedings of ICLR_. https://openreview.net/forum?id=B1lnbRNtwr
 
-7. **Alon, U., et al. (2019).** code2seq: Generating Sequences from Structured Representations of Code. *Proceedings of ICLR*. https://openreview.net/forum?id=H1gKYo09tX
+7. **Alon, U., et al. (2019).** code2seq: Generating Sequences from Structured Representations of Code. _Proceedings of ICLR_. https://openreview.net/forum?id=H1gKYo09tX
 
-8. **Allamanis, M., et al. (2018).** Learning to Represent Programs with Graphs. *Proceedings of ICLR*. https://openreview.net/forum?id=BJOFETxR-
+8. **Allamanis, M., et al. (2018).** Learning to Represent Programs with Graphs. _Proceedings of ICLR_. https://openreview.net/forum?id=BJOFETxR-
 
 ### Tokenization Analysis
 
-9. **Karampatsis, R. M., & Sutton, C. (2020).** How Often Do Single-Statement Bugs Occur? The ManySStuBs4J Dataset. *Proceedings of MSR*, 573-577.
+9. **Karampatsis, R. M., & Sutton, C. (2020).** How Often Do Single-Statement Bugs Occur? The ManySStuBs4J Dataset. _Proceedings of MSR_, 573-577.
 
-10. **Husain, H., et al. (2019).** CodeSearchNet Challenge: Evaluating the State of Semantic Code Search. *arXiv preprint arXiv:1909.09436*.
+10. **Husain, H., et al. (2019).** CodeSearchNet Challenge: Evaluating the State of Semantic Code Search. _arXiv preprint arXiv:1909.09436_.
 
 ### Tree-sitter and Parsing
 
-11. **Brunsfeld, M. (2018).** Tree-sitter: A new parsing system for programming tools. *GitHub Repository*. https://github.com/tree-sitter/tree-sitter
+11. **Brunsfeld, M. (2018).** Tree-sitter: A new parsing system for programming tools. _GitHub Repository_. https://github.com/tree-sitter/tree-sitter
 
-12. **Aho, A. V., et al. (2006).** Compilers: Principles, Techniques, and Tools (2nd Edition). *Addison-Wesley*.
+12. **Aho, A. V., et al. (2006).** Compilers: Principles, Techniques, and Tools (2nd Edition). _Addison-Wesley_.
 
 ---
 
@@ -787,16 +801,16 @@ def calculate_fibonacci(n):
     return calculate_fibonacci(n-1) + calculate_fibonacci(n-2)
 
 # Standard BPE tokenization:
-["def", "Ġcalculate", "_", "fibonacci", "(", "n", ")", ":", "ĊĠĠĠ", 
+["def", "Ġcalculate", "_", "fibonacci", "(", "n", ")", ":", "ĊĠĠĠ",
  '"""', "Calculate", "Ġthe", "Ġn", "th", "ĠFibonacci", "Ġnumber", ".",
- '"""', "ĊĠĠĠ", "if", "Ġn", "Ġ<", "=", "Ġ1", ":", "ĊĠĠĠĠĠĠĠ", 
- "return", "Ġn", "ĊĠĠĠ", "return", "Ġcalculate", "_", "fibonacci", 
+ '"""', "ĊĠĠĠ", "if", "Ġn", "Ġ<", "=", "Ġ1", ":", "ĊĠĠĠĠĠĠĠ",
+ "return", "Ġn", "ĊĠĠĠ", "return", "Ġcalculate", "_", "fibonacci",
  "(", "n", "-", "1", ")", "Ġ+", "Ġcalculate", "_", "fibonacci", "(", "n", "-", "2", ")"]
 
 # With identifier splitting:
 ["def", "calculate", "fibonacci", "(", "n", ")", ":", "NEWLINE", "INDENT",
  "if", "n", "<=", "1", ":", "NEWLINE", "INDENT", "return", "n", "NEWLINE", "DEDENT",
- "return", "calculate", "fibonacci", "(", "n", "-", "1", ")", "+", 
+ "return", "calculate", "fibonacci", "(", "n", "-", "1", ")", "+",
  "calculate", "fibonacci", "(", "n", "-", "2", ")", "NEWLINE", "DEDENT"]
 ```
 
@@ -805,24 +819,22 @@ def calculate_fibonacci(n):
 ```javascript
 // Input
 const fetchData = async (url) => {
-    const response = await fetch(url);
-    return response.json();
+  const response = await fetch(url);
+  return response.json();
 };
 
 // Tokenization with special handling:
-["const", "fetch", "data", "=", "async", "(", "url", ")", "=>", "{",
- "const", "response", "=", "await", "fetch", "(", "url", ")", ";",
- "return", "response", ".", "json", "(", ")", ";", "}"]
+["const", "fetch", "data", "=", "async", "(", "url", ")", "=>", "{", "const", "response", "=", "await", "fetch", "(", "url", ")", ";", "return", "response", ".", "json", "(", ")", ";", "}"];
 ```
 
 ---
 
 ## Document History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | 2026-04-04 | Tokn Research Team | Initial comprehensive SOTA analysis |
+| Version | Date       | Author             | Changes                             |
+| ------- | ---------- | ------------------ | ----------------------------------- |
+| 1.0     | 2026-04-04 | Tokn Research Team | Initial comprehensive SOTA analysis |
 
 ---
 
-*End of Document - 579 lines*
+_End of Document - 579 lines_

@@ -23,13 +23,13 @@ Vocabulary size is a fundamental architectural decision in tokenization systems 
 
 Industry standard vocabulary sizes vary by use case:
 
-| Use Case | Typical Size | Examples |
-|----------|--------------|----------|
-| English-only BERT | 30K | BERT Base/Large |
-| Multilingual | 100K-250K | XLM-RoBERTa (250K) |
-| General LLM | 50K-100K | GPT-4 (100K), LLaMA (32K) |
-| Code-specific | 50K | CodeBERT (50K), CodeT5 (32K) |
-| Low-resource | 10K-20K | Experimental |
+| Use Case          | Typical Size | Examples                     |
+| ----------------- | ------------ | ---------------------------- |
+| English-only BERT | 30K          | BERT Base/Large              |
+| Multilingual      | 100K-250K    | XLM-RoBERTa (250K)           |
+| General LLM       | 50K-100K     | GPT-4 (100K), LLaMA (32K)    |
+| Code-specific     | 50K          | CodeBERT (50K), CodeT5 (32K) |
+| Low-resource      | 10K-20K      | Experimental                 |
 
 ### Research Findings
 
@@ -43,13 +43,13 @@ Our analysis (see `docs/research/TOKENIZATION_ALGORITHMS_SOTA.md`) shows:
 ### Compression Analysis (C4 English Dataset)
 
 | Vocab Size | Avg Tokens/Sentence | Total Tokens (B) | Improvement |
-|------------|---------------------|------------------|-------------|
-| 8K | 35.2 | 12.8 | Baseline |
-| 16K | 28.1 | 10.2 | -20% |
-| 32K | 24.5 | 8.9 | -30% |
-| 50K | 22.8 | 8.3 | -35% |
-| 100K | 21.2 | 7.7 | -40% |
-| 200K | 20.1 | 7.3 | -43% |
+| ---------- | ------------------- | ---------------- | ----------- |
+| 8K         | 35.2                | 12.8             | Baseline    |
+| 16K        | 28.1                | 10.2             | -20%        |
+| 32K        | 24.5                | 8.9              | -30%        |
+| 50K        | 22.8                | 8.3              | -35%        |
+| 100K       | 21.2                | 7.7              | -40%        |
+| 200K       | 20.1                | 7.3              | -43%        |
 
 ### Constraints
 
@@ -65,12 +65,12 @@ Our analysis (see `docs/research/TOKENIZATION_ALGORITHMS_SOTA.md`) shows:
 
 **Tokn will support configurable vocabulary sizes with tiered recommendations:**
 
-| Tier | Size | Use Case | Rationale |
-|------|------|----------|-----------|
-| **Compact** | 32,000 | Resource-constrained, single-language | Balance of coverage and efficiency |
-| **Standard** | 50,000 | General-purpose, multi-language | Optimal efficiency point |
-| **Extended** | 100,000 | Maximum coverage, multilingual | Match tiktoken/GPT-4 |
-| **Custom** | 10K-200K | Specialized applications | User-defined |
+| Tier         | Size     | Use Case                              | Rationale                          |
+| ------------ | -------- | ------------------------------------- | ---------------------------------- |
+| **Compact**  | 32,000   | Resource-constrained, single-language | Balance of coverage and efficiency |
+| **Standard** | 50,000   | General-purpose, multi-language       | Optimal efficiency point           |
+| **Extended** | 100,000  | Maximum coverage, multilingual        | Match tiktoken/GPT-4               |
+| **Custom**   | 10K-200K | Specialized applications              | User-defined                       |
 
 ### Default Configuration
 
@@ -148,21 +148,21 @@ The 50,000 token vocabulary is optimal because:
 
 ### Memory Analysis
 
-| Component | 32K | 50K | 100K |
-|-----------|-----|-----|------|
-| Base tokens (256) | ~5KB | ~5KB | ~5KB |
-| Merged tokens | ~240KB | ~375KB | ~750KB |
-| String storage | ~2MB | ~3MB | ~6MB |
-| HashMap overhead | ~4MB | ~6MB | ~12MB |
-| **Total** | **~6MB** | **~10MB** | **~19MB** |
+| Component         | 32K      | 50K       | 100K      |
+| ----------------- | -------- | --------- | --------- |
+| Base tokens (256) | ~5KB     | ~5KB      | ~5KB      |
+| Merged tokens     | ~240KB   | ~375KB    | ~750KB    |
+| String storage    | ~2MB     | ~3MB      | ~6MB      |
+| HashMap overhead  | ~4MB     | ~6MB      | ~12MB     |
+| **Total**         | **~6MB** | **~10MB** | **~19MB** |
 
 ### Cache Efficiency
 
 | Vocab Size | L1 Cache (32KB) | L2 Cache (256KB) | L3 Cache (8MB) |
-|------------|-----------------|------------------|----------------|
-| 32K | ✅ Fits | ✅ Fits | ✅ Fits |
-| 50K | ❌ Overflow | ✅ Fits | ✅ Fits |
-| 100K | ❌ Overflow | ❌ Partial | ✅ Fits |
+| ---------- | --------------- | ---------------- | -------------- |
+| 32K        | ✅ Fits         | ✅ Fits          | ✅ Fits        |
+| 50K        | ❌ Overflow     | ✅ Fits          | ✅ Fits        |
+| 100K       | ❌ Overflow     | ❌ Partial       | ✅ Fits        |
 
 ---
 
@@ -173,11 +173,13 @@ The 50,000 token vocabulary is optimal because:
 **Description**: Only support 50,000 token vocabulary.
 
 **Pros**:
+
 - Simple implementation
 - Single code path to test
 - No configuration complexity
 
 **Cons**:
+
 - Too large for resource-constrained environments
 - Too small for some multilingual scenarios
 - No tiktoken compatibility
@@ -189,10 +191,12 @@ The 50,000 token vocabulary is optimal because:
 **Description**: Automatically determine optimal size based on training corpus.
 
 **Pros**:
+
 - Optimal for each use case
 - No manual tuning required
 
 **Cons**:
+
 - Non-deterministic behavior
 - Hard to compare across deployments
 - Complex implementation
@@ -205,10 +209,12 @@ The 50,000 token vocabulary is optimal because:
 **Description**: Default to 200K+ for maximum coverage.
 
 **Pros**:
+
 - Best possible compression
 - Handles rare terms well
 
 **Cons**:
+
 - 4x memory vs 50K
 - Requires massive training corpus
 - Diminishing returns (only 8% better than 50K)
@@ -289,10 +295,10 @@ pub fn train_vocabulary(
 ### Validation
 
 | Size | Min Training Data | Expected Compression | Test Coverage |
-|------|-------------------|----------------------|-------------|
-| 32K | 100MB | 24.5 tok/sent | 100% |
-| 50K | 1GB | 22.8 tok/sent | 100% |
-| 100K | 10GB | 21.2 tok/sent | 100% |
+| ---- | ----------------- | -------------------- | ------------- |
+| 32K  | 100MB             | 24.5 tok/sent        | 100%          |
+| 50K  | 1GB               | 22.8 tok/sent        | 100%          |
+| 100K | 10GB              | 21.2 tok/sent        | 100%          |
 
 ### Rollout Plan
 
@@ -316,17 +322,18 @@ pub fn train_vocabulary(
 ## References
 
 1. [TOKENIZATION_ALGORITHMS_SOTA.md](./TOKENIZATION_ALGORITHMS_SOTA.md) - Compression analysis
-2. **Bostrom, K., & Durrett, G. (2020).** Byte Pair Encoding is Suboptimal for Language Model Pretraining. *EMNLP*.
+2. **Bostrom, K., & Durrett, G. (2020).** Byte Pair Encoding is Suboptimal for Language Model Pretraining. _EMNLP_.
 3. **OpenAI Tiktoken:** https://github.com/openai/tiktoken (100K vocabulary)
 4. **HuggingFace Tokenizers:** https://huggingface.co/docs/tokenizers
 
 ---
 
 **Notes:**
+
 - Vocabulary size includes: 256 base tokens + merged tokens + special tokens
 - Special tokens typically add 50-100 IDs beyond the nominal size
 - Training corpus size recommendations are approximate; more data always helps
 
 ---
 
-*End of Document - 304 lines*
+_End of Document - 304 lines_

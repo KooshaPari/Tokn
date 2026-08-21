@@ -1,7 +1,9 @@
 # Test Suite Summary
 
 ## Overview
+
 A comprehensive test suite has been added to the tokenledger project with 46 total tests:
+
 - **Unit tests**: 37 tests across 4 modules
 - **Integration tests**: 9 tests in `tests/integration_test.rs`
 - **Test result**: ✅ All tests passing
@@ -10,11 +12,13 @@ A comprehensive test suite has been added to the tokenledger project with 46 tot
 ## Unit Tests by Module
 
 ### models.rs (13 tests)
+
 Core data structures for token usage, pricing, and events.
 
 Tests:
+
 - `test_token_usage_total` - Total token calculation with all token types
-- `test_token_usage_total_partial` - Partial token calculation 
+- `test_token_usage_total_partial` - Partial token calculation
 - `test_token_usage_zero` - Zero token handling
 - `test_model_rate_creation` - ModelRate struct instantiation
 - `test_pricing_apply_summary_default` - Default PricingApplySummary values
@@ -30,9 +34,11 @@ Tests:
 **Coverage**: 100% of public structs have at least one test
 
 ### cost.rs (11 tests)
+
 Cost calculation utilities and token subscription allocation.
 
 Tests:
+
 - `test_calc_variable_cost_basic` - Basic cost calculation for input/output
 - `test_calc_variable_cost_with_cache` - Cache-aware cost calculation
 - `test_allocate_subscription_full` - Full subscription allocation
@@ -48,9 +54,11 @@ Tests:
 **Coverage**: 100% of public functions have tests
 
 ### format.rs (7 tests)
+
 Output formatting and number rounding utilities.
 
 Tests:
+
 - `test_round2_basic` - Basic 2-decimal rounding
 - `test_round2_zero` - Rounding zero value
 - `test_round2_negative` - Negative number rounding
@@ -62,9 +70,11 @@ Tests:
 **Coverage**: 100% of public rounding functions
 
 ### cache.rs (6 tests)
+
 Pricing coverage reports and event caching logic.
 
 Tests:
+
 - `test_resolve_provider_alias_no_alias` - Provider resolution without alias
 - `test_resolve_provider_alias_with_alias` - Provider alias mapping
 - `test_resolve_model_alias_no_alias` - Model resolution without alias
@@ -81,6 +91,7 @@ Tests:
 File: `tests/integration_test.rs`
 
 End-to-end workflow tests:
+
 - `test_token_usage_full_workflow` - Complete token usage calculation
 - `test_pricing_book_with_multiple_providers` - Multi-provider pricing setup
 - `test_cost_calculation_workflow` - Cost calculation with subscription
@@ -103,7 +114,8 @@ Clippy Score:   ✅ Clean (0 warnings)
 
 ## Coverage Analysis
 
-**Public Functions Tested**: 
+**Public Functions Tested**:
+
 - TokenUsage::total() ✅
 - ModelRate fields ✅
 - PricingApplySummary fields ✅

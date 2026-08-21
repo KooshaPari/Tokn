@@ -6,6 +6,6 @@ Please report security vulnerabilities opening GitHub Issue contacting maintaine
 
 ## Supported Versions
 
-| Version | Supported |
-|---------|-----------|
+| Version | Supported          |
+| ------- | ------------------ |
 | main    | :white_check_mark: |

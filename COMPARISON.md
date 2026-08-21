@@ -4,44 +4,44 @@
 
 This document compares **tokenledger** with similar tools in the token tracking and AI cost management space.
 
-| Repository | Purpose | Key Features | Language/Framework | Maturity | Comparison |
-|------------|---------|--------------|-------------------|----------|------------|
-| **tokenledger (this repo)** | Token management & pricing governance | Multi-provider, Cost optimization, CLI reporting | Rust | Stable | Enterprise token governance |
-| [Helicone](https://github.com/Helicone/helicone) | LLM observability | Logging, Analytics, Caching | TypeScript | Stable | Open source observability |
-| [Portkey](https://github.com/PortKey-AI/portkey) | LLM gateway | Observability, Routing, Analytics | Python | Stable | Enterprise gateway |
-| [Braintrust](https://github.com/braintrustdata/braintrust) | Evaluation platform | Traces, Evals, Analytics | Python | Stable | Evaluation & tracing |
-| [PromptLayer](https://github.com/MagnivOrg/promptlayer) | Prompt management | Versioning, Analytics, Metadata | Python | Stable | Prompt tracking |
-| [Weights & Biases](https://github.com/wandb/wandb) | ML experiment tracking | Experiments, Logging, Artifacts | Python | Stable | General experiment tracking |
+| Repository                                                 | Purpose                               | Key Features                                     | Language/Framework | Maturity | Comparison                  |
+| ---------------------------------------------------------- | ------------------------------------- | ------------------------------------------------ | ------------------ | -------- | --------------------------- |
+| **tokenledger (this repo)**                                | Token management & pricing governance | Multi-provider, Cost optimization, CLI reporting | Rust               | Stable   | Enterprise token governance |
+| [Helicone](https://github.com/Helicone/helicone)           | LLM observability                     | Logging, Analytics, Caching                      | TypeScript         | Stable   | Open source observability   |
+| [Portkey](https://github.com/PortKey-AI/portkey)           | LLM gateway                           | Observability, Routing, Analytics                | Python             | Stable   | Enterprise gateway          |
+| [Braintrust](https://github.com/braintrustdata/braintrust) | Evaluation platform                   | Traces, Evals, Analytics                         | Python             | Stable   | Evaluation & tracing        |
+| [PromptLayer](https://github.com/MagnivOrg/promptlayer)    | Prompt management                     | Versioning, Analytics, Metadata                  | Python             | Stable   | Prompt tracking             |
+| [Weights & Biases](https://github.com/wandb/wandb)         | ML experiment tracking                | Experiments, Logging, Artifacts                  | Python             | Stable   | General experiment tracking |
 
 ## Detailed Feature Comparison
 
 ### Token & Cost Management
 
-| Feature | tokenledger | Helicone | Portkey | Braintrust |
-|---------|-------------|----------|---------|------------|
-| Token Tracking | ✅ | ✅ | ✅ | ✅ |
-| Cost Calculation | ✅ | ✅ | ✅ | ✅ |
-| Multi-Provider | ✅ (OpenAI, Anthropic) | ✅ | ✅ | ✅ |
-| Optimization | ✅ | ❌ | ✅ | ❌ |
-| Pricing Governance | ✅ | ❌ | ❌ | ❌ |
+| Feature            | tokenledger            | Helicone | Portkey | Braintrust |
+| ------------------ | ---------------------- | -------- | ------- | ---------- |
+| Token Tracking     | ✅                     | ✅       | ✅      | ✅         |
+| Cost Calculation   | ✅                     | ✅       | ✅      | ✅         |
+| Multi-Provider     | ✅ (OpenAI, Anthropic) | ✅       | ✅      | ✅         |
+| Optimization       | ✅                     | ❌       | ✅      | ❌         |
+| Pricing Governance | ✅                     | ❌       | ❌      | ❌         |
 
 ### CLI & Integration
 
-| Feature | tokenledger | Helicone | Portkey | PromptLayer |
-|---------|-------------|----------|---------|-------------|
-| CLI Tool | ✅ | ❌ | ❌ | ✅ |
-| Python SDK | ✅ | ✅ | ✅ | ✅ |
-| REST API | ❌ | ✅ | ✅ | ✅ |
-| thegent Integration | ✅ | ❌ | ❌ | ❌ |
+| Feature             | tokenledger | Helicone | Portkey | PromptLayer |
+| ------------------- | ----------- | -------- | ------- | ----------- |
+| CLI Tool            | ✅          | ❌       | ❌      | ✅          |
+| Python SDK          | ✅          | ✅       | ✅      | ✅          |
+| REST API            | ❌          | ✅       | ✅      | ✅          |
+| thegent Integration | ✅          | ❌       | ❌      | ❌          |
 
 ### Code Quality
 
-| Metric | tokenledger | Threshold |
-|--------|-------------|-----------|
-| Test coverage | >= 80% | tarpaulin |
-| Security findings | 0 high/critical | cargo-audit |
-| Clippy warnings | 0 | CI gate |
-| Max function lines | 40 | Style guide |
+| Metric             | tokenledger     | Threshold   |
+| ------------------ | --------------- | ----------- |
+| Test coverage      | >= 80%          | tarpaulin   |
+| Security findings  | 0 high/critical | cargo-audit |
+| Clippy warnings    | 0               | CI gate     |
+| Max function lines | 40              | Style guide |
 
 ## Unique Value Proposition
 

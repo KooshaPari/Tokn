@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   tokenledger-cli:
@@ -8,7 +8,7 @@ services:
     # Tokenledger is a CLI tool, not a long-running server.
     # This container can run periodic analysis commands or stay idle
     # waiting for external CLI invocations.
-    command: tail -f /dev/null  # Keep container running
+    command: tail -f /dev/null # Keep container running
     environment:
       # CLI configuration
       LOG_LEVEL: "info"

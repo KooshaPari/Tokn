@@ -2,13 +2,14 @@
 
 **Status:** Accepted  
 **Date:** 2026-04-02  
-**Deciders:** Architecture Team  
+**Deciders:** Architecture Team
 
 ---
 
 ## Context
 
 We need a configuration system that supports:
+
 - Type-safe configuration
 - Environment-specific overrides
 - Secrets management integration
@@ -137,19 +138,19 @@ observability:
 pub struct Config {
     #[serde(default)]
     pub server: ServerConfig,
-    
+
     #[serde(default)]
     pub database: DatabaseConfig,
-    
+
     #[serde(default)]
     pub redis: RedisConfig,
-    
+
     #[serde(default)]
     pub security: SecurityConfig,
-    
+
     #[serde(default)]
     pub plugins: PluginsConfig,
-    
+
     #[serde(default)]
     pub observability: ObservabilityConfig,
 }
@@ -158,25 +159,25 @@ impl Config {
     pub fn load() -> Result<Self, ConfigError> {
         // 1. Load base config
         let base = Self::load_from_file("config/tokn.yaml")?;
-        
+
         // 2. Load environment-specific config
         let env = std::env::var("TOKN_ENV")
             .unwrap_or_else(|_| "development".to_string());
-        
+
         let env_config = Self::load_from_file(&format!("config/tokn.{}.yaml", env))?;
-        
+
         // 3. Merge configs (env overrides base)
         let merged = base.merge(&env_config);
-        
+
         // 4. Apply environment variable overrides
         let final_config = merged.apply_env_overrides()?;
-        
+
         // 5. Validate configuration
         final_config.validate()?;
-        
+
         Ok(final_config)
     }
-    
+
     fn apply_env_overrides(mut self) -> Result<Self, ConfigError> {
         // Parse TOKN_* environment variables
         for (key, value) in std::env::vars() {
@@ -186,27 +187,27 @@ impl Config {
         }
         Ok(self)
     }
-    
+
     fn validate(&self) -> Result<(), ConfigError> {
         // Validate server settings
         if self.server.port == 0 {
             return Err(ConfigError::Validation("server.port must be non-zero".into()));
         }
-        
+
         // Validate database connection
         if self.database.primary.host.is_empty() {
             return Err(ConfigError::Validation("database.primary.host required".into()));
         }
-        
+
         // Validate token settings
         if self.security.token.default_ttl == Duration::ZERO {
             return Err(ConfigError::Validation("token.default_ttl must be non-zero".into()));
         }
-        
+
         if self.security.token.default_ttl > self.security.token.max_ttl {
             return Err(ConfigError::Validation("default_ttl must be <= max_ttl".into()));
         }
-        
+
         Ok(())
     }
 }
@@ -214,19 +215,20 @@ impl Config {
 
 ### Secrets Management
 
-| Secret Type | Storage | Rotation |
-|-------------|---------|----------|
-| **Database Password** | Environment or Vault | Manual |
-| **Redis Password** | Environment or Vault | Manual |
-| **Signing Keys** | HSM or Vault | Automated (90 days) |
-| **API Keys** | Database | Manual |
-| **JWT Secrets** | Environment | Manual |
+| Secret Type           | Storage              | Rotation            |
+| --------------------- | -------------------- | ------------------- |
+| **Database Password** | Environment or Vault | Manual              |
+| **Redis Password**    | Environment or Vault | Manual              |
+| **Signing Keys**      | HSM or Vault         | Automated (90 days) |
+| **API Keys**          | Database             | Manual              |
+| **JWT Secrets**       | Environment          | Manual              |
 
 ---
 
 ## Consequences
 
 ### Positive
+
 - Clear configuration hierarchy
 - Type-safe and validated
 - Environment-specific overrides
@@ -234,12 +236,14 @@ impl Config {
 - Hot reload support
 
 ### Negative
+
 - YAML complexity for nested config
 - Environment variable proliferation possible
 - Validation complexity
 - Documentation burden
 
 ### Mitigation
+
 - Generate config docs from schema
 - Provide config examples for common setups
 - Use config validation in CI

@@ -1,9 +1,9 @@
 name: release-crates
 on:
   push:
-    tags: ['v*']
+    tags: ["v*"]
   pull_request:
-    paths: ['crates/**', '.github/workflows/release-crates.yml']
+    paths: ["crates/**", ".github/workflows/release-crates.yml"]
 permissions:
   contents: read
 jobs:

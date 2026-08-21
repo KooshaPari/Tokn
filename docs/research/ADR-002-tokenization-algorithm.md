@@ -23,12 +23,12 @@ Tokn requires a robust tokenization foundation that balances performance, flexib
 
 The tokenization ecosystem offers several mature algorithms:
 
-| Algorithm | Primary Strength | Limitation |
-|-----------|------------------|------------|
-| BPE | Fast, simple, widely adopted | Can over-segment rare words |
-| WordPiece | Likelihood-optimized | Limited to specific vocabularies |
-| Unigram | Optimal segmentation, regularization | Slower, complex training |
-| BBPE | Universal coverage (no OOV) | Longer sequences |
+| Algorithm | Primary Strength                     | Limitation                       |
+| --------- | ------------------------------------ | -------------------------------- |
+| BPE       | Fast, simple, widely adopted         | Can over-segment rare words      |
+| WordPiece | Likelihood-optimized                 | Limited to specific vocabularies |
+| Unigram   | Optimal segmentation, regularization | Slower, complex training         |
+| BBPE      | Universal coverage (no OOV)          | Longer sequences                 |
 
 ### Constraints
 
@@ -133,7 +133,7 @@ WordPiece was evaluated but rejected as primary algorithm because:
 - **Complexity**: Likelihood-based training is more complex than frequency-based
 - **Speed**: Longest-match decoding slower than greedy merging
 - **Less universal**: Primarily used in Google ecosystem (BERT, T5)
-- **Unknown tokens**: Requires  or constrained vocabulary
+- **Unknown tokens**: Requires or constrained vocabulary
 
 ### Why Extensibility for Unigram?
 
@@ -152,11 +152,13 @@ Unigram provides unique capabilities worth supporting:
 **Description**: Each Unicode codepoint is a token.
 
 **Pros**:
+
 - Zero OOV rate
 - Simplest possible implementation
 - No training required
 
 **Cons**:
+
 - Massive vocabulary (100K+ for full Unicode)
 - Long sequences (5x tokens vs BBPE for English)
 - No subword structure for transfer learning
@@ -165,14 +167,16 @@ Unigram provides unique capabilities worth supporting:
 
 ### Alternative 2: Word-Level Tokenization
 
-**Description**: Dictionary-based word tokenization with  for OOV.
+**Description**: Dictionary-based word tokenization with for OOV.
 
 **Pros**:
+
 - Best semantic alignment
 - Shortest sequences for known words
 - Interpretable tokens
 
 **Cons**:
+
 - Massive vocabulary for morphologically rich languages
 - High OOV rate for technical/domain text
 - Cannot handle rare words or typos
@@ -184,10 +188,12 @@ Unigram provides unique capabilities worth supporting:
 **Description**: Train a neural network to segment text.
 
 **Pros**:
+
 - Potentially optimal for specific corpus
 - Can learn task-specific boundaries
 
 **Cons**:
+
 - Computationally expensive at inference
 - Requires large training corpus
 - Non-deterministic
@@ -236,20 +242,24 @@ Unigram provides unique capabilities worth supporting:
 ### Migration Strategy
 
 **Phase 1: Core Implementation**
+
 - Implement BBPE core algorithm
 - Build training pipeline
 - Create vocabulary serialization format
 
 **Phase 2: Compatibility Layer**
+
 - Implement tiktoken-compatible output
 - Test against reference implementations
 - Achieve 100% match on test corpus
 
 **Phase 3: Extended Algorithms**
+
 - Add standard BPE option
 - Add Unigram support (future)
 
 **Phase 4: Optimization**
+
 - SIMD optimizations
 - Parallel batch processing
 - Memory optimization
@@ -277,17 +287,18 @@ Unigram provides unique capabilities worth supporting:
 
 1. [TOKENIZATION_ALGORITHMS_SOTA.md](./TOKENIZATION_ALGORITHMS_SOTA.md) - Comprehensive algorithm analysis
 2. [MODERN_TOKENIZERS_SOTA.md](./MODERN_TOKENIZERS_SOTA.md) - Library comparison
-3. **Radford, A., et al. (2019).** Language Models are Unsupervised Multitask Learners. *OpenAI Blog*.
-4. **Sennrich, R., et al. (2016).** Neural Machine Translation of Rare Words with Subword Units. *ACL*.
+3. **Radford, A., et al. (2019).** Language Models are Unsupervised Multitask Learners. _OpenAI Blog_.
+4. **Sennrich, R., et al. (2016).** Neural Machine Translation of Rare Words with Subword Units. _ACL_.
 5. **OpenAI Tiktoken:** https://github.com/openai/tiktoken
 
 ---
 
 **Notes:**
+
 - BBPE is also known as "byte-level BPE" or "Byte Pair Encoding on bytes"
 - The 256 base tokens correspond to all possible byte values (0x00-0xFF)
 - Special tokens are assigned IDs beyond the base vocabulary range
 
 ---
 
-*End of Document - 311 lines*
+_End of Document - 311 lines_

@@ -33,11 +33,11 @@ use tokenledger::routing::{
 
 The frontier is computed in **O(N²)** using a generalized non-dominated sort over an arbitrary set of `(attribute_name, Minimize|Maximize)` pairs. An offer A **dominates** B iff A is no worse on every objective AND strictly better on at least one.
 
-| Function | Purpose | Origin |
-|----------|---------|--------|
-| `pareto_front_mask(offers, objectives)` | Returns `Vec<bool>` parallel to `offers`; `true` = non-dominated. | `helios_router/pareto/engine.py::pareto_front_mask` |
-| `compute_pareto(offers, min_cost, min_speed, max_quality)` | Defaults to `(cost_usd ↓, speed_score ↓, quality ↑)`; returns `ParetoResult` with frontier indices. | `helios_router/pareto/engine.py::compute_pareto` |
-| `compute_combos(offers, k)` | Returns all k-sized subsets with aggregate (mean quality, sum cost, min speed). | `helios_router/pareto/engine.py::compute_combos` |
+| Function                                                   | Purpose                                                                                             | Origin                                              |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `pareto_front_mask(offers, objectives)`                    | Returns `Vec<bool>` parallel to `offers`; `true` = non-dominated.                                   | `helios_router/pareto/engine.py::pareto_front_mask` |
+| `compute_pareto(offers, min_cost, min_speed, max_quality)` | Defaults to `(cost_usd ↓, speed_score ↓, quality ↑)`; returns `ParetoResult` with frontier indices. | `helios_router/pareto/engine.py::compute_pareto`    |
+| `compute_combos(offers, k)`                                | Returns all k-sized subsets with aggregate (mean quality, sum cost, min speed).                     | `helios_router/pareto/engine.py::compute_combos`    |
 
 **Sentinel handling:** Missing attributes are treated as worst-case (`+∞` for `Minimize`, `-∞` for `Maximize`), so an offer with a missing field never dominates one that has it.
 
@@ -45,13 +45,13 @@ The frontier is computed in **O(N²)** using a generalized non-dominated sort ov
 
 Each external data source implements the port traits. Tokn ships these adapters out-of-the-box:
 
-| Adapter | Port(s) | Source |
-|---------|---------|--------|
-| `UnifiedAdapter` | `BenchmarkPort` + `MetricsPort` | Combined stores |
-| `CLIProxyAdapter` | `BenchmarkPort` + `MetricsPort` | CLIProxyAPI runtime metrics |
-| `HeliosHarnessAdapter` | `BenchmarkPort` | Helios benchmark JSON |
-| `ThegentRoutingAdapter` | `RoutingPort` | thegent router signals |
-| `AgentAPIAdapter` | `BenchmarkPort` + `ModelMappingPort` | AgentAPI model registry |
+| Adapter                 | Port(s)                              | Source                      |
+| ----------------------- | ------------------------------------ | --------------------------- |
+| `UnifiedAdapter`        | `BenchmarkPort` + `MetricsPort`      | Combined stores             |
+| `CLIProxyAdapter`       | `BenchmarkPort` + `MetricsPort`      | CLIProxyAPI runtime metrics |
+| `HeliosHarnessAdapter`  | `BenchmarkPort`                      | Helios benchmark JSON       |
+| `ThegentRoutingAdapter` | `RoutingPort`                        | thegent router signals      |
+| `AgentAPIAdapter`       | `BenchmarkPort` + `ModelMappingPort` | AgentAPI model registry     |
 
 ## Routing Decision Flow
 

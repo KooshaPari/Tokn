@@ -10,6 +10,7 @@
 
 **Status:** Active
 
-**Test Traces:** 
+**Test Traces:**
+
 - `tests/integration_test.rs::test_cost_calculation_workflow`
 - `tests/integration_test.rs::test_pricing_with_cache_tokens`

@@ -10,6 +10,7 @@
 ## 1. Executive Summary
 
 This plan consolidates all existing research and implementations across:
+
 - **tokenledger** - Model/provider ledger (56 rows), pricing, Pareto scoring
 - **CLIProxyAPI** - API proxy with routing, model definitions
 - **thegent** - Quality/speed/cost values, harness model mapping
@@ -23,26 +24,26 @@ The goal: Build a unified "donut" layer around the harness that handles provider
 
 ### 2.1 What's Already Built
 
-| Component | Location | Status |
-|-----------|----------|--------|
-| Model/Provider Ledger | `tokenledger/ledger/` | ✅ 56 rows, SQL schema |
-| Quality Values | `thegent/models/quality_values.py` | ✅ Benchmark-based quality index |
-| Speed Values | `thegent/models/speed_values.py` | ✅ Speed index |
-| Cost Values | `thegent/models/cost_values.py` | ✅ Cost tracking |
-| Harness Model Mapping | `thegent/utils/routing_impl/harness_model_mapping.py` | ✅ Provider/harness resolution |
-| Pareto Router | `cliproxy++/pkg/llmproxy/registry/pareto_router.go` | ⚠️ Hardcoded maps (25 models) |
-| CLIProxyAPI Feed | `tokenledger/scripts/refresh_ledger.py` | ✅ Snapshot import |
-| Polyglot Governance | `thegent/docs/governance/POLYGLOT_RUNTIME_...` | ✅ Language standards |
+| Component             | Location                                              | Status                           |
+| --------------------- | ----------------------------------------------------- | -------------------------------- |
+| Model/Provider Ledger | `tokenledger/ledger/`                                 | ✅ 56 rows, SQL schema           |
+| Quality Values        | `thegent/models/quality_values.py`                    | ✅ Benchmark-based quality index |
+| Speed Values          | `thegent/models/speed_values.py`                      | ✅ Speed index                   |
+| Cost Values           | `thegent/models/cost_values.py`                       | ✅ Cost tracking                 |
+| Harness Model Mapping | `thegent/utils/routing_impl/harness_model_mapping.py` | ✅ Provider/harness resolution   |
+| Pareto Router         | `cliproxy++/pkg/llmproxy/registry/pareto_router.go`   | ⚠️ Hardcoded maps (25 models)    |
+| CLIProxyAPI Feed      | `tokenledger/scripts/refresh_ledger.py`               | ✅ Snapshot import               |
+| Polyglot Governance   | `thegent/docs/governance/POLYGLOT_RUNTIME_...`        | ✅ Language standards            |
 
 ### 2.2 Data Sources Identified
 
-| Source | Type | Metrics | Status |
-|--------|------|---------|--------|
-| Artificial Analysis | API | Intelligence, speed, latency, pricing | ✅ Has free API |
-| OpenRouter | API | Pricing, context, provider stats | ✅ Has API |
-| LMSYS Arena | Scrape | Quality rankings | ⚠️ Scrapers needed |
-| Vellum | Scrape | Quality rankings | ⚠️ Scrapers needed |
-| Manual Overrides | Config | Any | ❌ Not implemented |
+| Source              | Type   | Metrics                               | Status             |
+| ------------------- | ------ | ------------------------------------- | ------------------ |
+| Artificial Analysis | API    | Intelligence, speed, latency, pricing | ✅ Has free API    |
+| OpenRouter          | API    | Pricing, context, provider stats      | ✅ Has API         |
+| LMSYS Arena         | Scrape | Quality rankings                      | ⚠️ Scrapers needed |
+| Vellum              | Scrape | Quality rankings                      | ⚠️ Scrapers needed |
+| Manual Overrides    | Config | Any                                   | ❌ Not implemented |
 
 ---
 
@@ -112,13 +113,13 @@ struct ProviderHarnessModel {
     provider: Provider,      // openai, anthropic, google, etc.
     harness: Harness,         // codex, litellm, claudecode, etc.
     model: Model,             // gpt-4o, claude-3-5-sonnet, etc.
-    
+
     // Metrics from tokenledger
     quality_score: f64,       // 0.0-1.0 from benchmarks
     cost_per_1k: f64,        // USD per 1K tokens
     latency_ms: u32,         // p50 latency
     throughput_tps: f64,     // tokens per second
-    
+
     // Pareto
     pareto_rank: u32,
     pareto_dominated_by: Vec<String>,  // IDs that dominate this
@@ -132,14 +133,14 @@ struct ProviderHarnessModel {
 struct ProviderModelPair {
     provider: Provider,
     model: Model,
-    
+
     // From tokenledger pricing
     input_price_per_1m: f64,
     output_price_per_1m: f64,
     cache_read_price_per_1m: Option<f64>,
     cache_write_price_per_1m: Option<f64>,
     context_window: u64,
-    
+
     // From benchmarks
     intelligence_index: Option<f64>,
     coding_index: Option<f64>,
@@ -155,26 +156,26 @@ struct ProviderModelPair {
 struct BenchmarkData {
     model_id: String,
     provider: Option<String>,
-    
+
     // Quality
     intelligence_index: Option<f64>,
     coding_index: Option<f64>,
     agentic_index: Option<f64>,
-    
+
     // Performance
     speed_tps: Option<f64>,
     latency_ttft_ms: Option<f64>,
     latency_e2e_ms: Option<f64>,
-    
+
     // Pricing
     price_input_per_1m: Option<f64>,
     price_output_per_1m: Option<f64>,
     price_cache_read_per_1m: Option<f64>,
     price_cache_write_per_1m: Option<f64>,
-    
+
     // Context
     context_window_tokens: Option<u64>,
-    
+
     // Source tracking
     source: BenchmarkSource,  // artificial_analysis, openrouter, manual, scrape
     confidence: f64,          // 0.0-1.0
@@ -198,25 +199,25 @@ enum BenchmarkSource {
 
 **Goal:** Make tokenledger the single source of truth for all benchmark/pricing data
 
-| Task | From | To | Status |
-|------|------|-----|--------|
-| Move quality values | `thegent/models/quality_values.py` | `tokenledger/src/benchmarks/quality.rs` | ❌ TODO |
-| Move speed values | `thegent/models/speed_values.py` | `tokenledger/src/benchmarks/speed.rs` | ❌ TODO |
-| Move cost values | `thegent/models/cost_values.py` | `tokenledger/src/benchmarks/cost.rs` | ❌ TODO |
-| Move harness mapping | `thegent/utils/routing_impl/harness_model_mapping.py` | `tokenledger/src/mappings/` | ❌ TODO |
-| Add AA API client | NEW | `tokenledger/src/benchmarks/artificial_analysis.rs` | ❌ TODO |
-| Add OpenRouter API client | NEW | `tokenledger/src/benchmarks/openrouter.rs` | ❌ TODO |
+| Task                      | From                                                  | To                                                  | Status  |
+| ------------------------- | ----------------------------------------------------- | --------------------------------------------------- | ------- |
+| Move quality values       | `thegent/models/quality_values.py`                    | `tokenledger/src/benchmarks/quality.rs`             | ❌ TODO |
+| Move speed values         | `thegent/models/speed_values.py`                      | `tokenledger/src/benchmarks/speed.rs`               | ❌ TODO |
+| Move cost values          | `thegent/models/cost_values.py`                       | `tokenledger/src/benchmarks/cost.rs`                | ❌ TODO |
+| Move harness mapping      | `thegent/utils/routing_impl/harness_model_mapping.py` | `tokenledger/src/mappings/`                         | ❌ TODO |
+| Add AA API client         | NEW                                                   | `tokenledger/src/benchmarks/artificial_analysis.rs` | ❌ TODO |
+| Add OpenRouter API client | NEW                                                   | `tokenledger/src/benchmarks/openrouter.rs`          | ❌ TODO |
 
 ### Phase 2: Build Hexagonal Adapters
 
 **Goal:** Create clean ports/adapters for each system
 
-| Adapter | Description | Port Interface |
-|---------|-------------|----------------|
-| CLIProxyAPI | Real-time metrics feed | `trait CLIProxyAdapter` |
-| HeliosHarness | Benchmark result ingestion | `trait HarnessAdapter` |
-| thegent | Quality/speed/cost queries | `trait RoutingAdapter` |
-| agentapi++ | Agent lifecycle events | `trait AgentAdapter` |
+| Adapter       | Description                | Port Interface          |
+| ------------- | -------------------------- | ----------------------- |
+| CLIProxyAPI   | Real-time metrics feed     | `trait CLIProxyAdapter` |
+| HeliosHarness | Benchmark result ingestion | `trait HarnessAdapter`  |
+| thegent       | Quality/speed/cost queries | `trait RoutingAdapter`  |
+| agentapi++    | Agent lifecycle events     | `trait AgentAdapter`    |
 
 ```rust
 // Example port interface
@@ -231,12 +232,12 @@ pub trait BenchmarkPort {
 
 **Goal:** Replace hardcoded Pareto maps with dynamic tokenledger lookups
 
-| Task | Description |
-|------|-------------|
+| Task                  | Description                                                |
+| --------------------- | ---------------------------------------------------------- |
 | Remove hardcoded maps | Replace `qualityProxy`, `costPer1kProxy`, `latencyMsProxy` |
-| Add dynamic lookup | Query tokenledger for benchmark data |
-| Add fallback logic | Use hardcoded values when API unavailable |
-| Add real-time updates | Wire CLIProxyAPI telemetry |
+| Add dynamic lookup    | Query tokenledger for benchmark data                       |
+| Add fallback logic    | Use hardcoded values when API unavailable                  |
+| Add real-time updates | Wire CLIProxyAPI telemetry                                 |
 
 ### Phase 4: Manual Overrides & Governance
 
@@ -248,7 +249,7 @@ sources:
   artificial_analysis:
     enabled: true
     api_key: ${AA_API_KEY}
-  
+
   openrouter:
     enabled: true
     api_key: ${OPENROUTER_API_KEY}
@@ -267,37 +268,42 @@ overrides:
 
 Follow existing governance from `thegent/docs/governance/POLYGLOT_RUNTIME_COVERAGE_AND_CONVERSION_MATRIX_2026-02-21.md`:
 
-| Language | Primary Runtime | Required Tests |
-|----------|----------------|----------------|
-| Rust | stable toolchain | `cargo test`, `clippy -D warnings` |
-| Python | `uv` + CPython 3.14 | pytest + PyPy 3.11 |
-| Go | latest two minors | `go test ./...`, `go vet` |
+| Language | Primary Runtime     | Required Tests                     |
+| -------- | ------------------- | ---------------------------------- |
+| Rust     | stable toolchain    | `cargo test`, `clippy -D warnings` |
+| Python   | `uv` + CPython 3.14 | pytest + PyPy 3.11                 |
+| Go       | latest two minors   | `go test ./...`, `go vet`          |
 
 ---
 
 ## 7. Principles
 
 ### HEXAGONAL
+
 - Ports and adapters pattern
 - Core domain logic isolated from infrastructure
 - Adapters are swappable (file-based, API-based, scrape-based)
 
 ### POLYGLOT
+
 - Use right tool for job
 - Rust for core ledger/performance
 - Python for data processing/ML
 - Go for CLI tools
 
 ### KISS
+
 - Simple first, optimize later
 - No premature abstraction
 
 ### DRY
+
 - Single source of truth (tokenledger)
 - Shared data structures
 - No duplication of benchmark data
 
 ### SOLID
+
 - Single responsibility: tokenledger owns all benchmark data
 - Open/closed: extend via adapters, not modification
 - Liskov: adapters must implement full port interface
@@ -305,6 +311,7 @@ Follow existing governance from `thegent/docs/governance/POLYGLOT_RUNTIME_COVERA
 - Dependency inversion: depends on abstractions, not concretions
 
 ### MICROSERVICE
+
 - Independent deployability
 - Clear boundaries
 - API-first design

@@ -9,11 +9,11 @@ title: User Journeys
 
 ## Quick Navigation
 
-| Journey | Time | Complexity | Status |
-|---------|------|------------|--------|
-| [Quick Start](./quick-start) | 5 min | ⭐ Beginner | ✅ Ready |
+| Journey                                | Time   | Complexity        | Status     |
+| -------------------------------------- | ------ | ----------------- | ---------- |
+| [Quick Start](./quick-start)           | 5 min  | ⭐ Beginner       | ✅ Ready   |
 | [Core Integration](./core-integration) | 15 min | ⭐⭐ Intermediate | 📋 Planned |
-| [Production Setup](./production-setup) | 30 min | ⭐⭐⭐ Advanced | 📋 Planned |
+| [Production Setup](./production-setup) | 30 min | ⭐⭐⭐ Advanced   | 📋 Planned |
 
 ## Architecture
 
@@ -25,7 +25,7 @@ flowchart TB
 
 ## Performance
 
-| Metric | P50 | P95 |
-|--------|-----|-----|
+| Metric     | P50    | P95    |
+| ---------- | ------ | ------ |
 | Cold Start | < 10ms | < 50ms |
-| Hot Path | < 1ms | < 5ms |
+| Hot Path   | < 1ms  | < 5ms  |

@@ -3,7 +3,7 @@
 **Domain:** Token Management and JWT Handling  
 **Analysis Date:** 2026-04-02  
 **Standard:** FULL Nanovms Gold Standard  
-**Target Line Count:** 500+ lines  
+**Target Line Count:** 500+ lines
 
 ---
 
@@ -52,15 +52,15 @@ Tokn is a high-performance token management and modularization system designed f
 
 ### 1.2 Token Format Comparison
 
-| Aspect | JWT | PASETO | Opaque | Tokn Support |
-|--------|-----|--------|--------|---------------|
-| **Self-Contained** | Yes | Yes | No | Yes (JWT, PASETO) |
-| **Stateless** | Yes | Yes | No | Yes |
-| **Revocable** | Difficult | Difficult | Easy | Yes (with DB) |
-| **Size** | Compact | Compact | Minimal | Compact |
-| **Cryptography** | Traditional | Modern | None | Modern |
-| **Compatibility** | High | Growing | Low | High |
-| **Library Support** | Excellent | Good | Limited | Planned |
+| Aspect              | JWT         | PASETO    | Opaque  | Tokn Support      |
+| ------------------- | ----------- | --------- | ------- | ----------------- |
+| **Self-Contained**  | Yes         | Yes       | No      | Yes (JWT, PASETO) |
+| **Stateless**       | Yes         | Yes       | No      | Yes               |
+| **Revocable**       | Difficult   | Difficult | Easy    | Yes (with DB)     |
+| **Size**            | Compact     | Compact   | Minimal | Compact           |
+| **Cryptography**    | Traditional | Modern    | None    | Modern            |
+| **Compatibility**   | High        | Growing   | Low     | High              |
+| **Library Support** | Excellent   | Good      | Limited | Planned           |
 
 ---
 
@@ -68,59 +68,59 @@ Tokn is a high-performance token management and modularization system designed f
 
 ### 2.1 Tier 1: JWT Libraries
 
-| Library | Language | Algorithms | Validation | Security | Performance | Ecosystem |
-|---------|----------|------------|------------|----------|-------------|-----------|
-| **jsonwebtoken** | Node.js | HS256/386/512, RS256/384/512, ES256/384/512, PS256/384/512 | Full | Standard | High | L5 - Dominant |
-| **PyJWT** | Python | HS256/386/512, RS256/384/512, ES256/384/512, PS256/384/512 | Full | Standard | High | L5 - Dominant |
-| **jwt-go** | Go | HS256/386/512, RS256/384/512, ES256/384/512, EdDSA | Full | Standard | Very High | L4 - Stable |
-| **jsonwebtokens** | Rust | HS256/386/512, RS256/384/512, ES256/384/512 | Full | Standard | Very High | L4 - Stable |
-| **jose** | TypeScript | All + EdDSA, RSA-OAP | Full | Modern | High | L4 - Active |
-| **JOSE-JWT** | Java | Full Suite | Full | Standard | Medium | L4 - Mature |
-| **lua-resty-jwt** | Lua/OpenResty | HS*, RS* | Full | Standard | High | L3 - Nginx |
-| **iron** | TypeScript | JSYMAC | Full | Encrypted | High | L3 - Novel |
-| **Tokn** | Rust | Ed25519, RS256, PASETO | Full + Cache | Enhanced | Target: Ultra-High | L3 - Emerging |
+| Library           | Language      | Algorithms                                                 | Validation   | Security  | Performance        | Ecosystem     |
+| ----------------- | ------------- | ---------------------------------------------------------- | ------------ | --------- | ------------------ | ------------- |
+| **jsonwebtoken**  | Node.js       | HS256/386/512, RS256/384/512, ES256/384/512, PS256/384/512 | Full         | Standard  | High               | L5 - Dominant |
+| **PyJWT**         | Python        | HS256/386/512, RS256/384/512, ES256/384/512, PS256/384/512 | Full         | Standard  | High               | L5 - Dominant |
+| **jwt-go**        | Go            | HS256/386/512, RS256/384/512, ES256/384/512, EdDSA         | Full         | Standard  | Very High          | L4 - Stable   |
+| **jsonwebtokens** | Rust          | HS256/386/512, RS256/384/512, ES256/384/512                | Full         | Standard  | Very High          | L4 - Stable   |
+| **jose**          | TypeScript    | All + EdDSA, RSA-OAP                                       | Full         | Modern    | High               | L4 - Active   |
+| **JOSE-JWT**      | Java          | Full Suite                                                 | Full         | Standard  | Medium             | L4 - Mature   |
+| **lua-resty-jwt** | Lua/OpenResty | HS*, RS*                                                   | Full         | Standard  | High               | L3 - Nginx    |
+| **iron**          | TypeScript    | JSYMAC                                                     | Full         | Encrypted | High               | L3 - Novel    |
+| **Tokn**          | Rust          | Ed25519, RS256, PASETO                                     | Full + Cache | Enhanced  | Target: Ultra-High | L3 - Emerging |
 
 ### 2.2 Tier 2: Token Management Systems
 
-| System | Type | Features | Scalability | Enterprise | Complexity |
-|--------|------|----------|-------------|------------|------------|
-| **Keycloak** | IdM | OAuth2, OIDC, Token Mgmt | High | Yes | High |
-| **Auth0** | SaaS | Full Auth Suite | Very High | Yes | Low (managed) |
-| **Okta** | SaaS | Identity Platform | Very High | Yes | Medium |
-| **AWS Cognito** | Cloud | User Pools, Identity | High | Yes | Medium |
-| **ory/oathkeeper** | Open Source | Token Validation | High | Yes | Medium |
-| **corneille** | Rust | Minimal JWT | High | No | Low |
-| **Tokn** | Library | Token Lifecycle | High | Planned | Medium |
+| System             | Type        | Features                 | Scalability | Enterprise | Complexity    |
+| ------------------ | ----------- | ------------------------ | ----------- | ---------- | ------------- |
+| **Keycloak**       | IdM         | OAuth2, OIDC, Token Mgmt | High        | Yes        | High          |
+| **Auth0**          | SaaS        | Full Auth Suite          | Very High   | Yes        | Low (managed) |
+| **Okta**           | SaaS        | Identity Platform        | Very High   | Yes        | Medium        |
+| **AWS Cognito**    | Cloud       | User Pools, Identity     | High        | Yes        | Medium        |
+| **ory/oathkeeper** | Open Source | Token Validation         | High        | Yes        | Medium        |
+| **corneille**      | Rust        | Minimal JWT              | High        | No         | Low           |
+| **Tokn**           | Library     | Token Lifecycle          | High        | Planned    | Medium        |
 
 ### 2.3 Feature Comparison Matrix
 
-| Feature | jsonwebtoken | PyJWT | jwt-go | PASETO | Tokn |
-|---------|-------------|-------|--------|--------|------|
-| **Issue JWT** | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Validate JWT** | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Token Revocation** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Refresh Tokens** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **JWKS Endpoint** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Rate Limiting** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Audit Logging** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Plugin System** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Multi-Tenant** | ❌ | ❌ | ❌ | ❌ | Planned |
-| **PASETO Support** | ❌ | ❌ | ❌ | ✅ | ✅ |
-| **Ed25519** | Limited | Limited | ✅ | ✅ | ✅ |
-| **WASM Plugins** | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Feature              | jsonwebtoken | PyJWT   | jwt-go | PASETO | Tokn    |
+| -------------------- | ------------ | ------- | ------ | ------ | ------- |
+| **Issue JWT**        | ✅           | ✅      | ✅     | ✅     | ✅      |
+| **Validate JWT**     | ✅           | ✅      | ✅     | ✅     | ✅      |
+| **Token Revocation** | ❌           | ❌      | ❌     | ❌     | ✅      |
+| **Refresh Tokens**   | ❌           | ❌      | ❌     | ❌     | ✅      |
+| **JWKS Endpoint**    | ❌           | ❌      | ❌     | ❌     | ✅      |
+| **Rate Limiting**    | ❌           | ❌      | ❌     | ❌     | ✅      |
+| **Audit Logging**    | ❌           | ❌      | ❌     | ❌     | ✅      |
+| **Plugin System**    | ❌           | ❌      | ❌     | ❌     | ✅      |
+| **Multi-Tenant**     | ❌           | ❌      | ❌     | ❌     | Planned |
+| **PASETO Support**   | ❌           | ❌      | ❌     | ✅     | ✅      |
+| **Ed25519**          | Limited      | Limited | ✅     | ✅     | ✅      |
+| **WASM Plugins**     | ❌           | ❌      | ❌     | ❌     | ✅      |
 
 ### 2.4 Performance Benchmarks
 
-| Operation | jsonwebtoken | PyJWT | jwt-go | Tokn (target) |
-|-----------|-------------|-------|--------|---------------|
-| **Sign (HS256)** | 50,000 ops/s | 45,000 ops/s | 120,000 ops/s | 150,000 ops/s |
-| **Sign (RS256)** | 2,000 ops/s | 1,800 ops/s | 8,000 ops/s | 10,000 ops/s |
-| **Sign (Ed25519)** | N/A | N/A | 15,000 ops/s | 20,000 ops/s |
-| **Verify (HS256)** | 45,000 ops/s | 40,000 ops/s | 100,000 ops/s | 130,000 ops/s |
-| **Verify (RS256)** | 1,800 ops/s | 1,500 ops/s | 6,000 ops/s | 8,000 ops/s |
-| **Verify (Ed25519)** | N/A | N/A | 12,000 ops/s | 18,000 ops/s |
-| **Validation + Cache** | N/A | N/A | N/A | 500,000 ops/s |
-| **Memory/Op** | 2KB | 3KB | 1KB | 0.5KB |
+| Operation              | jsonwebtoken | PyJWT        | jwt-go        | Tokn (target) |
+| ---------------------- | ------------ | ------------ | ------------- | ------------- |
+| **Sign (HS256)**       | 50,000 ops/s | 45,000 ops/s | 120,000 ops/s | 150,000 ops/s |
+| **Sign (RS256)**       | 2,000 ops/s  | 1,800 ops/s  | 8,000 ops/s   | 10,000 ops/s  |
+| **Sign (Ed25519)**     | N/A          | N/A          | 15,000 ops/s  | 20,000 ops/s  |
+| **Verify (HS256)**     | 45,000 ops/s | 40,000 ops/s | 100,000 ops/s | 130,000 ops/s |
+| **Verify (RS256)**     | 1,800 ops/s  | 1,500 ops/s  | 6,000 ops/s   | 8,000 ops/s   |
+| **Verify (Ed25519)**   | N/A          | N/A          | 12,000 ops/s  | 18,000 ops/s  |
+| **Validation + Cache** | N/A          | N/A          | N/A           | 500,000 ops/s |
+| **Memory/Op**          | 2KB          | 3KB          | 1KB           | 0.5KB         |
 
 ---
 
@@ -169,31 +169,31 @@ Tokn is a high-performance token management and modularization system designed f
 
 ### 3.2 Security Threat Matrix
 
-| Threat | Severity | Mitigation | Tokn Status |
-|--------|----------|-----------|-------------|
-| **Algorithm Confusion** | Critical | Explicit algorithm allowlist | ✅ Implemented |
-| **Key Confusion (HS/RS)** | Critical | Separate key for symmetric/asymmetric | ✅ Implemented |
-| **Token Forgery** | Critical | Signature verification required | ✅ Implemented |
-| **Token Replay** | High | Nonce + revocation list | ✅ Implemented |
-| **Token Expiration** | High | exp claim validation | ✅ Implemented |
-| **Clock Skew** | Medium | Configurable skew tolerance | ✅ Implemented |
-| **Algorithm Downgrade** | High | alg:none rejection | ✅ Implemented |
-| **JWK Key Injection** | Critical | Key ID validation | ⚠️ Planned |
-| **Side-Channel Attacks** | High | Constant-time comparison | ⚠️ Audit Needed |
-| **Timing Attacks** | Medium | Constant-time operations | ⚠️ Audit Needed |
+| Threat                    | Severity | Mitigation                            | Tokn Status     |
+| ------------------------- | -------- | ------------------------------------- | --------------- |
+| **Algorithm Confusion**   | Critical | Explicit algorithm allowlist          | ✅ Implemented  |
+| **Key Confusion (HS/RS)** | Critical | Separate key for symmetric/asymmetric | ✅ Implemented  |
+| **Token Forgery**         | Critical | Signature verification required       | ✅ Implemented  |
+| **Token Replay**          | High     | Nonce + revocation list               | ✅ Implemented  |
+| **Token Expiration**      | High     | exp claim validation                  | ✅ Implemented  |
+| **Clock Skew**            | Medium   | Configurable skew tolerance           | ✅ Implemented  |
+| **Algorithm Downgrade**   | High     | alg:none rejection                    | ✅ Implemented  |
+| **JWK Key Injection**     | Critical | Key ID validation                     | ⚠️ Planned      |
+| **Side-Channel Attacks**  | High     | Constant-time comparison              | ⚠️ Audit Needed |
+| **Timing Attacks**        | Medium   | Constant-time operations              | ⚠️ Audit Needed |
 
 ### 3.3 Best Practices Compliance
 
-| Practice | RFC Reference | Compliance | Notes |
-|----------|--------------|------------|-------|
-| **Algorithm Explicit** | RFC 8725 | ✅ Required | Tokn requires explicit algorithm |
-| **Key Separation** | RFC 8725 | ✅ Required | Different keys for signing/encryption |
-| **Audience Restriction** | RFC 7519 | ✅ Required | aud claim validation |
-| **Issuer Validation** | RFC 7519 | ✅ Required | iss claim validation |
-| **Subject Validation** | RFC 7519 | ⚠️ Optional | sub claim handling |
-| **Nonce/Unique** | RFC 8725 | ⚠️ Optional | jti for replay prevention |
-| **Token Lifetimes** | OAuth 2.0 | ✅ Required | Configurable TTL |
-| **Refresh Rotation** | OAuth 2.0 | ✅ Optional | Refresh token support |
+| Practice                 | RFC Reference | Compliance  | Notes                                 |
+| ------------------------ | ------------- | ----------- | ------------------------------------- |
+| **Algorithm Explicit**   | RFC 8725      | ✅ Required | Tokn requires explicit algorithm      |
+| **Key Separation**       | RFC 8725      | ✅ Required | Different keys for signing/encryption |
+| **Audience Restriction** | RFC 7519      | ✅ Required | aud claim validation                  |
+| **Issuer Validation**    | RFC 7519      | ✅ Required | iss claim validation                  |
+| **Subject Validation**   | RFC 7519      | ⚠️ Optional | sub claim handling                    |
+| **Nonce/Unique**         | RFC 8725      | ⚠️ Optional | jti for replay prevention             |
+| **Token Lifetimes**      | OAuth 2.0     | ✅ Required | Configurable TTL                      |
+| **Refresh Rotation**     | OAuth 2.0     | ✅ Optional | Refresh token support                 |
 
 ---
 
@@ -351,16 +351,16 @@ Payload-Signature
 
 ### 4.3 Common Vulnerability Patterns
 
-| Pattern ID | Vulnerability | Detection Method | Impact | Mitigation |
-|------------|--------------|------------------|--------|------------|
-| **VP-001** | alg:none bypass | Check if token verifies without signature | Critical | Reject alg:none |
-| **VP-002** | HS256 with public key | Analyze key usage confusion | Critical | Separate key namespaces |
-| **VP-003** | None encryption | Check for unencrypted sensitive data | High | Use encryption for PII |
-| **VP-004** | Timing oracle | Measure validation time variance | Medium | Constant-time comparison |
-| **VP-005** | Key ID injection | Analyze JWKS endpoint responses | High | Validate kid format |
-| **VP-006** | Expired token reuse | Test with expired tokens | Medium | Nonce + rotation |
-| **VP-007** | Audience not validated | Test with wrong audience | High | Always validate aud |
-| **VP-008** | Issuer not validated | Test with wrong issuer | High | Always validate iss |
+| Pattern ID | Vulnerability          | Detection Method                          | Impact   | Mitigation               |
+| ---------- | ---------------------- | ----------------------------------------- | -------- | ------------------------ |
+| **VP-001** | alg:none bypass        | Check if token verifies without signature | Critical | Reject alg:none          |
+| **VP-002** | HS256 with public key  | Analyze key usage confusion               | Critical | Separate key namespaces  |
+| **VP-003** | None encryption        | Check for unencrypted sensitive data      | High     | Use encryption for PII   |
+| **VP-004** | Timing oracle          | Measure validation time variance          | Medium   | Constant-time comparison |
+| **VP-005** | Key ID injection       | Analyze JWKS endpoint responses           | High     | Validate kid format      |
+| **VP-006** | Expired token reuse    | Test with expired tokens                  | Medium   | Nonce + rotation         |
+| **VP-007** | Audience not validated | Test with wrong audience                  | High     | Always validate aud      |
+| **VP-008** | Issuer not validated   | Test with wrong issuer                    | High     | Always validate iss      |
 
 ### 4.4 Security Testing Checklist
 
@@ -416,16 +416,16 @@ Payload-Signature
 
 ### 5.1 RFC and Standards
 
-| Document | Title | Relevance | Status |
-|----------|-------|-----------|--------|
-| **RFC 7519** | JSON Web Token (JWT) | Core standard | Mandatory |
-| **RFC 7515** | JSON Web Signature (JWS) | Token signing | Mandatory |
-| **RFC 7516** | JSON Web Encryption (JWE) | Token encryption | Recommended |
-| **RFC 7517** | JSON Web Key (JWK) | Key representation | Recommended |
-| **RFC 7518** | JSON Web Algorithms (JWA) | Algorithm specs | Mandatory |
-| **RFC 7523** | JWT Profile for OAuth 2.0 | Client authentication | Optional |
-| **RFC 8725** | Token Reflection | Best practices | Critical |
-| **Paseto v2** | Platform-Agnostic Security Tokens | Modern alternative | Recommended |
+| Document      | Title                             | Relevance             | Status      |
+| ------------- | --------------------------------- | --------------------- | ----------- |
+| **RFC 7519**  | JSON Web Token (JWT)              | Core standard         | Mandatory   |
+| **RFC 7515**  | JSON Web Signature (JWS)          | Token signing         | Mandatory   |
+| **RFC 7516**  | JSON Web Encryption (JWE)         | Token encryption      | Recommended |
+| **RFC 7517**  | JSON Web Key (JWK)                | Key representation    | Recommended |
+| **RFC 7518**  | JSON Web Algorithms (JWA)         | Algorithm specs       | Mandatory   |
+| **RFC 7523**  | JWT Profile for OAuth 2.0         | Client authentication | Optional    |
+| **RFC 8725**  | Token Reflection                  | Best practices        | Critical    |
+| **Paseto v2** | Platform-Agnostic Security Tokens | Modern alternative    | Recommended |
 
 ### 5.2 Research Papers
 
@@ -467,24 +467,24 @@ Payload-Signature
 
 ### 6.1 Tokn Differentiation Points
 
-| Innovation | Description | Competitive Advantage | Maturity |
-|------------|-------------|----------------------|----------|
-| **WASM Plugin System** | Extend functionality with WASM modules | High | Development |
-| **Hybrid Storage** | Multi-backend token storage | Medium | Planned |
-| **ZK-Proof Validation** | Validate tokens without exposure | High | Research |
-| **Homomorphic Encryption** | Compute on encrypted tokens | Very High | Future |
-| **Token Fragments** | Split tokens across parties | Medium | Concept |
-| **Automatic Key Rotation** | Zero-downtime key updates | High | Planned |
+| Innovation                 | Description                            | Competitive Advantage | Maturity    |
+| -------------------------- | -------------------------------------- | --------------------- | ----------- |
+| **WASM Plugin System**     | Extend functionality with WASM modules | High                  | Development |
+| **Hybrid Storage**         | Multi-backend token storage            | Medium                | Planned     |
+| **ZK-Proof Validation**    | Validate tokens without exposure       | High                  | Research    |
+| **Homomorphic Encryption** | Compute on encrypted tokens            | Very High             | Future      |
+| **Token Fragments**        | Split tokens across parties            | Medium                | Concept     |
+| **Automatic Key Rotation** | Zero-downtime key updates              | High                  | Planned     |
 
 ### 6.2 Gaps in Current SOTA
 
-| Gap | Current SOTA | Tokn Opportunity | Priority |
-|-----|-------------|------------------|----------|
-| **ZK Integration** | None | Validate without decryption | P1 |
-| **Unbundled Tokens** | None | Token fragmentation | P2 |
-| **Formal Verification** | Limited | Machine-checkable proofs | P2 |
-| **Quantum Resistance** | Hybrid only | PQC algorithms | P3 |
-| **Smart Contract Integration** | Ethereum only | Multi-chain support | P2 |
+| Gap                            | Current SOTA  | Tokn Opportunity            | Priority |
+| ------------------------------ | ------------- | --------------------------- | -------- |
+| **ZK Integration**             | None          | Validate without decryption | P1       |
+| **Unbundled Tokens**           | None          | Token fragmentation         | P2       |
+| **Formal Verification**        | Limited       | Machine-checkable proofs    | P2       |
+| **Quantum Resistance**         | Hybrid only   | PQC algorithms              | P3       |
+| **Smart Contract Integration** | Ethereum only | Multi-chain support         | P2       |
 
 ---
 
@@ -531,17 +531,17 @@ Payload-Signature
 
 ### 7.2 Technology Stack Compatibility
 
-| Technology | Support Level | Integration Method | Notes |
-|------------|--------------|-------------------|-------|
-| **Rust** | Primary | Native | Core implementation |
-| **WebAssembly** | Primary | WASI, WASM plugins | Sandboxed execution |
-| **PostgreSQL** | Primary | SQLx, async | Primary storage |
-| **Redis** | Primary | redis-rs, async | Caching layer |
-| **gRPC** | Secondary | tonic | Internal communication |
-| **Prometheus** | Supported | metrics-rs | Observability |
-| **Jaeger** | Supported | opentracing | Distributed tracing |
-| **AWS KMS** | Planned | aws-sdk | HSM integration |
-| **Vault** | Planned | hashicorp-vault | Secret management |
+| Technology      | Support Level | Integration Method | Notes                  |
+| --------------- | ------------- | ------------------ | ---------------------- |
+| **Rust**        | Primary       | Native             | Core implementation    |
+| **WebAssembly** | Primary       | WASI, WASM plugins | Sandboxed execution    |
+| **PostgreSQL**  | Primary       | SQLx, async        | Primary storage        |
+| **Redis**       | Primary       | redis-rs, async    | Caching layer          |
+| **gRPC**        | Secondary     | tonic              | Internal communication |
+| **Prometheus**  | Supported     | metrics-rs         | Observability          |
+| **Jaeger**      | Supported     | opentracing        | Distributed tracing    |
+| **AWS KMS**     | Planned       | aws-sdk            | HSM integration        |
+| **Vault**       | Planned       | hashicorp-vault    | Secret management      |
 
 ---
 
@@ -549,25 +549,25 @@ Payload-Signature
 
 ### 8.1 Feature Gaps vs SOTA
 
-| Gap | SOTA Solution | Tokn Status | Target Date | Priority |
-|-----|--------------|-------------|-------------|----------|
-| Algorithm support | jose (all) | Core + PASETO | 1.0 | P0 |
-| Validation | PyJWT | Full + Cache | 1.0 | P0 |
-| Security | Paseto | Modern | 1.0 | P0 |
-| Key Rotation | Manual | Automated | 1.1 | P1 |
-| ZK-Proofs | None | Research | 2.0 | P2 |
-| Multi-Tenant | Keycloak | Design | 1.2 | P1 |
-| GraphQL | None | Optional | 1.3 | P2 |
-| Anomaly Detection | None | ML-based | 2.0 | P3 |
+| Gap               | SOTA Solution | Tokn Status   | Target Date | Priority |
+| ----------------- | ------------- | ------------- | ----------- | -------- |
+| Algorithm support | jose (all)    | Core + PASETO | 1.0         | P0       |
+| Validation        | PyJWT         | Full + Cache  | 1.0         | P0       |
+| Security          | Paseto        | Modern        | 1.0         | P0       |
+| Key Rotation      | Manual        | Automated     | 1.1         | P1       |
+| ZK-Proofs         | None          | Research      | 2.0         | P2       |
+| Multi-Tenant      | Keycloak      | Design        | 1.2         | P1       |
+| GraphQL           | None          | Optional      | 1.3         | P2       |
+| Anomaly Detection | None          | ML-based      | 2.0         | P3       |
 
 ### 8.2 Performance Gaps
 
-| Metric | Current SOTA | Tokn Target | Gap | Strategy |
-|--------|-------------|------------|-----|----------|
-| Validation p99 | 1ms | 0.5ms | 50% | Cache optimization |
-| Sign ops/s | 150K | 200K | 33% | Batch signing |
-| Memory/validation | 2KB | 0.5KB | 75% | Zero-copy parsing |
-| Cache hit rate | 80% | 95% | 15% | Predictive caching |
+| Metric            | Current SOTA | Tokn Target | Gap | Strategy           |
+| ----------------- | ------------ | ----------- | --- | ------------------ |
+| Validation p99    | 1ms          | 0.5ms       | 50% | Cache optimization |
+| Sign ops/s        | 150K         | 200K        | 33% | Batch signing      |
+| Memory/validation | 2KB          | 0.5KB       | 75% | Zero-copy parsing  |
+| Cache hit rate    | 80%          | 95%         | 15% | Predictive caching |
 
 ---
 
@@ -611,4 +611,4 @@ Payload-Signature
 **Document Status:** COMPLETE  
 **Last Updated:** 2026-04-05  
 **Next Review:** 2026-05-05  
-**Approver:** Architecture Team  
+**Approver:** Architecture Team

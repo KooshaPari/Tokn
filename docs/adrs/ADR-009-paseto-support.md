@@ -2,13 +2,14 @@
 
 **Status:** Accepted  
 **Date:** 2026-04-02  
-**Deciders:** Architecture Team  
+**Deciders:** Architecture Team
 
 ---
 
 ## Context
 
 We need to support PASETO as a modern alternative to JWT. PASETO eliminates several JWT vulnerabilities:
+
 - No algorithm confusion (fixed by version)
 - No cryptographic agility (version locked)
 - Authenticated encryption by default
@@ -99,7 +100,7 @@ impl PasetoService {
             }
         }
     }
-    
+
     pub async fn verify_paseto(
         &self,
         token: &str,
@@ -109,10 +110,10 @@ impl PasetoService {
         if parts.len() != 4 {
             return Err(PasetoError::InvalidFormat);
         }
-        
-        let (version, purpose, payload, signature) = 
+
+        let (version, purpose, payload, signature) =
             (parts[0], parts[1], parts[2], parts[3]);
-        
+
         match purpose {
             "public" => {
                 self.verify_public(parts, public_key).await
@@ -128,18 +129,19 @@ impl PasetoService {
 
 ### Use Cases
 
-| Token Type | Use Case | PASETO Version |
-|------------|----------|---------------|
-| **Internal API** | Service-to-service | PASETO v4.local |
-| **External API** | Third-party clients | PASETO v4.public |
-| **Legacy Support** | JWT-required systems | JWT RS256 |
-| **High Security** | PII-containing tokens | PASETO v4.local |
+| Token Type         | Use Case              | PASETO Version   |
+| ------------------ | --------------------- | ---------------- |
+| **Internal API**   | Service-to-service    | PASETO v4.local  |
+| **External API**   | Third-party clients   | PASETO v4.public |
+| **Legacy Support** | JWT-required systems  | JWT RS256        |
+| **High Security**  | PII-containing tokens | PASETO v4.local  |
 
 ---
 
 ## Consequences
 
 ### Positive
+
 - Eliminates JWT algorithm confusion attacks
 - Simpler implementation than JWE
 - Authenticated encryption in local tokens
@@ -147,12 +149,14 @@ impl PasetoService {
 - Growing ecosystem support
 
 ### Negative
+
 - Less library support than JWT
 - Local tokens require key agreement (PAKE)
 - Payload visible in public tokens (but not forgeable)
 - Newer standard, less battle-tested
 
 ### Mitigation
+
 - Provide JWT fallback for legacy systems
 - Use PASETO local for sensitive data
 - Monitor PASETO library maturity

@@ -7,16 +7,19 @@ User requested an explicit decision on whether to fork a full Rust monolith vers
 ## What was completed
 
 1. Performed wider web scan for:
+
 - multi-provider usage trackers and UI references,
 - Rust/Go parser and pipeline candidates,
 - performance-oriented crate options for tail/parse/cache/bench.
 
 2. Codified architecture decision:
+
 - no monolithic Rust fork,
 - yes to separate provider-focused adapter imports/forks,
 - `tokenledger` remains canonical core.
 
 3. Added formal research/policy document:
+
 - `docs/research/ADAPTER_BASE_LIBS_AND_FORK_STRATEGY_2026-02-21.md`
 
 4. Captured subscription and token pricing methodology in a unified blended Mtok model, including derivation metadata modes and comparability outputs.
@@ -50,6 +53,8 @@ User requested an explicit decision on whether to fork a full Rust monolith vers
 1. Adapter coverage is active for Claude/Codex/Cursor (logs + SQLite), ProxyAPI/CLIProxyAPI, and Droid sources in ingest discovery + normalization paths.
 2. Provider fixture/conformance coverage is present in `src/main.rs` tests, including adapter-shape normalization and Cursor SQLite deterministic selection/fallback behavior.
 3. CI benchmark/perf gating added at `.github/workflows/bench-perf-gate.yml`:
+
 - runs `bench --scenario all`
 - enforces strict perf gates via `scripts/perf_gate.sh` with baseline.
+
 4. Optional SQLite + disk cache acceleration is active via SQLite ingestion path and orchestrate ingest cache controls.

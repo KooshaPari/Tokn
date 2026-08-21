@@ -47,28 +47,28 @@
 
 ### 2.1 Core
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Rust | 1.75+ | Core language |
-| tokio | 1.x | Async runtime |
-| clap | 4.x | CLI parsing |
-| serde | 1.x | Serialization |
-| thiserror | 1.x | Error handling |
+| Technology | Version | Purpose        |
+| ---------- | ------- | -------------- |
+| Rust       | 1.75+   | Core language  |
+| tokio      | 1.x     | Async runtime  |
+| clap       | 4.x     | CLI parsing    |
+| serde      | 1.x     | Serialization  |
+| thiserror  | 1.x     | Error handling |
 
 ### 2.2 Database
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| SQLx | 0.7 | Database access |
-| SQLite | 3.x | Local storage |
-| PostgreSQL | 15+ | Production |
-| rusqlite | 0.31 | SQLite wrapper |
+| Technology | Version | Purpose         |
+| ---------- | ------- | --------------- |
+| SQLx       | 0.7     | Database access |
+| SQLite     | 3.x     | Local storage   |
+| PostgreSQL | 15+     | Production      |
+| rusqlite   | 0.31    | SQLite wrapper  |
 
 ### 2.3 Rate Limiting
 
-| Technology | Purpose |
-|------------|---------|
-| governor | Token bucket rate limiting |
+| Technology | Purpose                    |
+| ---------- | -------------------------- |
+| governor   | Token bucket rate limiting |
 
 ---
 
@@ -84,19 +84,19 @@ use std::collections::HashMap;
 pub trait LLMProvider: Send + Sync {
     /// Provider name (e.g., "anthropic", "openai")
     fn name(&self) -> &str;
-    
+
     /// Available models from this provider
     fn available_models(&self) -> Vec<Model>;
-    
+
     /// Execute a completion request
     async fn complete(&self, request: Request) -> Result<Response, ProviderError>;
-    
+
     /// Calculate cost for a request/response pair
     fn calculate_cost(&self, request: &Request, response: &Response) -> Cost;
-    
+
     /// Health check for provider
     async fn health_check(&self) -> bool;
-    
+
     /// Get current pricing (may be cached)
     fn get_pricing(&self) -> Pricing;
 }
@@ -114,13 +114,13 @@ pub struct AnthropicProvider {
 
 impl LLMProvider for AnthropicProvider {
     fn name(&self) -> &str { "anthropic" }
-    
+
     async fn complete(&self, request: Request) -> Result<Response, ProviderError> {
         // Implementation
     }
 }
 
-// openai.rs  
+// openai.rs
 pub struct OpenAIProvider {
     client: reqwest::Client,
     api_key: String,
@@ -140,11 +140,11 @@ impl ProviderRegistry {
     pub fn register(&mut self, provider: Box<dyn LLMProvider>) {
         self.providers.insert(provider.name().to_string(), provider);
     }
-    
+
     pub fn get(&self, name: &str) -> Option<&dyn LLMProvider> {
         self.providers.get(name).map(|p| p.as_ref())
     }
-    
+
     pub fn get_default(&self) -> &dyn LLMProvider {
         self.get(&self.default_provider).unwrap()
     }
@@ -310,10 +310,10 @@ impl RateLimiter {
             .burst_size(NonZeroU32::new(requests_per_minute).unwrap())
             .build()
             .unwrap();
-            
+
         Self { limiter }
     }
-    
+
     pub fn check(&self, key: &str) -> Result<(), RateLimitExceeded> {
         self.limiter.check_key(key).map_err(|_| RateLimitExceeded)
     }
@@ -326,13 +326,13 @@ impl RateLimiter {
 impl Budget {
     pub fn check_limit(&self, current_spent: Decimal) -> EnforcementAction {
         let percentage = (current_spent / self.amount_usd) * Decimal::from(100);
-        
+
         for alert in &self.alerts {
             if percentage >= alert.threshold {
                 return self.enforcement.clone();
             }
         }
-        
+
         EnforcementAction::NotifyOnly
     }
 }
@@ -399,7 +399,7 @@ CREATE TABLE alerts (
 providers:
   anthropic:
     claude-3-opus:
-      input: 0.015   # per 1K tokens
+      input: 0.015 # per 1K tokens
       output: 0.075
       cache_creation: 0.01875
       cache_read: 0.0
@@ -409,7 +409,7 @@ providers:
     claude-3-haiku:
       input: 0.00025
       output: 0.00125
-      
+
   openai:
     gpt-4o:
       input: 0.005
@@ -427,7 +427,7 @@ impl Pricing {
         let model_pricing = self.providers
             .get(provider)
             .and_then(|p| p.get(model));
-            
+
         // Calculate cost
     }
 }
@@ -466,12 +466,12 @@ pub enum Recommendation {
 ```rust
 pub fn analyze_optimization(usage: &[UsageRecord]) -> Vec<Recommendation> {
     let mut recommendations = Vec::new();
-    
+
     // 1. Check for model downgrade opportunities
     let simple_requests = usage.iter()
         .filter(|u| u.complexity_score() < 0.3)
         .count();
-        
+
     if simple_requests > usage.len() / 2 {
         recommendations.push(Recommendation::ModelDowngrade {
             from: "claude-3-opus".to_string(),
@@ -479,18 +479,18 @@ pub fn analyze_optimization(usage: &[UsageRecord]) -> Vec<Recommendation> {
             savings_percent: 40.0,
         });
     }
-    
+
     // 2. Check cache efficiency
     let cache_hit_rate = usage.iter()
         .filter(|u| u.cache_read_tokens.is_some())
         .count() as f64 / usage.len() as f64;
-        
+
     if cache_hit_rate < 0.3 {
         recommendations.push(Recommendation::EnableCaching {
             potential_savings: 25.0,
         });
     }
-    
+
     recommendations
 }
 ```
@@ -508,16 +508,16 @@ use thiserror::Error;
 pub enum TokenLedgerError {
     #[error("Provider error: {0}")]
     ProviderError(String),
-    
+
     #[error("Database error: {0}")]
     DatabaseError(String),
-    
+
     #[error("Rate limit exceeded: {0}")]
     RateLimitExceeded(String),
-    
+
     #[error("Budget exceeded: {0}")]
     BudgetExceeded(String),
-    
+
     #[error("Invalid configuration: {0}")]
     ConfigError(String),
 }
@@ -545,7 +545,7 @@ providers:
     organization: "${OPENAI_ORG}"
 
 rate_limits:
-  default: 1000  # requests per minute
+  default: 1000 # requests per minute
   by_team:
     engineering: 2000
     research: 3000

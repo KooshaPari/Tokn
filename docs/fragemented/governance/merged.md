@@ -13,9 +13,11 @@
 ## Required Artifacts
 
 1. Ingest summary:
+
 - `--summary-json-path`
 
 2. Reconcile artifacts:
+
 - per-run directory `reconcile-YYYYMMDD-HHMMSS/`
 - `pricing-patch.reconcile.json`
 - `unpriced-events.reconcile.jsonl`
@@ -23,13 +25,16 @@
 - rolling pointer: `reconcile-latest-summary.json`
 
 3. Bench artifacts:
+
 - timestamped `bench-*.json`
 - rolling `latest-summary.json`
 
 4. UI artifact (optional):
+
 - `ui-snapshot.json`
 
 5. Cache artifacts (optional but recommended for operator runs):
+
 - ingest cache metadata: `--ingest-cache-path`
 - aggregate cache entries: `--aggregate-cache-path`
 
@@ -75,9 +80,11 @@ Operational behavior:
 Each aggregate cache entry is keyed by:
 
 1. selector:
+
 - `month`
 - provider/model filters
 - `on_unpriced` mode
+
 2. pricing hash (from `--pricing` content)
 3. events fingerprint (from `--events-out` content/metadata)
 

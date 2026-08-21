@@ -2,13 +2,14 @@
 
 **Status:** Accepted  
 **Date:** 2026-04-02  
-**Deciders:** Architecture Team  
+**Deciders:** Architecture Team
 
 ---
 
 ## Context
 
 Tokn requires efficient internal communication between services. We need:
+
 - Low-latency token operations
 - Bidirectional streaming for events
 - Strong typing and code generation
@@ -70,7 +71,7 @@ service TokenService {
   rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
   rpc RevokeToken(RevokeTokenRequest) returns (RevokeTokenResponse);
   rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
-  
+
   // Streaming for events
   rpc StreamTokenEvents(StreamEventsRequest) returns (stream TokenEvent);
 }
@@ -125,19 +126,20 @@ message TokenEvent {
 
 ### Performance Comparison
 
-| Aspect | REST/JSON | gRPC/Protobuf | Improvement |
-|--------|-----------|---------------|-------------|
-| **Serialization** | JSON text | Binary protobuf | 3-10x smaller |
-| **Latency** | ~5ms | ~1ms | 5x faster |
-| **Throughput** | 10K req/s | 100K req/s | 10x higher |
-| **Code Gen** | None | Strong types | Type safety |
-| **Streaming** | SSE/WebSocket | Native bidirectional | Native support |
+| Aspect            | REST/JSON     | gRPC/Protobuf        | Improvement    |
+| ----------------- | ------------- | -------------------- | -------------- |
+| **Serialization** | JSON text     | Binary protobuf      | 3-10x smaller  |
+| **Latency**       | ~5ms          | ~1ms                 | 5x faster      |
+| **Throughput**    | 10K req/s     | 100K req/s           | 10x higher     |
+| **Code Gen**      | None          | Strong types         | Type safety    |
+| **Streaming**     | SSE/WebSocket | Native bidirectional | Native support |
 
 ---
 
 ## Consequences
 
 ### Positive
+
 - High-performance binary protocol
 - Strong typing with code generation
 - Native streaming support
@@ -145,12 +147,14 @@ message TokenEvent {
 - Wide language support
 
 ### Negative
+
 - Requires HTTP/2 (usually supported)
 - Debugging more complex than REST
 - Browser support limited (requires gRPC-Web)
 - Additional tooling required
 
 ### Mitigation
+
 - Provide REST gateway for external access
 - Use gRPC reflection for debugging
 - Document gRPC-Web for browser clients

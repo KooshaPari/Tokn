@@ -2,13 +2,14 @@
 
 **Status:** Accepted  
 **Date:** 2026-04-02  
-**Deciders:** Architecture Team  
+**Deciders:** Architecture Team
 
 ---
 
 ## Context
 
 Long-lived refresh tokens require rotation to prevent reuse attacks. We need to implement:
+
 - Token rotation on each use (refresh token reuse detection)
 - Family tracking for revoked token families
 - Replay attack prevention
@@ -110,37 +111,37 @@ impl RefreshTokenStore {
         if current_token.status != RefreshTokenStatus::Active {
             return Err(RotationError::TokenNotActive);
         }
-        
+
         // 2. Mark current token as used
         self.mark_used(current_token.token_id.clone()).await?;
-        
+
         // 3. Create new token in same family
         new_token.family_id = current_token.family_id.clone();
         new_token.generation = current_token.generation + 1;
         new_token.previous_token_id = Some(current_token.token_id.clone());
-        
+
         self.store(new_token).await?;
-        
+
         Ok(RotationResult {
             new_token: new_token.clone(),
             previous_token_expires: current_token.expires_at,
         })
     }
-    
+
     pub async fn detect_reuse(
         &self,
         token_id: &str,
     ) -> Result<ReuseDetectionResult, Error> {
         let token = self.get(token_id).await?;
-        
+
         match token.status {
             RefreshTokenStatus::Used => {
                 // Token already used - potential reuse attack!
                 let family = self.get_family(&token.family_id).await?;
-                
+
                 // Revoke entire family
                 self.revoke_family(&token.family_id).await?;
-                
+
                 Ok(ReuseDetectionResult {
                     reuse_detected: true,
                     family_revoked: true,
@@ -161,19 +162,20 @@ impl RefreshTokenStore {
 
 ### Rotation Parameters
 
-| Parameter | Value | Rationale |
-|-----------|-------|-----------|
-| **Token Lifetime** | 30 days | Balance security vs. UX |
-| **Rotation Window** | 7 days | Allow refresh before expiry |
-| **Max Generation** | 10 | Prevent infinite rotation |
-| **Grace Period** | 24 hours | Old token still valid briefly |
-| **Family Size Limit** | 20 tokens | Memory protection |
+| Parameter             | Value     | Rationale                     |
+| --------------------- | --------- | ----------------------------- |
+| **Token Lifetime**    | 30 days   | Balance security vs. UX       |
+| **Rotation Window**   | 7 days    | Allow refresh before expiry   |
+| **Max Generation**    | 10        | Prevent infinite rotation     |
+| **Grace Period**      | 24 hours  | Old token still valid briefly |
+| **Family Size Limit** | 20 tokens | Memory protection             |
 
 ---
 
 ## Consequences
 
 ### Positive
+
 - Detects stolen refresh tokens immediately
 - Prevents replay attacks
 - Complete audit trail
@@ -181,12 +183,14 @@ impl RefreshTokenStore {
 - Industry best practice
 
 ### Negative
+
 - Complex state management
 - Storage overhead per token
 - Reuse detection requires database lookup
 - False positives possible (network issues)
 
 ### Mitigation
+
 - Implement robust detection logging
 - Provide admin override for legitimate reuse
 - Monitor for attack patterns

@@ -7,18 +7,22 @@ User requested a unified model+provider ledger and explicit planning/worklog cov
 ## Completed
 
 1. Added unified ledger generator:
+
 - `scripts/build_unified_ledger.py`
 
 2. Generated deterministic ledger artifacts:
+
 - `ledger/unified_model_provider_ledger.csv`
 - `ledger/unified_model_provider_ledger.schema.sql`
 - `ledger/unified_model_provider_ledger.seed.sql`
 
 3. Added plan coverage:
+
 - updated `docs/plans/UNIFIED_E2E_EXECUTION_PLAN.md` with Phase 5 + WP-E
 - added `docs/plans/UNIFIED_MODEL_PROVIDER_LEDGER_PLAN_2026-02-21.md`
 
 4. Added index links:
+
 - `docs/index.md`
 - `docs/plans/INDEX.md`
 - `docs/worklog/INDEX.md`
@@ -26,11 +30,13 @@ User requested a unified model+provider ledger and explicit planning/worklog cov
 ## Ledger characteristics
 
 1. One-row surface for model/provider joins with:
+
 - pricing fields,
 - benchmark prior coverage counts,
 - mapping provenance fields (`rule` + `confidence`).
 
 2. Deterministic generation from:
+
 - `pricing.example.json`
 - `models_normalized.csv`
 
@@ -39,6 +45,7 @@ User requested a unified model+provider ledger and explicit planning/worklog cov
 ## Validation outcomes
 
 1. Generator run produced:
+
 - `ledger_rows=56`
 - `priors_aggregation_rows=13`
 
@@ -58,21 +65,25 @@ User requested a unified model+provider ledger and explicit planning/worklog cov
 ## Closeout update (implemented)
 
 1. Pareto scoring artifacts added:
+
 - `scripts/refresh_ledger.py`
 - `ledger/unified_model_provider_pareto.csv`
 - `ledger/unified_model_provider_pareto.view.sql`
 
 2. CLIProxyAPI snapshot import wired into recurring refresh flow:
+
 - snapshot auto-discovery + explicit `--cliproxyapi-snapshot` support in `scripts/refresh_ledger.py`
 - normalized runtime snapshot export at `ledger/cliproxyapi_runtime_metrics_snapshot.csv`
 
 3. CI diff check added:
+
 - `.github/workflows/ledger-diff-check.yml`
 - deterministic regeneration command: `python3 ./scripts/refresh_ledger.py --allow-missing-snapshot --skip-runtime-discovery`
 
 ## Follow-up closeout (validation shortcut)
 
 1. Added Taskfile SQL validation shortcut for ledger artifacts:
+
 - `task ledger:sql:validate`
 - loads `ledger/unified_model_provider_ledger.schema.sql` + `ledger/unified_model_provider_ledger.seed.sql` into in-memory SQLite and prints `ledger_rows=<count>`.
 

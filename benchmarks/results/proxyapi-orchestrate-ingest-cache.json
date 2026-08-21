@@ -1,8 +1,6 @@
 {
   "version": 1,
-  "providers": [
-    "proxyapi"
-  ],
+  "providers": ["proxyapi"],
   "since": null,
   "limit": 500,
   "events_out": "./artifacts/proxyapi.orchestrated.sample.jsonl",

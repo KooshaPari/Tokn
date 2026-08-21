@@ -41,14 +41,14 @@ For batch processing and streaming applications, tokenization performance direct
 
 ### 1.2 Library Evaluation Criteria
 
-| Criterion | Weight | Description |
-|-----------|--------|-------------|
-| **Speed** | High | Tokens processed per second |
-| **Accuracy** | Critical | Match to reference tokenization |
-| **Memory** | Medium | RAM usage for vocabularies |
-| **Ease of Use** | Medium | API design and documentation |
-| **Extensibility** | Medium | Custom vocabulary training |
-| **Ecosystem** | Medium | Integration with frameworks |
+| Criterion         | Weight   | Description                     |
+| ----------------- | -------- | ------------------------------- |
+| **Speed**         | High     | Tokens processed per second     |
+| **Accuracy**      | Critical | Match to reference tokenization |
+| **Memory**        | Medium   | RAM usage for vocabularies      |
+| **Ease of Use**   | Medium   | API design and documentation    |
+| **Extensibility** | Medium   | Custom vocabulary training      |
+| **Ecosystem**     | Medium   | Integration with frameworks     |
 
 ---
 
@@ -61,7 +61,7 @@ Tiktoken is OpenAI's high-performance BPE tokenizer, written in Rust with Python
 **Repository:** https://github.com/openai/tiktoken  
 **License:** MIT  
 **Primary Language:** Rust  
-**Python Support:** 3.8+  
+**Python Support:** 3.8+
 
 ### 2.2 Architecture
 
@@ -85,21 +85,21 @@ Tiktoken is OpenAI's high-performance BPE tokenizer, written in Rust with Python
 
 #### Benchmark Results (English text, single thread)
 
-| Metric | Tiktoken | HF Tokenizers | Pure Python | Notes |
-|--------|----------|---------------|-------------|-------|
-| Throughput | 10M tok/s | 3M tok/s | 0.5M tok/s | 1MB English text |
-| Latency (1K chars) | 0.1ms | 0.3ms | 2.0ms | p99 latency |
-| Memory (vocab) | 15MB | 20MB | 50MB | GPT-4 vocab |
-| Load time | 10ms | 50ms | 100ms | Cold start |
+| Metric             | Tiktoken  | HF Tokenizers | Pure Python | Notes            |
+| ------------------ | --------- | ------------- | ----------- | ---------------- |
+| Throughput         | 10M tok/s | 3M tok/s      | 0.5M tok/s  | 1MB English text |
+| Latency (1K chars) | 0.1ms     | 0.3ms         | 2.0ms       | p99 latency      |
+| Memory (vocab)     | 15MB      | 20MB          | 50MB        | GPT-4 vocab      |
+| Load time          | 10ms      | 50ms          | 100ms       | Cold start       |
 
 #### Multi-threaded Performance
 
 | Threads | Tiktoken | HF Tokenizers | Speedup |
-|---------|----------|---------------|---------|
-| 1 | 10M/s | 3M/s | 3.3x |
-| 4 | 35M/s | 10M/s | 3.5x |
-| 8 | 60M/s | 18M/s | 3.3x |
-| 16 | 80M/s | 25M/s | 3.2x |
+| ------- | -------- | ------------- | ------- |
+| 1       | 10M/s    | 3M/s          | 3.3x    |
+| 4       | 35M/s    | 10M/s         | 3.5x    |
+| 8       | 60M/s    | 18M/s         | 3.3x    |
+| 16      | 80M/s    | 25M/s         | 3.2x    |
 
 ### 2.4 Key Optimizations
 
@@ -135,13 +135,13 @@ token_counts = [enc.encode_ordinary_batch(texts)]
 
 ### 2.6 Supported Encodings
 
-| Encoding | Models | Vocab Size | Max Token Value |
-|----------|--------|------------|-----------------|
-| `cl100k_base` | GPT-4, GPT-4-turbo | 100,256 | 100,276 |
-| `p50k_base` | GPT-3.5, GPT-3 | 50,257 | 50,281 |
-| `p50k_edit` | GPT-3 edit models | 50,257 | 50,281 |
-| `r50k_base` | GPT-3 base | 50,257 | 50,257 |
-| `gpt2` | GPT-2 | 50,257 | 50,257 |
+| Encoding      | Models             | Vocab Size | Max Token Value |
+| ------------- | ------------------ | ---------- | --------------- |
+| `cl100k_base` | GPT-4, GPT-4-turbo | 100,256    | 100,276         |
+| `p50k_base`   | GPT-3.5, GPT-3     | 50,257     | 50,281          |
+| `p50k_edit`   | GPT-3 edit models  | 50,257     | 50,281          |
+| `r50k_base`   | GPT-3 base         | 50,257     | 50,257          |
+| `gpt2`        | GPT-2              | 50,257     | 50,257          |
 
 ### 2.7 Strengths
 
@@ -176,7 +176,7 @@ HuggingFace Tokenizers is a comprehensive tokenization library supporting multip
 **Repository:** https://github.com/huggingface/tokenizers  
 **License:** Apache 2.0  
 **Primary Language:** Rust + Python  
-**Version:** 0.15.x (current)  
+**Version:** 0.15.x (current)
 
 ### 3.2 Architecture
 
@@ -237,55 +237,55 @@ tokenizer = Tokenizer.from_file("tokenizer.json")
 
 #### Benchmark Results
 
-| Operation | HF Tokenizers | Pure Python | Notes |
-|-----------|---------------|-------------|-------|
-| Encode (1K chars) | 0.3ms | 2.0ms | Single thread |
-| Encode batch (1K×100) | 20ms | 200ms | Batch efficiency |
-| Training (1M tokens) | 5s | 60s | BPE training |
-| Load from file | 50ms | 100ms | JSON parsing |
-| Save to file | 100ms | 200ms | Serialization |
+| Operation             | HF Tokenizers | Pure Python | Notes            |
+| --------------------- | ------------- | ----------- | ---------------- |
+| Encode (1K chars)     | 0.3ms         | 2.0ms       | Single thread    |
+| Encode batch (1K×100) | 20ms          | 200ms       | Batch efficiency |
+| Training (1M tokens)  | 5s            | 60s         | BPE training     |
+| Load from file        | 50ms          | 100ms       | JSON parsing     |
+| Save to file          | 100ms         | 200ms       | Serialization    |
 
 #### Memory Usage
 
-| Component | Memory | Notes |
-|-----------|--------|-------|
-| BPE (50K) | 20MB | Vocabulary + merges |
-| WordPiece (30K) | 15MB | Smaller vocab |
-| Unigram (32K) | 18MB | Probabilities stored |
-| Full pipeline | +5MB | Pre/post processors |
+| Component       | Memory | Notes                |
+| --------------- | ------ | -------------------- |
+| BPE (50K)       | 20MB   | Vocabulary + merges  |
+| WordPiece (30K) | 15MB   | Smaller vocab        |
+| Unigram (32K)   | 18MB   | Probabilities stored |
+| Full pipeline   | +5MB   | Pre/post processors  |
 
 ### 3.5 Supported Algorithms
 
-| Algorithm | Implementation | Training | Notes |
-|-----------|------------------|----------|-------|
-| BPE | Native Rust | Yes | Standard algorithm |
-| WordPiece | Native Rust | Yes | BERT-compatible |
-| Unigram | Native Rust | Yes | SentencePiece-compatible |
-| Char | Native Rust | Yes | Character-level |
-| Word | Native Rust | Yes | Word-level |
+| Algorithm | Implementation | Training | Notes                    |
+| --------- | -------------- | -------- | ------------------------ |
+| BPE       | Native Rust    | Yes      | Standard algorithm       |
+| WordPiece | Native Rust    | Yes      | BERT-compatible          |
+| Unigram   | Native Rust    | Yes      | SentencePiece-compatible |
+| Char      | Native Rust    | Yes      | Character-level          |
+| Word      | Native Rust    | Yes      | Word-level               |
 
 ### 3.6 Pre-tokenization Options
 
-| Pre-tokenizer | Use Case | Speed |
-|---------------|----------|-------|
-| Whitespace | Simple splitting | Fast |
-| ByteLevel | GPT-style (BBPE) | Fast |
-| Punctuation | Split on punctuation | Medium |
-| Metaspace | T5-style spaces | Medium |
-| Split | Custom patterns | Medium |
-| Digits | Split numbers | Medium |
-| Sequence | Multiple chained | Varies |
+| Pre-tokenizer | Use Case             | Speed  |
+| ------------- | -------------------- | ------ |
+| Whitespace    | Simple splitting     | Fast   |
+| ByteLevel     | GPT-style (BBPE)     | Fast   |
+| Punctuation   | Split on punctuation | Medium |
+| Metaspace     | T5-style spaces      | Medium |
+| Split         | Custom patterns      | Medium |
+| Digits        | Split numbers        | Medium |
+| Sequence      | Multiple chained     | Varies |
 
 ### 3.7 Integration Ecosystem
 
-| Framework | Integration | Notes |
-|-----------|-------------|-------|
-| Transformers | Native | `AutoTokenizer` |
-| PyTorch | Direct | Tensor inputs |
-| TensorFlow | Direct | Tensor inputs |
-| JAX | Via Transformers | Indirect |
-| Datasets | Native | Batch processing |
-| Accelerate | Native | Distributed |
+| Framework    | Integration      | Notes            |
+| ------------ | ---------------- | ---------------- |
+| Transformers | Native           | `AutoTokenizer`  |
+| PyTorch      | Direct           | Tensor inputs    |
+| TensorFlow   | Direct           | Tensor inputs    |
+| JAX          | Via Transformers | Indirect         |
+| Datasets     | Native           | Batch processing |
+| Accelerate   | Native           | Distributed      |
 
 ### 3.8 Custom Training Example
 
@@ -368,7 +368,7 @@ SentencePiece, developed by Google, provides language-independent subword tokeni
 **Repository:** https://github.com/google/sentencepiece  
 **License:** Apache 2.0  
 **Primary Language:** C++  
-**Version:** 0.2.0 (current)  
+**Version:** 0.2.0 (current)
 
 ### 4.2 Architecture
 
@@ -451,13 +451,13 @@ tokens = sp.sample_encode_as_pieces('Hello', -1, 0.1)  # nbest, alpha
 
 ### 4.6 Performance Characteristics
 
-| Metric | SentencePiece | HF Tokenizers | Tiktoken |
-|--------|---------------|---------------|----------|
-| Encode speed | 2M tok/s | 3M tok/s | 10M tok/s |
-| Training speed | Medium | Fast | N/A |
-| Memory (vocab) | 12MB | 20MB | 15MB |
-| Model file size | 800KB | 1.5MB | 500KB |
-| Load time | 20ms | 50ms | 10ms |
+| Metric          | SentencePiece | HF Tokenizers | Tiktoken  |
+| --------------- | ------------- | ------------- | --------- |
+| Encode speed    | 2M tok/s      | 3M tok/s      | 10M tok/s |
+| Training speed  | Medium        | Fast          | N/A       |
+| Memory (vocab)  | 12MB          | 20MB          | 15MB      |
+| Model file size | 800KB         | 1.5MB         | 500KB     |
+| Load time       | 20ms          | 50ms          | 10ms      |
 
 ### 4.7 Space Handling
 
@@ -494,12 +494,12 @@ SentencePiece includes built-in Unicode normalization:
 
 ### 4.9 Model Types
 
-| Type | Algorithm | Use Case |
-|------|-----------|----------|
-| `bpe` | BPE | General purpose |
-| `unigram` | Unigram | Better segmentation |
-| `char` | Character | Baseline |
-| `word` | Word | Controlled vocabulary |
+| Type      | Algorithm | Use Case              |
+| --------- | --------- | --------------------- |
+| `bpe`     | BPE       | General purpose       |
+| `unigram` | Unigram   | Better segmentation   |
+| `char`    | Character | Baseline              |
+| `word`    | Word      | Controlled vocabulary |
 
 ### 4.10 Strengths
 
@@ -534,54 +534,54 @@ All benchmarks run on Intel Core i9-12900K, 64GB RAM, Linux.
 
 #### Single-Threaded Throughput (Million tokens/second)
 
-| Library | 1KB text | 10KB text | 100KB text | 1MB text |
-|---------|----------|-----------|------------|----------|
-| tiktoken | 8.5 | 9.2 | 9.5 | 10.0 |
-| HF Tokenizers | 2.8 | 3.0 | 3.1 | 3.2 |
-| SentencePiece | 1.8 | 1.9 | 2.0 | 2.0 |
-| spaCy tokenizer | 0.5 | 0.6 | 0.6 | 0.6 |
-| Pure Python BPE | 0.3 | 0.4 | 0.4 | 0.4 |
+| Library         | 1KB text | 10KB text | 100KB text | 1MB text |
+| --------------- | -------- | --------- | ---------- | -------- |
+| tiktoken        | 8.5      | 9.2       | 9.5        | 10.0     |
+| HF Tokenizers   | 2.8      | 3.0       | 3.1        | 3.2      |
+| SentencePiece   | 1.8      | 1.9       | 2.0        | 2.0      |
+| spaCy tokenizer | 0.5      | 0.6       | 0.6        | 0.6      |
+| Pure Python BPE | 0.3      | 0.4       | 0.4        | 0.4      |
 
 #### Multi-Threaded (8 threads, 1MB chunks)
 
-| Library | Throughput | Efficiency |
-|---------|------------|------------|
-| tiktoken | 75M tok/s | 94% |
-| HF Tokenizers | 22M tok/s | 92% |
-| SentencePiece | 14M tok/s | 88% |
+| Library       | Throughput | Efficiency |
+| ------------- | ---------- | ---------- |
+| tiktoken      | 75M tok/s  | 94%        |
+| HF Tokenizers | 22M tok/s  | 92%        |
+| SentencePiece | 14M tok/s  | 88%        |
 
 #### Memory Usage (GPT-2 vocabulary, 50K tokens)
 
-| Library | Initial | Peak | After GC |
-|---------|---------|------|----------|
-| tiktoken | 45MB | 60MB | 45MB |
-| HF Tokenizers | 55MB | 80MB | 55MB |
-| SentencePiece | 35MB | 50MB | 35MB |
+| Library       | Initial | Peak | After GC |
+| ------------- | ------- | ---- | -------- |
+| tiktoken      | 45MB    | 60MB | 45MB     |
+| HF Tokenizers | 55MB    | 80MB | 55MB     |
+| SentencePiece | 35MB    | 50MB | 35MB     |
 
 ### 5.2 Latency Distribution (p50, p99, p999)
 
-| Library | p50 | p99 | p999 |
-|---------|-----|-----|------|
-| tiktoken | 0.08ms | 0.15ms | 0.30ms |
+| Library       | p50    | p99    | p999   |
+| ------------- | ------ | ------ | ------ |
+| tiktoken      | 0.08ms | 0.15ms | 0.30ms |
 | HF Tokenizers | 0.25ms | 0.50ms | 1.00ms |
 | SentencePiece | 0.40ms | 0.80ms | 1.50ms |
 
 ### 5.3 Batch Processing Efficiency
 
 | Batch Size | tiktoken | HF Tokenizers | SentencePiece |
-|------------|----------|---------------|---------------|
-| 1 | 8.5M/s | 2.8M/s | 1.8M/s |
-| 10 | 15M/s | 5M/s | 3M/s |
-| 100 | 25M/s | 8M/s | 5M/s |
-| 1000 | 30M/s | 10M/s | 6M/s |
+| ---------- | -------- | ------------- | ------------- |
+| 1          | 8.5M/s   | 2.8M/s        | 1.8M/s        |
+| 10         | 15M/s    | 5M/s          | 3M/s          |
+| 100        | 25M/s    | 8M/s          | 5M/s          |
+| 1000       | 30M/s    | 10M/s         | 6M/s          |
 
 ### 5.4 Startup/Load Time
 
-| Library | Cold Start | Warm Start |
-|---------|------------|------------|
-| tiktoken | 15ms | 5ms |
-| HF Tokenizers | 50ms | 20ms |
-| SentencePiece | 25ms | 15ms |
+| Library       | Cold Start | Warm Start |
+| ------------- | ---------- | ---------- |
+| tiktoken      | 15ms       | 5ms        |
+| HF Tokenizers | 50ms       | 20ms       |
+| SentencePiece | 25ms       | 15ms       |
 
 ---
 
@@ -589,64 +589,64 @@ All benchmarks run on Intel Core i9-12900K, 64GB RAM, Linux.
 
 ### 6.1 Core Features
 
-| Feature | Tiktoken | HF Tokenizers | SentencePiece |
-|---------|----------|---------------|---------------|
-| BPE | ✅ | ✅ | ✅ |
-| BBPE | ✅ | ✅ | ❌ |
-| WordPiece | ❌ | ✅ | ❌ |
-| Unigram | ❌ | ✅ | ✅ |
-| Char | ❌ | ✅ | ✅ |
-| Word | ❌ | ✅ | ✅ |
+| Feature   | Tiktoken | HF Tokenizers | SentencePiece |
+| --------- | -------- | ------------- | ------------- |
+| BPE       | ✅       | ✅            | ✅            |
+| BBPE      | ✅       | ✅            | ❌            |
+| WordPiece | ❌       | ✅            | ❌            |
+| Unigram   | ❌       | ✅            | ✅            |
+| Char      | ❌       | ✅            | ✅            |
+| Word      | ❌       | ✅            | ✅            |
 
 ### 6.2 Training Features
 
-| Feature | Tiktoken | HF Tokenizers | SentencePiece |
-|---------|----------|---------------|---------------|
-| Train from scratch | ❌ | ✅ | ✅ |
-| Custom vocabulary | ❌ | ✅ | ✅ |
-| Incremental training | ❌ | ❌ | ✅ |
-| Vocab pruning | ❌ | Partial | ✅ |
-| Special tokens | Limited | ✅ | ✅ |
+| Feature              | Tiktoken | HF Tokenizers | SentencePiece |
+| -------------------- | -------- | ------------- | ------------- |
+| Train from scratch   | ❌       | ✅            | ✅            |
+| Custom vocabulary    | ❌       | ✅            | ✅            |
+| Incremental training | ❌       | ❌            | ✅            |
+| Vocab pruning        | ❌       | Partial       | ✅            |
+| Special tokens       | Limited  | ✅            | ✅            |
 
 ### 6.3 Pre-tokenization
 
-| Feature | Tiktoken | HF Tokenizers | SentencePiece |
-|---------|----------|---------------|---------------|
-| Regex patterns | Fixed | Configurable | Limited |
-| Whitespace split | ✅ | ✅ | Implicit |
-| Byte-level | ✅ | ✅ | ❌ |
-| Punctuation | Fixed | ✅ | ❌ |
-| Custom pre-tokenizer | ❌ | ✅ | ❌ |
+| Feature              | Tiktoken | HF Tokenizers | SentencePiece |
+| -------------------- | -------- | ------------- | ------------- |
+| Regex patterns       | Fixed    | Configurable  | Limited       |
+| Whitespace split     | ✅       | ✅            | Implicit      |
+| Byte-level           | ✅       | ✅            | ❌            |
+| Punctuation          | Fixed    | ✅            | ❌            |
+| Custom pre-tokenizer | ❌       | ✅            | ❌            |
 
 ### 6.4 Post-processing
 
-| Feature | Tiktoken | HF Tokenizers | SentencePiece |
-|---------|----------|---------------|---------------|
-| Special tokens | Limited | ✅ | Manual |
-| Padding | ❌ | ✅ | ❌ |
-| Truncation | ❌ | ✅ | ❌ |
-| Template processing | ❌ | ✅ | ❌ |
-| Decoding | ✅ | ✅ | ✅ |
+| Feature             | Tiktoken | HF Tokenizers | SentencePiece |
+| ------------------- | -------- | ------------- | ------------- |
+| Special tokens      | Limited  | ✅            | Manual        |
+| Padding             | ❌       | ✅            | ❌            |
+| Truncation          | ❌       | ✅            | ❌            |
+| Template processing | ❌       | ✅            | ❌            |
+| Decoding            | ✅       | ✅            | ✅            |
 
 ### 6.5 Integration
 
-| Framework | Tiktoken | HF Tokenizers | SentencePiece |
-|-----------|----------|---------------|---------------|
-| OpenAI API | ✅ | Via wrapper | ❌ |
-| HuggingFace | Via wrapper | ✅ | Via wrapper |
-| PyTorch | Manual | ✅ | Manual |
-| TensorFlow | Manual | ✅ | Manual |
-| ONNX | ❌ | Partial | ❌ |
+| Framework   | Tiktoken    | HF Tokenizers | SentencePiece |
+| ----------- | ----------- | ------------- | ------------- |
+| OpenAI API  | ✅          | Via wrapper   | ❌            |
+| HuggingFace | Via wrapper | ✅            | Via wrapper   |
+| PyTorch     | Manual      | ✅            | Manual        |
+| TensorFlow  | Manual      | ✅            | Manual        |
+| ONNX        | ❌          | Partial       | ❌            |
 
 ### 6.6 Language Support
 
-| Aspect | Tiktoken | HF Tokenizers | SentencePiece |
-|--------|----------|---------------|---------------|
-| Multilingual | Excellent | Excellent | Excellent |
-| CJK optimization | Good | Good | Excellent |
-| RTL languages | Good | Good | Good |
-| Low-resource | Good | Good | Good |
-| Custom scripts | ❌ | ✅ | ✅ |
+| Aspect           | Tiktoken  | HF Tokenizers | SentencePiece |
+| ---------------- | --------- | ------------- | ------------- |
+| Multilingual     | Excellent | Excellent     | Excellent     |
+| CJK optimization | Good      | Good          | Excellent     |
+| RTL languages    | Good      | Good          | Good          |
+| Low-resource     | Good      | Good          | Good          |
+| Custom scripts   | ❌        | ✅            | ✅            |
 
 ---
 
@@ -670,6 +670,7 @@ async def count_tokens(text: str) -> int:
 ```
 
 **Requirements:**
+
 - Maximum throughput
 - Low latency
 - OpenAI compatibility
@@ -688,6 +689,7 @@ tokenizer.train(files=["corpus.txt"], trainer=trainer)
 ```
 
 **Requirements:**
+
 - Custom vocabulary training
 - Algorithm flexibility
 - Research iteration speed
@@ -705,6 +707,7 @@ tokens = sp.encode("Any language text", out_type=str)
 ```
 
 **Requirements:**
+
 - Language-agnostic processing
 - Reversible tokenization
 - Space preservation
@@ -725,6 +728,7 @@ unigram = Tokenizer(models.Unigram())
 ```
 
 **Requirements:**
+
 - Multiple algorithms
 - Easy comparison
 - Flexible configuration
@@ -777,12 +781,12 @@ Microsoft's fast tokenization library:
 
 ### 9.4 Tokenizers in Other Languages
 
-| Language | Library | Notes |
-|----------|---------|-------|
-| Go | tiktoken-go | Port of tiktoken |
-| Rust | tokenizers (HF) | Native Rust |
-| JavaScript | gpt3-tokenizer | Web-focused |
-| Java | JTokkit | JVM-based |
+| Language   | Library         | Notes            |
+| ---------- | --------------- | ---------------- |
+| Go         | tiktoken-go     | Port of tiktoken |
+| Rust       | tokenizers (HF) | Native Rust      |
+| JavaScript | gpt3-tokenizer  | Web-focused      |
+| Java       | JTokkit         | JVM-based        |
 
 ---
 
@@ -792,12 +796,12 @@ Microsoft's fast tokenization library:
 
 Based on this analysis, Tokn should target:
 
-| Capability | Target | Differentiation |
-|------------|--------|-----------------|
-| Speed | 15-20M tok/s | Between HF and tiktoken |
-| Training | Full support | Better than tiktoken |
-| Flexibility | High | Match HF Tokenizers |
-| Simplicity | High | Better than HF complexity |
+| Capability  | Target       | Differentiation           |
+| ----------- | ------------ | ------------------------- |
+| Speed       | 15-20M tok/s | Between HF and tiktoken   |
+| Training    | Full support | Better than tiktoken      |
+| Flexibility | High         | Match HF Tokenizers       |
+| Simplicity  | High         | Better than HF complexity |
 
 ### 10.2 Implementation Strategy
 
@@ -809,23 +813,23 @@ Based on this analysis, Tokn should target:
 
 ### 10.3 Feature Priorities
 
-| Priority | Feature | Rationale |
-|----------|---------|-----------|
-| P0 | BBPE implementation | Universal coverage |
-| P0 | Tiktoken compatibility | Production use cases |
-| P1 | Training from corpus | Custom vocabularies |
-| P1 | BPE implementation | Algorithm variety |
-| P2 | WordPiece/Unigram | Research use cases |
-| P2 | Multi-language bindings | Broader adoption |
+| Priority | Feature                 | Rationale            |
+| -------- | ----------------------- | -------------------- |
+| P0       | BBPE implementation     | Universal coverage   |
+| P0       | Tiktoken compatibility  | Production use cases |
+| P1       | Training from corpus    | Custom vocabularies  |
+| P1       | BPE implementation      | Algorithm variety    |
+| P2       | WordPiece/Unigram       | Research use cases   |
+| P2       | Multi-language bindings | Broader adoption     |
 
 ### 10.4 Performance Targets
 
-| Metric | Target | Benchmark |
-|--------|--------|-----------|
-| Throughput | 15M tok/s | tiktoken: 10M/s |
-| Latency p99 | 0.3ms | tiktoken: 0.15ms |
-| Memory | &lt;20MB vocab | Similar to tiktoken |
-| Load time | &lt;20ms | Match competitors |
+| Metric      | Target         | Benchmark           |
+| ----------- | -------------- | ------------------- |
+| Throughput  | 15M tok/s      | tiktoken: 10M/s     |
+| Latency p99 | 0.3ms          | tiktoken: 0.15ms    |
+| Memory      | &lt;20MB vocab | Similar to tiktoken |
+| Load time   | &lt;20ms       | Match competitors   |
 
 ---
 
@@ -833,17 +837,17 @@ Based on this analysis, Tokn should target:
 
 ### Primary Sources
 
-1. **OpenAI. (2023).** Tiktoken: A fast BPE tokeniser for use with OpenAI's models. *GitHub Repository*. https://github.com/openai/tiktoken
+1. **OpenAI. (2023).** Tiktoken: A fast BPE tokeniser for use with OpenAI's models. _GitHub Repository_. https://github.com/openai/tiktoken
 
-2. **HuggingFace. (2023).** Tokenizers: Fast state-of-the-art tokenizers. *GitHub Repository*. https://github.com/huggingface/tokenizers
+2. **HuggingFace. (2023).** Tokenizers: Fast state-of-the-art tokenizers. _GitHub Repository_. https://github.com/huggingface/tokenizers
 
-3. **Google. (2023).** SentencePiece: Unsupervised text tokenizer. *GitHub Repository*. https://github.com/google/sentencepiece
+3. **Google. (2023).** SentencePiece: Unsupervised text tokenizer. _GitHub Repository_. https://github.com/google/sentencepiece
 
 ### Performance Studies
 
-4. **Xiao, C., et al. (2023).** Tokenizer Efficiency: A Comparative Study of Modern Tokenization Libraries. *arXiv preprint arXiv:2306.xxxxx*.
+4. **Xiao, C., et al. (2023).** Tokenizer Efficiency: A Comparative Study of Modern Tokenization Libraries. _arXiv preprint arXiv:2306.xxxxx_.
 
-5. **Kudo, T. (2019).** SentencePiece performance analysis. *Google Research Technical Report*.
+5. **Kudo, T. (2019).** SentencePiece performance analysis. _Google Research Technical Report_.
 
 ### Technical Documentation
 
@@ -855,9 +859,9 @@ Based on this analysis, Tokn should target:
 
 ### Related Research
 
-9. **Mielke, S. J., et al. (2021).** Between Words and Characters: A Brief History of Open-Vocabulary Modeling and Tokenization in NLP. *arXiv preprint arXiv:2112.10501*.
+9. **Mielke, S. J., et al. (2021).** Between Words and Characters: A Brief History of Open-Vocabulary Modeling and Tokenization in NLP. _arXiv preprint arXiv:2112.10501_.
 
-10. **Rust, P., et al. (2023).** How Good is Your Tokenizer? On the Language Specificity of Multilingual Tokenizers. *Proceedings of ACL*, 3118-3133.
+10. **Rust, P., et al. (2023).** How Good is Your Tokenizer? On the Language Specificity of Multilingual Tokenizers. _Proceedings of ACL_, 3118-3133.
 
 ---
 
@@ -951,10 +955,10 @@ pip install tiktoken tokenizers sentencepiece
 
 ## Document History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | 2026-04-04 | Tokn Research Team | Initial comprehensive SOTA analysis |
+| Version | Date       | Author             | Changes                             |
+| ------- | ---------- | ------------------ | ----------------------------------- |
+| 1.0     | 2026-04-04 | Tokn Research Team | Initial comprehensive SOTA analysis |
 
 ---
 
-*End of Document - 685 lines*
+_End of Document - 685 lines_

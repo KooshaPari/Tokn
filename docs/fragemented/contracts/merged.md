@@ -38,33 +38,36 @@ This contract defines the normalized JSONL event shape used by `monthly`, `daily
 
 ## Field contract
 
-| Field | Type | Required | Notes |
-| --- | --- | --- | --- |
-| `provider` | string | yes | Provider key (alias values are allowed on input; canonicalized against pricing aliases before filtering/costing). |
-| `model` | string | yes | Model key (alias values are allowed on input; canonicalized against provider model aliases before filtering/costing). |
-| `session_id` | string | yes | Logical session identifier used in session counts and dedupe keys. |
-| `timestamp` | RFC3339 datetime string | yes | Must parse as UTC datetime (`DateTime<Utc>`). |
-| `usage` | object | yes | Token usage payload (see subfields below). |
-| `usage.input_tokens` | non-negative integer | yes | Input prompt tokens. |
-| `usage.output_tokens` | non-negative integer | yes | Output/completion tokens. |
-| `usage.cache_write_tokens` | non-negative integer | yes | Cache write tokens. |
-| `usage.cache_read_tokens` | non-negative integer | yes | Cache read tokens. |
-| `usage.tool_input_tokens` | non-negative integer | yes | Tool input tokens. |
-| `usage.tool_output_tokens` | non-negative integer | yes | Tool output tokens. |
+| Field                      | Type                    | Required | Notes                                                                                                                 |
+| -------------------------- | ----------------------- | -------- | --------------------------------------------------------------------------------------------------------------------- |
+| `provider`                 | string                  | yes      | Provider key (alias values are allowed on input; canonicalized against pricing aliases before filtering/costing).     |
+| `model`                    | string                  | yes      | Model key (alias values are allowed on input; canonicalized against provider model aliases before filtering/costing). |
+| `session_id`               | string                  | yes      | Logical session identifier used in session counts and dedupe keys.                                                    |
+| `timestamp`                | RFC3339 datetime string | yes      | Must parse as UTC datetime (`DateTime<Utc>`).                                                                         |
+| `usage`                    | object                  | yes      | Token usage payload (see subfields below).                                                                            |
+| `usage.input_tokens`       | non-negative integer    | yes      | Input prompt tokens.                                                                                                  |
+| `usage.output_tokens`      | non-negative integer    | yes      | Output/completion tokens.                                                                                             |
+| `usage.cache_write_tokens` | non-negative integer    | yes      | Cache write tokens.                                                                                                   |
+| `usage.cache_read_tokens`  | non-negative integer    | yes      | Cache read tokens.                                                                                                    |
+| `usage.tool_input_tokens`  | non-negative integer    | yes      | Tool input tokens.                                                                                                    |
+| `usage.tool_output_tokens` | non-negative integer    | yes      | Tool output tokens.                                                                                                   |
 
 ## Invariants
 
 1. `usage_total_tokens` is defined as:
-`input_tokens + output_tokens + cache_write_tokens + cache_read_tokens + tool_input_tokens + tool_output_tokens`.
+   `input_tokens + output_tokens + cache_write_tokens + cache_read_tokens + tool_input_tokens + tool_output_tokens`.
 2. Consumers must treat the payload as append-only for unknown keys (ignore unknown fields).
 3. Empty event sets after month/provider/model filters are treated as an execution error for report/snapshot generation.
 
 ## Compatibility policy
 
 1. `v1` is additive-forward-compatible:
+
 - adding optional fields is non-breaking,
 - adding top-level metadata fields is non-breaking.
+
 2. Breaking changes require `v2`:
+
 - renaming/removing required fields,
 - changing numeric semantics,
 - changing timestamp format away from RFC3339 UTC.
@@ -132,28 +135,27 @@ It is intended for file-based extension and statusbar integrations (CodexBar/Ope
       "session_count": 2
     }
   ],
-  "suggestions": [
-    "tip"
-  ],
+  "suggestions": ["tip"],
   "reconcile_latest_summary_path": "benchmarks/results/reconcile-latest-summary.json"
 }
 ```
 
 ## Field contract
 
-| Field | Type | Required | Notes |
-| --- | --- | --- | --- |
-| `schema_version` | integer | yes | Compatibility gate for consumers. |
-| `generated_at` | RFC3339 datetime string | yes | Snapshot generation timestamp (UTC). |
-| `month` | string | yes | Snapshot month in `YYYY-MM`. |
-| `mode` | enum | yes | `compact` or `extended`. |
-| `totals` | object | yes | Aggregate cost/token/session metrics. |
-| `top_providers` | array | yes | Provider-level rows sorted by token volume. |
-| `top_models` | array | yes | Model-level rows sorted by token volume. |
-| `suggestions` | array of string | yes | Optimization suggestions from report pipeline. |
-| `reconcile_latest_summary_path` | string | no | Present when latest reconcile summary pointer exists. |
+| Field                           | Type                    | Required | Notes                                                 |
+| ------------------------------- | ----------------------- | -------- | ----------------------------------------------------- |
+| `schema_version`                | integer                 | yes      | Compatibility gate for consumers.                     |
+| `generated_at`                  | RFC3339 datetime string | yes      | Snapshot generation timestamp (UTC).                  |
+| `month`                         | string                  | yes      | Snapshot month in `YYYY-MM`.                          |
+| `mode`                          | enum                    | yes      | `compact` or `extended`.                              |
+| `totals`                        | object                  | yes      | Aggregate cost/token/session metrics.                 |
+| `top_providers`                 | array                   | yes      | Provider-level rows sorted by token volume.           |
+| `top_models`                    | array                   | yes      | Model-level rows sorted by token volume.              |
+| `suggestions`                   | array of string         | yes      | Optimization suggestions from report pipeline.        |
+| `reconcile_latest_summary_path` | string                  | no       | Present when latest reconcile summary pointer exists. |
 
 `totals` fields:
+
 - `cost_usd` (number)
 - `tokens` (non-negative integer)
 - `blended_usd_per_mtok` (number)
@@ -161,6 +163,7 @@ It is intended for file-based extension and statusbar integrations (CodexBar/Ope
 - `skipped_unpriced_count` (non-negative integer)
 
 Row fields in `top_providers[]` and `top_models[]`:
+
 - `name` (string)
 - `tokens` (non-negative integer)
 - `total_cost_usd` (number)
@@ -170,8 +173,11 @@ Row fields in `top_providers[]` and `top_models[]`:
 ## Mode semantics
 
 1. `compact`:
+
 - `top_providers` and `top_models` are top-N slices (currently N=5).
+
 2. `extended`:
+
 - `top_providers` and `top_models` include full breakdowns.
 
 ## Compatibility policy
@@ -180,6 +186,7 @@ Row fields in `top_providers[]` and `top_models[]`:
 2. Additive fields in `v1` are non-breaking; consumers must ignore unknown keys.
 3. `mode` additions are non-breaking if existing values and field semantics are preserved.
 4. Any of the following requires a major contract bump (`schema_version: 2`):
+
 - required field removal/rename,
 - type change for existing fields,
 - semantic redefinition of totals or row metrics.

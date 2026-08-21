@@ -1,40 +1,40 @@
-name-template: 'v$RESOLVED_VERSION'
-tag-template: 'v$RESOLVED_VERSION'
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
 categories:
-  - title: 'Breaking Changes'
+  - title: "Breaking Changes"
     labels:
-      - 'breaking'
-  - title: 'New Features'
+      - "breaking"
+  - title: "New Features"
     labels:
-      - 'feature'
-      - 'feat'
-  - title: 'Bug Fixes'
+      - "feature"
+      - "feat"
+  - title: "Bug Fixes"
     labels:
-      - 'fix'
-      - 'bug'
-  - title: 'Documentation'
+      - "fix"
+      - "bug"
+  - title: "Documentation"
     labels:
-      - 'docs'
-      - 'documentation'
-  - title: 'Maintenance'
+      - "docs"
+      - "documentation"
+  - title: "Maintenance"
     labels:
-      - 'chore'
-      - 'maintenance'
-change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+      - "chore"
+      - "maintenance"
+change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
 version-resolver:
   major:
     labels:
-      - 'breaking'
+      - "breaking"
   minor:
     labels:
-      - 'feature'
-      - 'feat'
+      - "feature"
+      - "feat"
   patch:
     labels:
-      - 'fix'
-      - 'bug'
-      - 'docs'
-      - 'chore'
+      - "fix"
+      - "bug"
+      - "docs"
+      - "chore"
   default: patch
 template: |
   ## Changes

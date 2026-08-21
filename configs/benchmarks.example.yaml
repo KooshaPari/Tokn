@@ -1,5 +1,5 @@
 # Benchmark Sources Configuration
-# 
+#
 # This configures where to fetch benchmark data from and how to prioritize it.
 #
 # Priority (highest to lowest):
@@ -18,7 +18,7 @@ sources:
     api_key: ${AA_API_KEY}
     # Cache TTL in seconds (default: 3600 = 1 hour)
     cache_ttl_seconds: 3600
-  
+
   # OpenRouter - provides pricing, context length
   openrouter:
     enabled: true
@@ -41,7 +41,7 @@ overrides:
     price_input: 2.00
     price_output: 12.00
     context_window: 1048576
-  
+
   # Example: Custom internal model
   internal-model-v1:
     intelligence_index: 90.0

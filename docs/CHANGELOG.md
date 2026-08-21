@@ -16,4 +16,4 @@ See root [`../CHANGELOG.md`](../CHANGELOG.md) for full notes and
 
 ---
 
-*Last updated: 2026-07-18*
+_Last updated: 2026-07-18_

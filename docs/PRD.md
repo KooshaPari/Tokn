@@ -26,21 +26,21 @@ Build an enterprise-grade token and cost tracking system for AI coding agents th
 
 ### Success Criteria
 
-| Metric | Target | Timeline |
-|--------|--------|----------|
-| Cost savings | ≥30% vs unmanaged | v1.0 |
-| Provider switching | &lt;100ms latency impact | v1.0 |
-| Budget alerts | 100% accuracy | v1.0 |
-| Report generation | &lt;5s for 30-day report | v1.0 |
+| Metric             | Target                   | Timeline |
+| ------------------ | ------------------------ | -------- |
+| Cost savings       | ≥30% vs unmanaged        | v1.0     |
+| Provider switching | &lt;100ms latency impact | v1.0     |
+| Budget alerts      | 100% accuracy            | v1.0     |
+| Report generation  | &lt;5s for 30-day report | v1.0     |
 
 ### Target Users
 
-| Persona | Need | Use Case |
-|---------|------|----------|
-| Dev Team Lead | Track team AI spend | "How much did we spend?" |
-| Finance | Budget allocation | "Allocate $X to team Y" |
-| Platform Eng | Provider optimization | "Switch to cheaper model" |
-| CTO | Cost governance | "Enforce $50/user/month limit" |
+| Persona       | Need                  | Use Case                       |
+| ------------- | --------------------- | ------------------------------ |
+| Dev Team Lead | Track team AI spend   | "How much did we spend?"       |
+| Finance       | Budget allocation     | "Allocate $X to team Y"        |
+| Platform Eng  | Provider optimization | "Switch to cheaper model"      |
+| CTO           | Cost governance       | "Enforce $50/user/month limit" |
 
 ---
 
@@ -48,29 +48,29 @@ Build an enterprise-grade token and cost tracking system for AI coding agents th
 
 ### P0 - Critical
 
-| ID | Requirement | Priority |
-|----|-------------|----------|
-| PRD-TOKEN-001 | Multi-provider token tracking | P0 |
-| PRD-TOKEN-002 | Real-time cost aggregation | P0 |
-| PRD-TOKEN-003 | Budget alerts and limits | P0 |
-| PRD-TOKEN-004 | Provider failover | P0 |
+| ID            | Requirement                   | Priority |
+| ------------- | ----------------------------- | -------- |
+| PRD-TOKEN-001 | Multi-provider token tracking | P0       |
+| PRD-TOKEN-002 | Real-time cost aggregation    | P0       |
+| PRD-TOKEN-003 | Budget alerts and limits      | P0       |
+| PRD-TOKEN-004 | Provider failover             | P0       |
 
 ### P1 - High
 
-| ID | Requirement | Priority |
-|----|-------------|----------|
-| PRD-TOKEN-005 | Cost optimization recommendations | P1 |
-| PRD-TOKEN-006 | Usage analytics dashboards | P1 |
-| PRD-TOKEN-007 | Team/project attribution | P1 |
-| PRD-TOKEN-008 | Rate limiting enforcement | P1 |
+| ID            | Requirement                       | Priority |
+| ------------- | --------------------------------- | -------- |
+| PRD-TOKEN-005 | Cost optimization recommendations | P1       |
+| PRD-TOKEN-006 | Usage analytics dashboards        | P1       |
+| PRD-TOKEN-007 | Team/project attribution          | P1       |
+| PRD-TOKEN-008 | Rate limiting enforcement         | P1       |
 
 ### P2 - Medium
 
-| ID | Requirement | Priority |
-|----|-------------|----------|
-| PRD-TOKEN-009 | Anomaly detection | P2 |
-| PRD-TOKEN-010 | Forecasting | P2 |
-| PRD-TOKEN-011 | Cost allocation reports | P2 |
+| ID            | Requirement             | Priority |
+| ------------- | ----------------------- | -------- |
+| PRD-TOKEN-009 | Anomaly detection       | P2       |
+| PRD-TOKEN-010 | Forecasting             | P2       |
+| PRD-TOKEN-011 | Cost allocation reports | P2       |
 
 ---
 
@@ -81,6 +81,7 @@ Build an enterprise-grade token and cost tracking system for AI coding agents th
 **Description:** Track token usage across multiple LLM providers.
 
 **Providers:**
+
 - Anthropic (Claude)
 - OpenAI (GPT-4)
 - Google (Gemini)
@@ -88,6 +89,7 @@ Build an enterprise-grade token and cost tracking system for AI coding agents th
 - Azure (OpenAI)
 
 **Data Captured:**
+
 - Input tokens
 - Output tokens
 - Cache tokens (if available)
@@ -102,12 +104,14 @@ Build an enterprise-grade token and cost tracking system for AI coding agents th
 **Description:** Aggregate costs in real-time with configurable windows.
 
 **Features:**
+
 - Per-request cost calculation
 - Per-minute/hour/day aggregation
 - Team and project attribution
 - Custom cost centers
 
 **Pricing Sources:**
+
 - Provider API (real-time)
 - Configurable price lists
 - Cached pricing with refresh
@@ -119,6 +123,7 @@ Build an enterprise-grade token and cost tracking system for AI coding agents th
 **Description:** Enforce budget limits with alerts.
 
 **Alert Types:**
+
 - Threshold alerts (50%, 75%, 90%)
 - Daily/weekly/monthly limits
 - Per-user limits
@@ -126,6 +131,7 @@ Build an enterprise-grade token and cost tracking system for AI coding agents th
 - Anomaly detection
 
 **Actions:**
+
 - Email/Slack notification
 - Rate limiting
 - Provider switching
@@ -138,12 +144,14 @@ Build an enterprise-grade token and cost tracking system for AI coding agents th
 **Description:** Automatic failover when provider experiences issues.
 
 **Triggers:**
+
 - High latency (>5s)
 - Error rate (>5%)
 - 429 Too Many Requests
 - API down
 
 **Failover Strategy:**
+
 1. Primary fails → Switch to secondary
 2. Log the failure
 3. Alert on repeated failures
@@ -157,18 +165,19 @@ Build an enterprise-grade token and cost tracking system for AI coding agents th
 
 **Recommendation Types:**
 
-| Type | Description | Potential Savings |
-|------|-------------|-------------------|
-| Model downgrade | Use cheaper model for simple tasks | 30-50% |
-| Caching | Cache similar requests | 20-40% |
-| Batching | Batch requests together | 10-20% |
-| Provider switch | Switch to cheaper provider | 20-30% |
+| Type            | Description                        | Potential Savings |
+| --------------- | ---------------------------------- | ----------------- |
+| Model downgrade | Use cheaper model for simple tasks | 30-50%            |
+| Caching         | Cache similar requests             | 20-40%            |
+| Batching        | Batch requests together            | 10-20%            |
+| Provider switch | Switch to cheaper provider         | 20-30%            |
 
 **Recommendation Engine:**
+
 ```python
 def generate_recommendations(usage: UsageData) -> List[Recommendation]:
     recommendations = []
-    
+
     # Check for model downgrade opportunities
     if usage.avg_complexity < 0.3:
         recommendations.append(
@@ -179,7 +188,7 @@ def generate_recommendations(usage: UsageData) -> List[Recommendation]:
                 savings_estimate="40%"
             )
         )
-    
+
     # Check cache efficiency
     if usage.cache_hit_rate < 0.5:
         recommendations.append(
@@ -188,7 +197,7 @@ def generate_recommendations(usage: UsageData) -> List[Recommendation]:
                 potential_savings="25%"
             )
         )
-    
+
     return recommendations
 ```
 
@@ -198,26 +207,26 @@ def generate_recommendations(usage: UsageData) -> List[Recommendation]:
 
 ### Components
 
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| CLI | Rust/Clap | User interface |
-| Provider Abstraction | Rust Traits | Multi-provider |
-| Storage | SQLite/PostgreSQL | Data persistence |
-| Rate Limiting | governor crate | Token bucket |
-| Analytics | Custom | Aggregations |
+| Component            | Technology        | Purpose          |
+| -------------------- | ----------------- | ---------------- |
+| CLI                  | Rust/Clap         | User interface   |
+| Provider Abstraction | Rust Traits       | Multi-provider   |
+| Storage              | SQLite/PostgreSQL | Data persistence |
+| Rate Limiting        | governor crate    | Token bucket     |
+| Analytics            | Custom            | Aggregations     |
 
 ### Provider Interface
 
 ```rust
 pub trait LLMProvider: Send + Sync {
     fn name(&self) -> &str;
-    
+
     async fn complete(&self, request: Request) -> Result<Response, ProviderError>;
-    
+
     fn calculate_cost(&self, request: &Request, response: &Response) -> Cost;
-    
+
     fn available_models(&self) -> Vec<Model>;
-    
+
     fn health_check(&self) -> impl Future<Output = bool>;
 }
 ```
@@ -266,14 +275,14 @@ struct Budget {
 
 ### Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /api/v1/usage | Record usage |
-| GET | /api/v1/usage | Query usage |
-| GET | /api/v1/costs/aggregate | Cost aggregation |
-| POST | /api/v1/budgets | Create budget |
-| GET | /api/v1/recommendations | Get recommendations |
-| POST | /api/v1/alerts/ack | Acknowledge alert |
+| Method | Endpoint                | Description         |
+| ------ | ----------------------- | ------------------- |
+| POST   | /api/v1/usage           | Record usage        |
+| GET    | /api/v1/usage           | Query usage         |
+| GET    | /api/v1/costs/aggregate | Cost aggregation    |
+| POST   | /api/v1/budgets         | Create budget       |
+| GET    | /api/v1/recommendations | Get recommendations |
+| POST   | /api/v1/alerts/ack      | Acknowledge alert   |
 
 ### Cost Aggregation
 
@@ -302,19 +311,19 @@ GET /api/v1/costs/aggregate?start=2026-01-01&end=2026-01-31&group_by=team
 
 ### Performance
 
-| Metric | Target |
-|--------|--------|
-| Latency overhead | &lt;10ms |
-| Throughput | 1000 req/s |
-| Aggregation query | &lt;5s |
-| Startup time | &lt;1s |
+| Metric            | Target     |
+| ----------------- | ---------- |
+| Latency overhead  | &lt;10ms   |
+| Throughput        | 1000 req/s |
+| Aggregation query | &lt;5s     |
+| Startup time      | &lt;1s     |
 
 ### Reliability
 
-| Metric | Target |
-|--------|--------|
-| Uptime | 99.9% |
-| Data retention | 1 year |
+| Metric           | Target |
+| ---------------- | ------ |
+| Uptime           | 99.9%  |
+| Data retention   | 1 year |
 | Backup frequency | Hourly |
 
 ### Security
@@ -337,13 +346,13 @@ policies:
     limit: $500/month
     alerts: [50%, 75%, 90%]
     enforcement: rate_limit
-    
+
   - name: "research-budget"
     scope: team:research
     limit: $1000/month
     alerts: [50%, 75%, 90%]
     enforcement: notify_only
-    
+
   - name: "model-preference"
     scope: team:*
     prefer:
@@ -378,13 +387,13 @@ heliosHarness ---> tokenledger
 
 ## Milestones
 
-| Milestone | Deliverable | Target |
-|-----------|-------------|--------|
-| M1 | Core tracking + providers | 2026-03-01 |
-| M2 | Budgets + alerts | 2026-03-15 |
-| M3 | Recommendations | 2026-04-01 |
-| M4 | Analytics dashboard | 2026-04-15 |
-| M5 | Production ready | 2026-05-01 |
+| Milestone | Deliverable               | Target     |
+| --------- | ------------------------- | ---------- |
+| M1        | Core tracking + providers | 2026-03-01 |
+| M2        | Budgets + alerts          | 2026-03-15 |
+| M3        | Recommendations           | 2026-04-01 |
+| M4        | Analytics dashboard       | 2026-04-15 |
+| M5        | Production ready          | 2026-05-01 |
 
 ---
 
@@ -399,11 +408,11 @@ heliosHarness ---> tokenledger
 
 ## Risks
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|-------------|
-| Pricing API changes | Medium | High | Configurable price lists |
-| High volume processing | Medium | Medium | Async aggregation |
-| Provider lock-in | Low | Medium | Abstraction layer |
+| Risk                   | Probability | Impact | Mitigation               |
+| ---------------------- | ----------- | ------ | ------------------------ |
+| Pricing API changes    | Medium      | High   | Configurable price lists |
+| High volume processing | Medium      | Medium | Async aggregation        |
+| Provider lock-in       | Low         | Medium | Abstraction layer        |
 
 ---
 

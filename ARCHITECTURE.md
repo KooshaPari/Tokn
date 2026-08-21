@@ -7,35 +7,37 @@
 ## Components
 
 ### Component A
+
 - **Purpose**: [Description]
 - **Interfaces**: [APIs/events]
 - **Dependencies**: [Other components]
 
 ### Component B
+
 - **Purpose**: [Description]
 - **Interfaces**: [APIs/events]
 - **Dependencies**: [Other components]
 
 ## Data Flow
 
-
-
 ## Technology Stack
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| Frontend | [Tech] | UI layer |
-| Backend | [Tech] | Business logic |
-| Database | [Tech] | Data storage |
-| Cache | [Tech] | Performance |
+| Layer    | Technology | Purpose        |
+| -------- | ---------- | -------------- |
+| Frontend | [Tech]     | UI layer       |
+| Backend  | [Tech]     | Business logic |
+| Database | [Tech]     | Data storage   |
+| Cache    | [Tech]     | Performance    |
 
 ## Integration Points
 
 ### With Phenotype Ecosystem
+
 - [Integration 1]: [Description]
 - [Integration 2]: [Description]
 
 ### External Services
+
 - [External 1]: [Description]
 
 ## Scalability

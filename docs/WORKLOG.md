@@ -1,6 +1,5 @@
 # Worklog
 
-
 **Category: ARCHITECTURE**
 Active repo-level status for `tokenledger-wt`.
 

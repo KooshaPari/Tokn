@@ -34,33 +34,36 @@ This contract defines the normalized JSONL event shape used by `monthly`, `daily
 
 ## Field contract
 
-| Field | Type | Required | Notes |
-| --- | --- | --- | --- |
-| `provider` | string | yes | Provider key (alias values are allowed on input; canonicalized against pricing aliases before filtering/costing). |
-| `model` | string | yes | Model key (alias values are allowed on input; canonicalized against provider model aliases before filtering/costing). |
-| `session_id` | string | yes | Logical session identifier used in session counts and dedupe keys. |
-| `timestamp` | RFC3339 datetime string | yes | Must parse as UTC datetime (`DateTime<Utc>`). |
-| `usage` | object | yes | Token usage payload (see subfields below). |
-| `usage.input_tokens` | non-negative integer | yes | Input prompt tokens. |
-| `usage.output_tokens` | non-negative integer | yes | Output/completion tokens. |
-| `usage.cache_write_tokens` | non-negative integer | yes | Cache write tokens. |
-| `usage.cache_read_tokens` | non-negative integer | yes | Cache read tokens. |
-| `usage.tool_input_tokens` | non-negative integer | yes | Tool input tokens. |
-| `usage.tool_output_tokens` | non-negative integer | yes | Tool output tokens. |
+| Field                      | Type                    | Required | Notes                                                                                                                 |
+| -------------------------- | ----------------------- | -------- | --------------------------------------------------------------------------------------------------------------------- |
+| `provider`                 | string                  | yes      | Provider key (alias values are allowed on input; canonicalized against pricing aliases before filtering/costing).     |
+| `model`                    | string                  | yes      | Model key (alias values are allowed on input; canonicalized against provider model aliases before filtering/costing). |
+| `session_id`               | string                  | yes      | Logical session identifier used in session counts and dedupe keys.                                                    |
+| `timestamp`                | RFC3339 datetime string | yes      | Must parse as UTC datetime (`DateTime<Utc>`).                                                                         |
+| `usage`                    | object                  | yes      | Token usage payload (see subfields below).                                                                            |
+| `usage.input_tokens`       | non-negative integer    | yes      | Input prompt tokens.                                                                                                  |
+| `usage.output_tokens`      | non-negative integer    | yes      | Output/completion tokens.                                                                                             |
+| `usage.cache_write_tokens` | non-negative integer    | yes      | Cache write tokens.                                                                                                   |
+| `usage.cache_read_tokens`  | non-negative integer    | yes      | Cache read tokens.                                                                                                    |
+| `usage.tool_input_tokens`  | non-negative integer    | yes      | Tool input tokens.                                                                                                    |
+| `usage.tool_output_tokens` | non-negative integer    | yes      | Tool output tokens.                                                                                                   |
 
 ## Invariants
 
 1. `usage_total_tokens` is defined as:
-`input_tokens + output_tokens + cache_write_tokens + cache_read_tokens + tool_input_tokens + tool_output_tokens`.
+   `input_tokens + output_tokens + cache_write_tokens + cache_read_tokens + tool_input_tokens + tool_output_tokens`.
 2. Consumers must treat the payload as append-only for unknown keys (ignore unknown fields).
 3. Empty event sets after month/provider/model filters are treated as an execution error for report/snapshot generation.
 
 ## Compatibility policy
 
 1. `v1` is additive-forward-compatible:
+
 - adding optional fields is non-breaking,
 - adding top-level metadata fields is non-breaking.
+
 2. Breaking changes require `v2`:
+
 - renaming/removing required fields,
 - changing numeric semantics,
 - changing timestamp format away from RFC3339 UTC.

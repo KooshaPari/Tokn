@@ -11,13 +11,13 @@ This document audits the tokenledger, CLIProxyAPI, thegent, agentapi++, and heli
 
 ### Current State: Massive Overlap
 
-| Component | Routing | Benchmarks | Pricing | Providers | Models |
-|-----------|---------|------------|---------|-----------|---------|
-| **tokenledger** | ❌ | ✅ (new) | ✅ | ✅ | ✅ |
-| **cliproxy++** | ✅ Pareto | ⚠️ hardcoded | ✅ | ✅ | ✅ |
-| **thegent** | ✅ Multiple | ✅ quality/speed/cost | ✅ | ✅ | ✅ |
-| **agentapi++** | ❌ | ❌ | ❌ | ⚠️ | ❌ |
-| **heliosHarness** | ⚠️ | ✅ runners | ❌ | ✅ adapters | ✅ |
+| Component         | Routing     | Benchmarks            | Pricing | Providers   | Models |
+| ----------------- | ----------- | --------------------- | ------- | ----------- | ------ |
+| **tokenledger**   | ❌          | ✅ (new)              | ✅      | ✅          | ✅     |
+| **cliproxy++**    | ✅ Pareto   | ⚠️ hardcoded          | ✅      | ✅          | ✅     |
+| **thegent**       | ✅ Multiple | ✅ quality/speed/cost | ✅      | ✅          | ✅     |
+| **agentapi++**    | ❌          | ❌                    | ❌      | ⚠️          | ❌     |
+| **heliosHarness** | ⚠️          | ✅ runners            | ❌      | ✅ adapters | ✅     |
 
 ---
 
@@ -26,6 +26,7 @@ This document audits the tokenledger, CLIProxyAPI, thegent, agentapi++, and heli
 ### 1.1 tokenledger (Rust)
 
 **Current Scope:**
+
 - Pricing book management
 - Cost calculation
 - Benchmark store (new - 60+ metrics)
@@ -33,9 +34,11 @@ This document audits the tokenledger, CLIProxyAPI, thegent, agentapi++, and heli
 - CLI commands
 
 **Routing Functions:**
+
 - None currently
 
 **Gaps:**
+
 - No runtime routing logic
 - No provider adapters
 - No agent/harness integration
@@ -43,17 +46,20 @@ This document audits the tokenledger, CLIProxyAPI, thegent, agentapi++, and heli
 ### 1.2 CLIProxyAPI (Go)
 
 **Current Scope:**
+
 - Multi-provider proxy (OpenAI, Anthropic, Google, etc.)
 - Pareto router (hardcoded maps)
 - Model definitions
 - Rankings endpoint
 
 **Routing Functions:**
+
 - `pareto_router.go` - hardcoded quality/cost/latency maps
 - Auto-routing
 - Provider failover
 
 **Gaps:**
+
 - Static benchmark data (25 models)
 - No live benchmark integration
 - No agentic metrics
@@ -61,6 +67,7 @@ This document audits the tokenledger, CLIProxyAPI, thegent, agentapi++, and heli
 ### 1.3 thegent (Python/Rust)
 
 **Current Scope:**
+
 - Agent orchestration
 - Multiple routing strategies (pareto, cost-aware, hybrid, etc.)
 - Quality/speed/cost indices
@@ -68,6 +75,7 @@ This document audits the tokenledger, CLIProxyAPI, thegent, agentapi++, and heli
 - Provider adapters
 
 **Routing Functions:**
+
 - `utils/routing_impl/pareto_router.py`
 - `utils/routing_impl/cost_aware_router.py`
 - `utils/routing_impl/hybrid_router.py`
@@ -75,6 +83,7 @@ This document audits the tokenledger, CLIProxyAPI, thegent, agentapi++, and heli
 - Multiple provider adapters
 
 **Gaps:**
+
 - Scattered routing logic across files
 - Duplicated quality/speed/cost with tokenledger
 - No unified benchmark source
@@ -82,14 +91,17 @@ This document audits the tokenledger, CLIProxyAPI, thegent, agentapi++, and heli
 ### 1.4 agentapi++ (Go)
 
 **Current Scope:**
+
 - Agent SDK
 - Message formats
 - Agent lifecycle
 
 **Routing Functions:**
+
 - None
 
 **Gaps:**
+
 - No routing
 - No pricing
 - No benchmarks
@@ -97,15 +109,18 @@ This document audits the tokenledger, CLIProxyAPI, thegent, agentapi++, and heli
 ### 1.5 heliosHarness (Python/Rust)
 
 **Current Scope:**
+
 - Benchmark runners
 - Provider adapters
 - SLA tracking
 
 **Routing Functions:**
+
 - Some harness-specific routing
 - Provider registry
 
 **Gaps:**
+
 - Not integrated with tokenledger
 - Duplicates CLIProxyAPI routing
 
@@ -115,15 +130,15 @@ This document audits the tokenledger, CLIProxyAPI, thegent, agentapi++, and heli
 
 ### 2.1 Duplicated Components
 
-| Function | In tokenledger | In thegent | In CLIProxy | In heliosHarness |
-|----------|----------------|------------|-------------|-----------------|
-| Model definitions | ✅ | ✅ | ✅ | ⚠️ |
-| Quality scores | New | ✅ | ❌ | ❌ |
-| Speed/latency | New | ✅ | ⚠️ | ❌ |
-| Pricing | ✅ | ✅ | ✅ | ❌ |
-| Pareto routing | New | ✅ | ✅ | ❌ |
-| Provider adapters | ❌ | ✅ | ✅ | ✅ |
-| Benchmark runners | ❌ | ❌ | ❌ | ✅ |
+| Function          | In tokenledger | In thegent | In CLIProxy | In heliosHarness |
+| ----------------- | -------------- | ---------- | ----------- | ---------------- |
+| Model definitions | ✅             | ✅         | ✅          | ⚠️               |
+| Quality scores    | New            | ✅         | ❌          | ❌               |
+| Speed/latency     | New            | ✅         | ⚠️          | ❌               |
+| Pricing           | ✅             | ✅         | ✅          | ❌               |
+| Pareto routing    | New            | ✅         | ✅          | ❌               |
+| Provider adapters | ❌             | ✅         | ✅          | ✅               |
+| Benchmark runners | ❌             | ❌         | ❌          | ✅               |
 
 ### 2.2 Data Flow Issues
 
@@ -189,14 +204,14 @@ Pareto router → routing decisions
 
 ### 3.3 Key Architectural Decisions
 
-| Decision | Rationale |
-|----------|------------|
+| Decision                                  | Rationale                                      |
+| ----------------------------------------- | ---------------------------------------------- |
 | **Single benchmark source (tokenledger)** | DRY - eliminate quality/speed/cost duplication |
-| **Adapters per system** | HEXAGONAL - swap implementations |
-| **CLIProxy reads from tokenledger** | INTEGRATION - live data, not static maps |
-| **thegent uses tokenledger** | DEPENDENCY INVERSION - port interface |
-| **agentapi stays thin** | KISS - no routing logic needed |
-| **heliosHarness writes to tokenledger** | SINGLE DIRECTION - benchmarks flow in |
+| **Adapters per system**                   | HEXAGONAL - swap implementations               |
+| **CLIProxy reads from tokenledger**       | INTEGRATION - live data, not static maps       |
+| **thegent uses tokenledger**              | DEPENDENCY INVERSION - port interface          |
+| **agentapi stays thin**                   | KISS - no routing logic needed                 |
+| **heliosHarness writes to tokenledger**   | SINGLE DIRECTION - benchmarks flow in          |
 
 ---
 
@@ -204,53 +219,57 @@ Pareto router → routing decisions
 
 ### 4.1 New Modules to Create
 
-| Module | Location | Responsibility |
-|--------|----------|----------------|
-| `tokenledger-benchmarks` | tokenledger/src/benchmarks/ | DONE ✅ |
-| `tokenledger-cli` | tokenledger/src/cli.rs | DONE ✅ |
-| `cliproxy-tokenledger-client` | cliproxy++/pkg/llmproxy/benchmarks/ | NEW |
-| `thegent-tokenledger-adapter` | thegent/adapters/tokenledger.py | NEW |
-| `helios-benchmarks-adapter` | heliosHarness/adapters/tokenledger.py | NEW |
+| Module                        | Location                              | Responsibility |
+| ----------------------------- | ------------------------------------- | -------------- |
+| `tokenledger-benchmarks`      | tokenledger/src/benchmarks/           | DONE ✅        |
+| `tokenledger-cli`             | tokenledger/src/cli.rs                | DONE ✅        |
+| `cliproxy-tokenledger-client` | cliproxy++/pkg/llmproxy/benchmarks/   | NEW            |
+| `thegent-tokenledger-adapter` | thegent/adapters/tokenledger.py       | NEW            |
+| `helios-benchmarks-adapter`   | heliosHarness/adapters/tokenledger.py | NEW            |
 
 ### 4.2 Modules to Consolidate
 
-| From | To | Rationale |
-|-------|-----|------------|
-| thegent/utils/routing_impl/quality_values.py | tokenledger | DRY |
-| thegent/models/speed_values.py | tokenledger | DRY |
-| cliproxy++/pkg/llmproxy/registry/pareto_router.go | tokenledger integration | DRY |
-| CLIProxy hardcoded maps | tokenledger | LIVE DATA |
-| heliosHarness benchmarks | tokenledger | SINGLE SOURCE |
+| From                                              | To                      | Rationale     |
+| ------------------------------------------------- | ----------------------- | ------------- |
+| thegent/utils/routing_impl/quality_values.py      | tokenledger             | DRY           |
+| thegent/models/speed_values.py                    | tokenledger             | DRY           |
+| cliproxy++/pkg/llmproxy/registry/pareto_router.go | tokenledger integration | DRY           |
+| CLIProxy hardcoded maps                           | tokenledger             | LIVE DATA     |
+| heliosHarness benchmarks                          | tokenledger             | SINGLE SOURCE |
 
 ### 4.3 Modules to Keep Separate
 
-| Module | Reason |
-|--------|---------|
-| agentapi++ | Thin SDK, no routing |
+| Module                | Reason                     |
+| --------------------- | -------------------------- |
+| agentapi++            | Thin SDK, no routing       |
 | heliosHarness runners | Actual benchmark execution |
-| thegent orchestration | Agent logic |
-| CLIProxy proxy | API forwarding |
+| thegent orchestration | Agent logic                |
+| CLIProxy proxy        | API forwarding             |
 
 ---
 
 ## 5. Implementation Phases
 
 ### Phase 1: Core Infrastructure ✅ DONE
+
 - [x] tokenledger benchmarks module
 - [x] CLI commands
 - [x] Integration stub in CLIProxy
 
 ### Phase 2: Integration (Current)
+
 - [ ] CLIProxy reads from tokenledger
 - [ ] thegent adapter
 - [ ] heliosHarness adapter
 
 ### Phase 3: Consolidation
+
 - [ ] Move quality/speed/cost to tokenledger
 - [ ] Remove duplicates
 - [ ] Verify data flow
 
 ### Phase 4: Polish
+
 - [ ] Remove hardcoded maps
 - [ ] Add tests
 - [ ] Documentation
@@ -287,14 +306,14 @@ Pareto router → routing decisions
 
 ## 7. Principles Applied
 
-| Principle | Application |
-|-----------|-------------|
-| **DRY** | Single benchmark source (tokenledger) |
-| **KISS** | Simple adapters per system |
-| **SOLID** | Port/adapter pattern |
-| **HEXAGONAL** | Clear boundaries |
-| **POLYGLOT** | Best language per job |
-| **MICROSERVICE** | Independent deployability |
+| Principle        | Application                           |
+| ---------------- | ------------------------------------- |
+| **DRY**          | Single benchmark source (tokenledger) |
+| **KISS**         | Simple adapters per system            |
+| **SOLID**        | Port/adapter pattern                  |
+| **HEXAGONAL**    | Clear boundaries                      |
+| **POLYGLOT**     | Best language per job                 |
+| **MICROSERVICE** | Independent deployability             |
 
 ---
 

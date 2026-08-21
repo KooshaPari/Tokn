@@ -51,28 +51,27 @@ It is intended for file-based extension and statusbar integrations (CodexBar/Ope
       "session_count": 2
     }
   ],
-  "suggestions": [
-    "tip"
-  ],
+  "suggestions": ["tip"],
   "reconcile_latest_summary_path": "benchmarks/results/reconcile-latest-summary.json"
 }
 ```
 
 ## Field contract
 
-| Field | Type | Required | Notes |
-| --- | --- | --- | --- |
-| `schema_version` | integer | yes | Compatibility gate for consumers. |
-| `generated_at` | RFC3339 datetime string | yes | Snapshot generation timestamp (UTC). |
-| `month` | string | yes | Snapshot month in `YYYY-MM`. |
-| `mode` | enum | yes | `compact` or `extended`. |
-| `totals` | object | yes | Aggregate cost/token/session metrics. |
-| `top_providers` | array | yes | Provider-level rows sorted by token volume. |
-| `top_models` | array | yes | Model-level rows sorted by token volume. |
-| `suggestions` | array of string | yes | Optimization suggestions from report pipeline. |
-| `reconcile_latest_summary_path` | string | no | Present when latest reconcile summary pointer exists. |
+| Field                           | Type                    | Required | Notes                                                 |
+| ------------------------------- | ----------------------- | -------- | ----------------------------------------------------- |
+| `schema_version`                | integer                 | yes      | Compatibility gate for consumers.                     |
+| `generated_at`                  | RFC3339 datetime string | yes      | Snapshot generation timestamp (UTC).                  |
+| `month`                         | string                  | yes      | Snapshot month in `YYYY-MM`.                          |
+| `mode`                          | enum                    | yes      | `compact` or `extended`.                              |
+| `totals`                        | object                  | yes      | Aggregate cost/token/session metrics.                 |
+| `top_providers`                 | array                   | yes      | Provider-level rows sorted by token volume.           |
+| `top_models`                    | array                   | yes      | Model-level rows sorted by token volume.              |
+| `suggestions`                   | array of string         | yes      | Optimization suggestions from report pipeline.        |
+| `reconcile_latest_summary_path` | string                  | no       | Present when latest reconcile summary pointer exists. |
 
 `totals` fields:
+
 - `cost_usd` (number)
 - `tokens` (non-negative integer)
 - `blended_usd_per_mtok` (number)
@@ -80,6 +79,7 @@ It is intended for file-based extension and statusbar integrations (CodexBar/Ope
 - `skipped_unpriced_count` (non-negative integer)
 
 Row fields in `top_providers[]` and `top_models[]`:
+
 - `name` (string)
 - `tokens` (non-negative integer)
 - `total_cost_usd` (number)
@@ -89,8 +89,11 @@ Row fields in `top_providers[]` and `top_models[]`:
 ## Mode semantics
 
 1. `compact`:
+
 - `top_providers` and `top_models` are top-N slices (currently N=5).
+
 2. `extended`:
+
 - `top_providers` and `top_models` include full breakdowns.
 
 ## Compatibility policy
@@ -99,6 +102,7 @@ Row fields in `top_providers[]` and `top_models[]`:
 2. Additive fields in `v1` are non-breaking; consumers must ignore unknown keys.
 3. `mode` additions are non-breaking if existing values and field semantics are preserved.
 4. Any of the following requires a major contract bump (`schema_version: 2`):
+
 - required field removal/rename,
 - type change for existing fields,
 - semantic redefinition of totals or row metrics.

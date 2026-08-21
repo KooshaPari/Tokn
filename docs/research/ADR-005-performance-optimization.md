@@ -17,23 +17,23 @@ Tokenization performance is critical for Tokn's success in production environmen
 
 Based on market analysis and use cases:
 
-| Use Case | Throughput Target | Latency Target | Scale |
-|----------|-------------------|----------------|-------|
-| API services | 10M+ tok/s | &lt;1ms p99 | High concurrent |
-| Batch processing | 50M+ tok/s | N/A | Single-node throughput |
-| CLI operations | 5M+ tok/s | Interactive | Single-threaded |
-| Training | 1M+ tok/s | N/A | Background processing |
+| Use Case         | Throughput Target | Latency Target | Scale                  |
+| ---------------- | ----------------- | -------------- | ---------------------- |
+| API services     | 10M+ tok/s        | &lt;1ms p99    | High concurrent        |
+| Batch processing | 50M+ tok/s        | N/A            | Single-node throughput |
+| CLI operations   | 5M+ tok/s         | Interactive    | Single-threaded        |
+| Training         | 1M+ tok/s         | N/A            | Background processing  |
 
 ### Current Baselines
 
 Benchmarks from research (see `docs/research/MODERN_TOKENIZERS_SOTA.md`):
 
-| Library | Throughput | Latency p99 | Language |
-|---------|------------|-------------|----------|
-| tiktoken | 10M tok/s | 0.15ms | Rust |
-| HF Tokenizers | 3M tok/s | 0.50ms | Rust + Python |
-| SentencePiece | 2M tok/s | 0.80ms | C++ |
-| Pure Python BPE | 0.5M tok/s | 2.0ms | Python |
+| Library         | Throughput | Latency p99 | Language      |
+| --------------- | ---------- | ----------- | ------------- |
+| tiktoken        | 10M tok/s  | 0.15ms      | Rust          |
+| HF Tokenizers   | 3M tok/s   | 0.50ms      | Rust + Python |
+| SentencePiece   | 2M tok/s   | 0.80ms      | C++           |
+| Pure Python BPE | 0.5M tok/s | 2.0ms       | Python        |
 
 ### Performance Bottlenecks in Tokenization
 
@@ -59,14 +59,14 @@ Benchmarks from research (see `docs/research/MODERN_TOKENIZERS_SOTA.md`):
 
 ### Performance Targets
 
-| Metric | Target | Stretch | Measurement |
-|--------|--------|---------|-------------|
-| Single-thread throughput | 15M tok/s | 20M tok/s | 1MB English text |
-| Latency p50 | 0.05ms | 0.03ms | 1K character input |
-| Latency p99 | 0.20ms | 0.10ms | 1K character input |
-| Memory/vocab | 15MB | 10MB | 50K vocabulary |
-| Batch efficiency | 90% | 95% | 1000x batch size |
-| Multi-thread scaling | 80% | 90% | 8 cores |
+| Metric                   | Target    | Stretch   | Measurement        |
+| ------------------------ | --------- | --------- | ------------------ |
+| Single-thread throughput | 15M tok/s | 20M tok/s | 1MB English text   |
+| Latency p50              | 0.05ms    | 0.03ms    | 1K character input |
+| Latency p99              | 0.20ms    | 0.10ms    | 1K character input |
+| Memory/vocab             | 15MB      | 10MB      | 50K vocabulary     |
+| Batch efficiency         | 90%       | 95%       | 1000x batch size   |
+| Multi-thread scaling     | 80%       | 90%       | 8 cores            |
 
 ### Optimization Architecture
 
@@ -134,16 +134,17 @@ Positioning between existing solutions:
 
 Different layers address different bottlenecks:
 
-| Layer | Bottleneck Addressed | Expected Gain |
-|-------|---------------------|---------------|
-| Algorithmic | Regex, lookup complexity | 5-10x |
-| Data structures | Memory access patterns | 2-3x |
-| SIMD/Parallel | CPU utilization | 2-4x |
-| System | Resource efficiency | 1.2-1.5x |
+| Layer           | Bottleneck Addressed     | Expected Gain |
+| --------------- | ------------------------ | ------------- |
+| Algorithmic     | Regex, lookup complexity | 5-10x         |
+| Data structures | Memory access patterns   | 2-3x          |
+| SIMD/Parallel   | CPU utilization          | 2-4x          |
+| System          | Resource efficiency      | 1.2-1.5x      |
 
 ### Why Rust?
 
 Rust enables:
+
 - **Zero-cost abstractions**: High-level code compiles to efficient machine code
 - **Memory safety**: No GC pauses or memory corruption
 - **SIMD support**: Stable SIMD intrinsics
@@ -159,10 +160,12 @@ Rust enables:
 **Description**: Implement tokenization on GPU for massive parallelism.
 
 **Pros**:
+
 - Theoretical 100x+ speedup
 - Good for massive batches
 
 **Cons**:
+
 - Overhead for small inputs
 - Memory transfer costs
 - Limited by GPU memory
@@ -176,11 +179,13 @@ Rust enables:
 **Description**: Optimize only single-threaded performance, ignore parallelism.
 
 **Pros**:
+
 - Simpler implementation
 - Deterministic performance
 - No synchronization overhead
 
 **Cons**:
+
 - Underutilizes modern CPUs
 - Poor batch performance
 - Not competitive at scale
@@ -192,10 +197,12 @@ Rust enables:
 **Description**: Aggressive caching of all tokenization results.
 
 **Pros**:
+
 - Instant repeated tokenization
 - Reduced CPU usage
 
 **Cons**:
+
 - Memory explosion
 - Cache invalidation complexity
 - Diminishing returns (texts rarely repeat)
@@ -285,7 +292,7 @@ impl Vocabulary {
 ```rust
 pub fn encode(&self, text: &str) -> Vec<TokenId> {
     let mut tokens: Vec<u8> = text.bytes().collect();
-    
+
     // Apply merges greedily
     for &(first, second) in &self.merges {
         let mut i = 0;
@@ -299,7 +306,7 @@ pub fn encode(&self, text: &str) -> Vec<TokenId> {
             }
         }
     }
-    
+
     tokens
 }
 ```
@@ -314,7 +321,7 @@ pub fn encode_batch(&self, texts: &[&str]) -> Vec<Vec<TokenId>> {
         // Pre-allocate with estimated capacity
         let estimated_tokens = text.len() / 3; // ~3 bytes per token avg
         let mut tokens = Vec::with_capacity(estimated_tokens);
-        
+
         self.encode_into(text, &mut tokens);
         tokens
     }).collect()
@@ -405,14 +412,14 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion, Throughpu
 fn benchmark_encode(c: &mut Criterion) {
     let tokenizer = load_test_tokenizer();
     let text = load_test_corpus();
-    
+
     let mut group = c.benchmark_group("encode");
     group.throughput(Throughput::Bytes(text.len() as u64));
-    
+
     group.bench_function("single_thread", |b| {
         b.iter(|| tokenizer.encode(black_box(&text)))
     });
-    
+
     group.bench_function("parallel", |b| {
         let texts: Vec<&str> = vec![&text; 100];
         b.iter(|| tokenizer.encode_batch(black_box(&texts)))
@@ -442,7 +449,7 @@ jobs:
       - name: Upload results
         uses: benchmark-action/github-action-benchmark@v1
         with:
-          tool: 'cargo'
+          tool: "cargo"
           output-file-path: target/criterion/report.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: true
@@ -481,6 +488,7 @@ jobs:
 ---
 
 **Notes:**
+
 - All optimizations must maintain bitwise compatibility with tiktoken output
 - Performance targets measured on Intel Core i9-12900K or equivalent
 - ARM optimizations follow x86 implementation with NEON intrinsics
@@ -488,4 +496,4 @@ jobs:
 
 ---
 
-*End of Document - 362 lines*
+_End of Document - 362 lines_

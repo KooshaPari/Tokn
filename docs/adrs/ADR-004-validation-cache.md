@@ -2,19 +2,21 @@
 
 **Status:** Accepted  
 **Date:** 2026-04-02  
-**Deciders:** Architecture Team  
+**Deciders:** Architecture Team
 
 ---
 
 ## Context
 
 High-throughput token validation requires caching to avoid repeated cryptographic operations. We need:
+
 - Sub-millisecond validation for cache hits
 - High cache hit rate (>95%)
 - Minimal memory footprint
 - Cache invalidation on revocation
 
 Previous approaches:
+
 - **No caching** - Too slow for high-throughput
 - **Simple LRU cache** - No preloading, poor hit rate
 - **Write-through cache** - Complex, high write latency
@@ -115,14 +117,14 @@ impl ValidationService {
         request: ValidationRequest,
     ) -> Result<ValidationResponse, ValidationError> {
         let cache_key = self.cache.cache_key(&request.token);
-        
+
         // 1. Check Tier-1 (local cache)
         if let Some(cached) = self.cache.get_local(&cache_key).await? {
             if !cached.revocation_check_needed || !request.check_revocation {
                 return Ok(cached.to_response());
             }
         }
-        
+
         // 2. Check Tier-2 (Redis cache)
         if let Some(cached) = self.cache.get_redis(&cache_key).await? {
             if !cached.revocation_check_needed || !request.check_revocation {
@@ -131,17 +133,17 @@ impl ValidationService {
                 return Ok(cached.to_response());
             }
         }
-        
+
         // 3. Full validation
         let response = self.validate_full(&request).await?;
-        
+
         // 4. Cache result
         if response.valid {
             let cached = CachedValidation::from_response(&response);
             self.cache.put_redis(cache_key.clone(), &cached).await?;
             self.cache.put_local(cache_key, &cached).await?;
         }
-        
+
         Ok(response)
     }
 }
@@ -149,19 +151,20 @@ impl ValidationService {
 
 ### Performance Metrics
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| Cache Hit Latency | <0.01ms | TBD |
-| Cache Miss Latency | <5ms | TBD |
-| Hit Rate | >95% | TBD |
-| Memory per Entry | ~500 bytes | TBD |
-| Max Local Entries | 100,000 | TBD |
+| Metric             | Target     | Current |
+| ------------------ | ---------- | ------- |
+| Cache Hit Latency  | <0.01ms    | TBD     |
+| Cache Miss Latency | <5ms       | TBD     |
+| Hit Rate           | >95%       | TBD     |
+| Memory per Entry   | ~500 bytes | TBD     |
+| Max Local Entries  | 100,000    | TBD     |
 
 ---
 
 ## Consequences
 
 ### Positive
+
 - Sub-millisecond validation for cache hits
 - High hit rate with predictive preloading
 - Distributed cache for horizontal scaling
@@ -169,12 +172,14 @@ impl ValidationService {
 - Memory-efficient LRU eviction
 
 ### Negative
+
 - Additional Redis infrastructure required
 - Cache coherence challenges in distributed environment
 - Preloading adds overhead on token issuance
 - Memory usage for local cache
 
 ### Mitigation
+
 - Use Redis Cluster for high availability
 - Implement cache metrics monitoring
 - Tune TTL based on workload characteristics

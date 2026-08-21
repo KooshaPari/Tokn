@@ -73,6 +73,7 @@ Output: Vocabulary of merge rules
 During training, BPE learns merge operations that progressively combine frequent character sequences into subword units:
 
 **Example Training:**
+
 ```
 Initial: l o w </w>  (5 tokens)
          l o w e r </w>  (6 tokens)
@@ -112,28 +113,31 @@ def bpe_tokenize(text, merge_rules):
 
 ### 2.4 Properties and Characteristics
 
-| Property | Description |
-|----------|-------------|
-| **Deterministic** | Same input always produces same tokenization |
-| **Greedy** | Applies highest-frequency merges first |
-| **Lossless** | Original text can be perfectly reconstructed |
+| Property                     | Description                                            |
+| ---------------------------- | ------------------------------------------------------ |
+| **Deterministic**            | Same input always produces same tokenization           |
+| **Greedy**                   | Applies highest-frequency merges first                 |
+| **Lossless**                 | Original text can be perfectly reconstructed           |
 | **Character-level fallback** | Unknown characters are handled at byte/character level |
-| **Vocabulary control** | Fixed vocabulary size determined at training |
+| **Vocabulary control**       | Fixed vocabulary size determined at training           |
 
 ### 2.5 BPE Variants
 
 #### 2.5.1 Standard BPE
+
 - Used in: GPT-2, RoBERTa, many production systems
 - Implementation: HuggingFace Tokenizers, SentencePiece
 - Characteristics: Fast, simple, effective for most languages
 
 #### 2.5.2 Byte-level BPE (BBPE)
+
 - Used in: GPT-3, GPT-4, modern LLMs
 - Innovation: Operates on bytes (0-255) instead of characters
 - Advantage: No unknown tokens—can represent any Unicode text
 - Trade-off: Longer sequences (average 1.3 tokens per character for English)
 
 #### 2.5.3 BPE with Dropout
+
 - Proposed by Provilkov et al. (2020)
 - Randomly skips merge operations during training
 - Reduces over-segmentation of rare words
@@ -142,6 +146,7 @@ def bpe_tokenize(text, merge_rules):
 ### 2.6 Strengths and Limitations
 
 **Strengths:**
+
 - Simple to implement and understand
 - Efficient training (linear time complexity)
 - Produces linguistically intuitive subwords
@@ -149,6 +154,7 @@ def bpe_tokenize(text, merge_rules):
 - Well-suited for morphologically rich languages
 
 **Limitations:**
+
 - Greedy algorithm may not find optimal segmentation
 - No explicit probabilistic framework
 - Can over-segment rare words
@@ -156,12 +162,12 @@ def bpe_tokenize(text, merge_rules):
 
 ### 2.7 Production Implementations
 
-| System | Variant | Vocab Size | Notable Features |
-|--------|---------|------------|------------------|
-| GPT-2 | BPE | 50,257 | Regex pre-tokenization |
-| GPT-3/4 | BBPE | 100,256 | Byte-level, no OOV |
-| RoBERTa | BPE | 50,265 | Different pre-tokenization |
-| XLM-RoBERTa | BBPE | 250,000 | Multilingual optimized |
+| System      | Variant | Vocab Size | Notable Features           |
+| ----------- | ------- | ---------- | -------------------------- |
+| GPT-2       | BPE     | 50,257     | Regex pre-tokenization     |
+| GPT-3/4     | BBPE    | 100,256    | Byte-level, no OOV         |
+| RoBERTa     | BPE     | 50,265     | Different pre-tokenization |
+| XLM-RoBERTa | BBPE    | 250,000    | Multilingual optimized     |
 
 ---
 
@@ -199,6 +205,7 @@ This measures how much merging A and B reduces perplexity compared to keeping th
 ### 3.3 Training Process
 
 **Example (simplified):**
+
 ```
 Corpus: ["hello", "world", "hell", "word"]
 
@@ -249,6 +256,7 @@ BERT introduced several WordPiece conventions:
 - **`[UNK]`**: Unknown token
 
 **Example:**
+
 ```
 Input: "unbelievable"
 Output: ["un", "##be", "##liev", "##able"]
@@ -259,34 +267,34 @@ Output: ["play", "##ing"]
 
 ### 3.6 Comparison: BPE vs WordPiece
 
-| Aspect | BPE | WordPiece |
-|--------|-----|-----------|
-| **Merge criterion** | Frequency | Likelihood |
-| **Training objective** | Minimize tokens | Maximize LM likelihood |
-| **Tokenization** | Greedy merge application | Longest-match |
-| **Unknown tokens** | Rare (BBPE eliminates) | Possible with constrained vocab |
-| **Implementation** | Simpler | More complex |
-| **Continuations** | No marker | `##` prefix in BERT |
-| **Determinism** | Fully deterministic | Fully deterministic |
+| Aspect                 | BPE                      | WordPiece                       |
+| ---------------------- | ------------------------ | ------------------------------- |
+| **Merge criterion**    | Frequency                | Likelihood                      |
+| **Training objective** | Minimize tokens          | Maximize LM likelihood          |
+| **Tokenization**       | Greedy merge application | Longest-match                   |
+| **Unknown tokens**     | Rare (BBPE eliminates)   | Possible with constrained vocab |
+| **Implementation**     | Simpler                  | More complex                    |
+| **Continuations**      | No marker                | `##` prefix in BERT             |
+| **Determinism**        | Fully deterministic      | Fully deterministic             |
 
 ### 3.7 Properties and Characteristics
 
-| Property | Description |
-|----------|-------------|
-| **Likelihood-optimized** | Merges maximize language model probability |
-| **Longest-match decoding** | Always finds longest vocabulary match |
-| **Unknown token handling** | Falls back to [UNK] when necessary |
-| **BERT ecosystem** | Standard for BERT, DistilBERT, ALBERT |
+| Property                   | Description                                |
+| -------------------------- | ------------------------------------------ |
+| **Likelihood-optimized**   | Merges maximize language model probability |
+| **Longest-match decoding** | Always finds longest vocabulary match      |
+| **Unknown token handling** | Falls back to [UNK] when necessary         |
+| **BERT ecosystem**         | Standard for BERT, DistilBERT, ALBERT      |
 
 ### 3.8 Production Implementations
 
-| Model | Vocab Size | Notable Features |
-|-------|------------|------------------|
-| BERT Base | 30,522 | Original WordPiece |
-| BERT Large | 30,522 | Same vocabulary |
-| DistilBERT | 30,522 | Inherited from BERT |
-| ALBERT | 30,000 | Shared vocabulary across layers |
-| ELECTRA | 30,522 | BERT-compatible |
+| Model      | Vocab Size | Notable Features                |
+| ---------- | ---------- | ------------------------------- |
+| BERT Base  | 30,522     | Original WordPiece              |
+| BERT Large | 30,522     | Same vocabulary                 |
+| DistilBERT | 30,522     | Inherited from BERT             |
+| ALBERT     | 30,000     | Shared vocabulary across layers |
+| ELECTRA    | 30,522     | BERT-compatible                 |
 
 ---
 
@@ -331,7 +339,7 @@ def unigram_tokenize(text, vocabulary, probabilities):
     best_score = [float('-inf')] * (n + 1)
     best_edge = [None] * (n + 1)
     best_score[0] = 0
-    
+
     for i in range(n):
         for j in range(i + 1, n + 1):
             subword = text[i:j]
@@ -340,14 +348,14 @@ def unigram_tokenize(text, vocabulary, probabilities):
                 if score > best_score[j]:
                     best_score[j] = score
                     best_edge[j] = (i, subword)
-    
+
     # Backtrack to get tokens
     tokens = []
     i = n
     while i > 0:
         tokens.append(best_edge[i][1])
         i = best_edge[i][0]
-    
+
     return list(reversed(tokens))
 ```
 
@@ -386,13 +394,13 @@ M-step: Re-estimate token probabilities based on expected counts
 
 ### 4.6 Properties and Characteristics
 
-| Property | Description |
-|----------|-------------|
-| **Optimal segmentation** | Viterbi finds globally optimal, not greedy |
-| **Multiple outputs possible** | Can sample diverse segmentations |
-| **Pruning-based** | Starts large, removes tokens |
-| **Probabilistically grounded** | Explicit language model |
-| **More flexible** | Handles subword regularization |
+| Property                       | Description                                |
+| ------------------------------ | ------------------------------------------ |
+| **Optimal segmentation**       | Viterbi finds globally optimal, not greedy |
+| **Multiple outputs possible**  | Can sample diverse segmentations           |
+| **Pruning-based**              | Starts large, removes tokens               |
+| **Probabilistically grounded** | Explicit language model                    |
+| **More flexible**              | Handles subword regularization             |
 
 ### 4.7 Subword Regularization
 
@@ -408,6 +416,7 @@ for batch in training_data:
 ### 4.8 Strengths and Limitations
 
 **Strengths:**
+
 - Finds optimal (not just greedy) segmentations
 - Can generate multiple valid tokenizations
 - More robust through subword regularization
@@ -415,6 +424,7 @@ for batch in training_data:
 - Language-agnostic like BPE
 
 **Limitations:**
+
 - Slower tokenization (Viterbi algorithm)
 - More complex implementation
 - Training is more computationally intensive
@@ -422,12 +432,12 @@ for batch in training_data:
 
 ### 4.9 Production Implementations
 
-| Model | System | Vocab Size | Features |
-|-------|--------|------------|----------|
-| ALBERT | SentencePiece | 30,000 | Unigram with n-gram LM |
-| XLNet | SentencePiece | 32,000 | Unigram + BPE hybrid |
-| T5 | SentencePiece | 32,000 | End-to-end trained |
-| Marian NMT | SentencePiece | Varies | Optimized for translation |
+| Model      | System        | Vocab Size | Features                  |
+| ---------- | ------------- | ---------- | ------------------------- |
+| ALBERT     | SentencePiece | 30,000     | Unigram with n-gram LM    |
+| XLNet      | SentencePiece | 32,000     | Unigram + BPE hybrid      |
+| T5         | SentencePiece | 32,000     | End-to-end trained        |
+| Marian NMT | SentencePiece | Varies     | Optimized for translation |
 
 ---
 
@@ -436,6 +446,7 @@ for batch in training_data:
 ### 5.1 Motivation
 
 Traditional BPE operates on Unicode characters, which presents challenges:
+
 - Large character sets for some languages (CJK)
 - Unknown characters for rare scripts or emojis
 - Inconsistent handling of whitespace and control characters
@@ -451,7 +462,7 @@ BBPE applies standard BPE but treats each byte (0-255) as a token:
 def bbpe_tokenize(text, merge_rules):
     # Convert text to UTF-8 bytes
     bytes_seq = text.encode('utf-8')  # List of integers 0-255
-    
+
     # Apply BPE on byte sequence
     tokens = list(bytes_seq)
     for merge in merge_rules:
@@ -467,7 +478,7 @@ def bbpe_tokenize(text, merge_rules):
                 new_tokens.append(tokens[i])
                 i += 1
         tokens = new_tokens
-    
+
     return tokens
 ```
 
@@ -482,6 +493,7 @@ Vocabulary:
 ### 5.4 UTF-8 Handling
 
 UTF-8 is a variable-length encoding:
+
 - ASCII: 1 byte (0-127)
 - Extended: 2-4 bytes (128-255 combinations)
 
@@ -490,6 +502,7 @@ BBPE naturally learns UTF-8 structure through merge operations.
 ### 5.5 Space Handling
 
 GPT-2 introduced special space handling:
+
 - Spaces are encoded as part of the following word
 - Different tokens for word-initial vs internal positions
 
@@ -500,35 +513,35 @@ GPT-2 introduced special space handling:
 
 ### 5.6 Advantages
 
-| Advantage | Description |
-|-----------|-------------|
-| **No unknown tokens** | Can encode any valid UTF-8 text |
-| **Universal** | Works for any language or script |
-| **Emojis & symbols** | Handles modern Unicode seamlessly |
-| **Robust** | No character normalization issues |
-| **Compact base** | Only 256 base tokens |
+| Advantage             | Description                       |
+| --------------------- | --------------------------------- |
+| **No unknown tokens** | Can encode any valid UTF-8 text   |
+| **Universal**         | Works for any language or script  |
+| **Emojis & symbols**  | Handles modern Unicode seamlessly |
+| **Robust**            | No character normalization issues |
+| **Compact base**      | Only 256 base tokens              |
 
 ### 5.7 Trade-offs
 
-| Trade-off | Impact |
-|-----------|--------|
-| **Sequence length** | Longer sequences (~1.3x for English) |
-| **Context window** | More tokens per word reduces effective context |
-| **Computational cost** | More tokens = more computation |
-| **Base vocabulary** | 256 fixed IDs reduce space for learned tokens |
+| Trade-off              | Impact                                         |
+| ---------------------- | ---------------------------------------------- |
+| **Sequence length**    | Longer sequences (~1.3x for English)           |
+| **Context window**     | More tokens per word reduces effective context |
+| **Computational cost** | More tokens = more computation                 |
+| **Base vocabulary**    | 256 fixed IDs reduce space for learned tokens  |
 
 ### 5.8 Production Implementations
 
-| Model | Vocab Size | Notable |
-|-------|------------|---------|
-| GPT-2 | 50,257 | First major BBPE implementation |
-| GPT-3 | 50,257 | Inherited from GPT-2 |
-| GPT-4 | 100,256 | Expanded vocabulary |
-| RoBERTa | 50,265 | Modified pre-tokenization |
-| XLM-RoBERTa | 250,000 | Massive multilingual vocabulary |
-| LLaMA | 32,000 | Optimized for efficiency |
-| LLaMA 2 | 32,000 | Same as LLaMA |
-| Mistral | 32,000 | Similar to LLaMA |
+| Model       | Vocab Size | Notable                         |
+| ----------- | ---------- | ------------------------------- |
+| GPT-2       | 50,257     | First major BBPE implementation |
+| GPT-3       | 50,257     | Inherited from GPT-2            |
+| GPT-4       | 100,256    | Expanded vocabulary             |
+| RoBERTa     | 50,265     | Modified pre-tokenization       |
+| XLM-RoBERTa | 250,000    | Massive multilingual vocabulary |
+| LLaMA       | 32,000     | Optimized for efficiency        |
+| LLaMA 2     | 32,000     | Same as LLaMA                   |
+| Mistral     | 32,000     | Similar to LLaMA                |
 
 ---
 
@@ -545,12 +558,12 @@ def char_tokenize(text):
 
 ### 6.2 Properties
 
-| Property | Value |
-|----------|-------|
-| **Vocabulary size** | Very large (100K+ for full Unicode) |
-| **Sequence length** | Shortest possible (1 per char) |
-| **Semantic meaning** | Minimal per token |
-| **OOV rate** | Zero |
+| Property             | Value                               |
+| -------------------- | ----------------------------------- |
+| **Vocabulary size**  | Very large (100K+ for full Unicode) |
+| **Sequence length**  | Shortest possible (1 per char)      |
+| **Semantic meaning** | Minimal per token                   |
+| **OOV rate**         | Zero                                |
 
 ### 6.3 Use Cases
 
@@ -571,13 +584,13 @@ def char_tokenize(text):
 
 ### 7.1 Algorithm Comparison Matrix
 
-| Algorithm | Merge Criterion | Decoding | Multi-lingual | Unknown Tokens | Speed |
-|-----------|-----------------|----------|---------------|----------------|-------|
-| BPE | Frequency | Greedy merge | Good | BBPE: No | Fast |
-| WordPiece | Likelihood | Longest match | Good | Possible | Fast |
-| Unigram | EM optimization | Viterbi optimal | Good | BBPE: No | Medium |
-| BBPE | Frequency (bytes) | Greedy merge | Excellent | Never | Fast |
-| Character | N/A | Direct | Perfect | Never | Fastest |
+| Algorithm | Merge Criterion   | Decoding        | Multi-lingual | Unknown Tokens | Speed   |
+| --------- | ----------------- | --------------- | ------------- | -------------- | ------- |
+| BPE       | Frequency         | Greedy merge    | Good          | BBPE: No       | Fast    |
+| WordPiece | Likelihood        | Longest match   | Good          | Possible       | Fast    |
+| Unigram   | EM optimization   | Viterbi optimal | Good          | BBPE: No       | Medium  |
+| BBPE      | Frequency (bytes) | Greedy merge    | Excellent     | Never          | Fast    |
+| Character | N/A               | Direct          | Perfect       | Never          | Fastest |
 
 ### 7.2 Performance Benchmarks
 
@@ -585,50 +598,50 @@ Based on published research and industry benchmarks:
 
 #### Tokenization Speed (K tokens/second, single CPU)
 
-| Algorithm | Implementation | Speed | Notes |
-|-----------|----------------|-------|-------|
-| BPE | tiktoken (Rust) | ~1,000K | Highly optimized |
-| BPE | HF Tokenizers | ~100K | General purpose |
-| WordPiece | HF Tokenizers | ~80K | Longest-match overhead |
-| Unigram | SentencePiece | ~50K | Viterbi algorithm |
-| BBPE | tiktoken | ~800K | Byte operations are fast |
+| Algorithm | Implementation  | Speed   | Notes                    |
+| --------- | --------------- | ------- | ------------------------ |
+| BPE       | tiktoken (Rust) | ~1,000K | Highly optimized         |
+| BPE       | HF Tokenizers   | ~100K   | General purpose          |
+| WordPiece | HF Tokenizers   | ~80K    | Longest-match overhead   |
+| Unigram   | SentencePiece   | ~50K    | Viterbi algorithm        |
+| BBPE      | tiktoken        | ~800K   | Byte operations are fast |
 
 #### Compression Efficiency (tokens per word, English)
 
-| Algorithm | Avg Tokens/Word | Vocab Size | Compression |
-|-----------|-----------------|------------|-------------|
-| BPE (50K) | 1.3 | 50,000 | Good |
-| WordPiece (30K) | 1.4 | 30,522 | Good |
-| Unigram (32K) | 1.35 | 32,000 | Good |
-| BBPE (50K) | 1.5 | 50,257 | Moderate |
-| Character | 5.0 | 100,000+ | Poor |
+| Algorithm       | Avg Tokens/Word | Vocab Size | Compression |
+| --------------- | --------------- | ---------- | ----------- |
+| BPE (50K)       | 1.3             | 50,000     | Good        |
+| WordPiece (30K) | 1.4             | 30,522     | Good        |
+| Unigram (32K)   | 1.35            | 32,000     | Good        |
+| BBPE (50K)      | 1.5             | 50,257     | Moderate    |
+| Character       | 5.0             | 100,000+   | Poor        |
 
 #### OOV Handling
 
-| Algorithm | OOV Rate (English) | OOV Rate (Multilingual) |
-|-----------|-------------------|-------------------------|
-| BPE (character) | &lt;0.1% | 1-5% |
-| WordPiece | &lt;0.1% | 1-3% |
-| BBPE | 0% | 0% |
-| Character | 0% | 0% |
+| Algorithm       | OOV Rate (English) | OOV Rate (Multilingual) |
+| --------------- | ------------------ | ----------------------- |
+| BPE (character) | &lt;0.1%           | 1-5%                    |
+| WordPiece       | &lt;0.1%           | 1-3%                    |
+| BBPE            | 0%                 | 0%                      |
+| Character       | 0%                 | 0%                      |
 
 ### 7.3 Memory Usage
 
-| Algorithm | Vocabulary Memory | Model Overhead |
-|-----------|-------------------|----------------|
-| BPE (50K) | ~10MB | Embedding: 50K × d |
-| WordPiece (30K) | ~6MB | Embedding: 30K × d |
-| BBPE (100K) | ~20MB | Embedding: 100K × d |
-| Character (100K) | ~20MB | Embedding: 100K × d |
+| Algorithm        | Vocabulary Memory | Model Overhead      |
+| ---------------- | ----------------- | ------------------- |
+| BPE (50K)        | ~10MB             | Embedding: 50K × d  |
+| WordPiece (30K)  | ~6MB              | Embedding: 30K × d  |
+| BBPE (100K)      | ~20MB             | Embedding: 100K × d |
+| Character (100K) | ~20MB             | Embedding: 100K × d |
 
 ### 7.4 Training Characteristics
 
-| Algorithm | Training Time | Convergence | Parallelization |
-|-----------|---------------|-------------|-----------------|
-| BPE | Fast | Stable | Easy |
-| WordPiece | Medium | Stable | Moderate |
-| Unigram | Slow | Requires tuning | Difficult |
-| BBPE | Fast | Stable | Easy |
+| Algorithm | Training Time | Convergence     | Parallelization |
+| --------- | ------------- | --------------- | --------------- |
+| BPE       | Fast          | Stable          | Easy            |
+| WordPiece | Medium        | Stable          | Moderate        |
+| Unigram   | Slow          | Requires tuning | Difficult       |
+| BBPE      | Fast          | Stable          | Easy            |
 
 ---
 
@@ -647,13 +660,13 @@ Better generalization    Potential overfitting
 
 ### 8.2 Optimal Vocabulary Sizes by Domain
 
-| Domain | Recommended Size | Rationale |
-|--------|------------------|-----------|
-| General English | 30K-50K | Balance coverage and efficiency |
-| Multilingual | 100K-250K | Cover many languages |
-| Code | 50K-100K | Keywords, identifiers, patterns |
-| Domain-specific | 20K-40K | Specialized vocabulary |
-| Low-resource | 10K-20K | Focus on character-level |
+| Domain          | Recommended Size | Rationale                       |
+| --------------- | ---------------- | ------------------------------- |
+| General English | 30K-50K          | Balance coverage and efficiency |
+| Multilingual    | 100K-250K        | Cover many languages            |
+| Code            | 50K-100K         | Keywords, identifiers, patterns |
+| Domain-specific | 20K-40K          | Specialized vocabulary          |
+| Low-resource    | 10K-20K          | Focus on character-level        |
 
 ### 8.3 Empirical Findings
 
@@ -668,13 +681,13 @@ Research shows diminishing returns beyond certain vocabulary sizes:
 Based on analysis of C4 dataset (English):
 
 | Vocab Size | Avg Tokens/Sentence | Total Tokens (C4) |
-|------------|---------------------|-------------------|
-| 8K | 35.2 | 12.8B |
-| 16K | 28.1 | 10.2B |
-| 32K | 24.5 | 8.9B |
-| 50K | 22.8 | 8.3B |
-| 100K | 21.2 | 7.7B |
-| 200K | 20.1 | 7.3B |
+| ---------- | ------------------- | ----------------- |
+| 8K         | 35.2                | 12.8B             |
+| 16K        | 28.1                | 10.2B             |
+| 32K        | 24.5                | 8.9B              |
+| 50K        | 22.8                | 8.3B              |
+| 100K       | 21.2                | 7.7B              |
+| 200K       | 20.1                | 7.3B              |
 
 **Insight**: Doubling vocabulary yields ~10-15% token reduction, with diminishing returns.
 
@@ -725,6 +738,7 @@ Based on analysis of C4 dataset (English):
 ### 10.1 SentencePiece Unification
 
 SentencePiece (Kudo & Richardson, 2018) provides a unified interface:
+
 - Supports BPE, Unigram, char, and word models
 - Language-agnostic pre-tokenization
 - Reversible tokenization
@@ -733,6 +747,7 @@ SentencePiece (Kudo & Richardson, 2018) provides a unified interface:
 ### 10.2 Tiktoken Optimization
 
 OpenAI's tiktoken provides:
+
 - Rust-based implementation for speed
 - Regex-based pre-tokenization
 - Special handling for GPT models
@@ -741,6 +756,7 @@ OpenAI's tiktoken provides:
 ### 10.3 HuggingFace Tokenizers
 
 Provides:
+
 - Rust implementation with Python bindings
 - Parallel processing
 - Pre-tokenization customization
@@ -749,6 +765,7 @@ Provides:
 ### 10.4 Neural Tokenization (Emerging)
 
 Research directions:
+
 - **Tokenization-free models**: ByT5, CANINE (character/byte models)
 - **Learned tokenization**: Neural segmentation
 - **Adaptive tokenization**: Dynamic vocabulary per input
@@ -759,13 +776,13 @@ Research directions:
 
 ### 11.1 Algorithm Selection Guidelines
 
-| Use Case | Recommended Algorithm | Rationale |
-|----------|----------------------|-----------|
-| General-purpose LLM | BBPE (50K-100K) | Universal, no OOV |
-| Multilingual model | BBPE (100K-250K) | Handles all scripts |
-| Code-focused model | BPE with code pre-tok | Preserves structure |
-| Resource-constrained | WordPiece (30K) | Smaller embeddings |
-| Research flexibility | Unigram | Multiple segmentations |
+| Use Case             | Recommended Algorithm | Rationale              |
+| -------------------- | --------------------- | ---------------------- |
+| General-purpose LLM  | BBPE (50K-100K)       | Universal, no OOV      |
+| Multilingual model   | BBPE (100K-250K)      | Handles all scripts    |
+| Code-focused model   | BPE with code pre-tok | Preserves structure    |
+| Resource-constrained | WordPiece (30K)       | Smaller embeddings     |
+| Research flexibility | Unigram               | Multiple segmentations |
 
 ### 11.2 Tokn Positioning
 
@@ -779,14 +796,14 @@ Based on this research, Tokn should consider:
 
 ### 11.3 Implementation Priorities
 
-| Priority | Feature | Target |
-|----------|---------|--------|
-| P0 | BBPE core algorithm | 100K vocab, UTF-8 |
-| P0 | Tiktoken-compatible output | Exact matching |
-| P1 | BPE algorithm | 50K vocab option |
-| P1 | Training from corpus | Custom vocabularies |
-| P2 | WordPiece support | BERT compatibility |
-| P2 | Unigram support | Advanced users |
+| Priority | Feature                    | Target              |
+| -------- | -------------------------- | ------------------- |
+| P0       | BBPE core algorithm        | 100K vocab, UTF-8   |
+| P0       | Tiktoken-compatible output | Exact matching      |
+| P1       | BPE algorithm              | 50K vocab option    |
+| P1       | Training from corpus       | Custom vocabularies |
+| P2       | WordPiece support          | BERT compatibility  |
+| P2       | Unigram support            | Advanced users      |
 
 ---
 
@@ -794,47 +811,47 @@ Based on this research, Tokn should consider:
 
 ### Primary Sources
 
-1. **Sennrich, R., Haddow, B., & Birch, A. (2016).** Neural Machine Translation of Rare Words with Subword Units. *Proceedings of ACL*, 1715-1725. https://doi.org/10.18653/v1/P16-1162
+1. **Sennrich, R., Haddow, B., & Birch, A. (2016).** Neural Machine Translation of Rare Words with Subword Units. _Proceedings of ACL_, 1715-1725. https://doi.org/10.18653/v1/P16-1162
 
-2. **Schuster, M., & Nakajima, K. (2012).** Japanese and Korean Voice Search. *IEEE ICASSP*, 5149-5152. https://ieeexplore.ieee.org/document/6289079
+2. **Schuster, M., & Nakajima, K. (2012).** Japanese and Korean Voice Search. _IEEE ICASSP_, 5149-5152. https://ieeexplore.ieee.org/document/6289079
 
-3. **Kudo, T. (2018).** Subword Regularization: Improving Neural Network Translation Models with Multiple Subword Candidates. *Proceedings of ACL*, 66-75. https://doi.org/10.18653/v1/P18-1007
+3. **Kudo, T. (2018).** Subword Regularization: Improving Neural Network Translation Models with Multiple Subword Candidates. _Proceedings of ACL_, 66-75. https://doi.org/10.18653/v1/P18-1007
 
-4. **Kudo, T., & Richardson, J. (2018).** SentencePiece: A simple and language independent subword tokenizer and detokenizer for Neural Text Processing. *Proceedings of EMNLP*, 66-71. https://doi.org/10.18653/v1/D18-2012
+4. **Kudo, T., & Richardson, J. (2018).** SentencePiece: A simple and language independent subword tokenizer and detokenizer for Neural Text Processing. _Proceedings of EMNLP_, 66-71. https://doi.org/10.18653/v1/D18-2012
 
-5. **Radford, A., Wu, J., Child, R., Luan, D., Amodei, D., & Sutskever, I. (2019).** Language Models are Unsupervised Multitask Learners. *OpenAI Blog*, 1-24.
+5. **Radford, A., Wu, J., Child, R., Luan, D., Amodei, D., & Sutskever, I. (2019).** Language Models are Unsupervised Multitask Learners. _OpenAI Blog_, 1-24.
 
 ### Algorithm Foundations
 
-6. **Gage, P. (1994).** A New Algorithm for Data Compression. *The C Users Journal*, 12(2), 23-38.
+6. **Gage, P. (1994).** A New Algorithm for Data Compression. _The C Users Journal_, 12(2), 23-38.
 
-7. **Provilkov, I., Emelianenko, D., & Voita, E. (2020).** BPE-Dropout: Simple and Effective Subword Regularization. *Proceedings of ACL*, 1882-1892. https://doi.org/10.18653/v1/2020.acl-main.170
+7. **Provilkov, I., Emelianenko, D., & Voita, E. (2020).** BPE-Dropout: Simple and Effective Subword Regularization. _Proceedings of ACL_, 1882-1892. https://doi.org/10.18653/v1/2020.acl-main.170
 
-8. **Bostrom, K., & Durrett, G. (2020).** Byte Pair Encoding is Suboptimal for Language Model Pretraining. *Findings of EMNLP*, 4617-4624. https://doi.org/10.18653/v1/2020.findings-emnlp.414
+8. **Bostrom, K., & Durrett, G. (2020).** Byte Pair Encoding is Suboptimal for Language Model Pretraining. _Findings of EMNLP_, 4617-4624. https://doi.org/10.18653/v1/2020.findings-emnlp.414
 
 ### Modern Implementations
 
-9. **OpenAI. (2023).** Tiktoken: A fast BPE tokeniser for use with OpenAI's models. *GitHub Repository*. https://github.com/openai/tiktoken
+9. **OpenAI. (2023).** Tiktoken: A fast BPE tokeniser for use with OpenAI's models. _GitHub Repository_. https://github.com/openai/tiktoken
 
-10. **HuggingFace. (2023).** Tokenizers: Fast state-of-the-art tokenizers. *GitHub Repository*. https://github.com/huggingface/tokenizers
+10. **HuggingFace. (2023).** Tokenizers: Fast state-of-the-art tokenizers. _GitHub Repository_. https://github.com/huggingface/tokenizers
 
-11. **Google. (2023).** SentencePiece: Unsupervised text tokenizer. *GitHub Repository*. https://github.com/google/sentencepiece
+11. **Google. (2023).** SentencePiece: Unsupervised text tokenizer. _GitHub Repository_. https://github.com/google/sentencepiece
 
 ### Comparative Studies
 
-12. **Mielke, S. J., et al. (2021).** Between Words and Characters: A Brief History of Open-Vocabulary Modeling and Tokenization in NLP. *arXiv preprint arXiv:2112.10501*.
+12. **Mielke, S. J., et al. (2021).** Between Words and Characters: A Brief History of Open-Vocabulary Modeling and Tokenization in NLP. _arXiv preprint arXiv:2112.10501_.
 
-13. **Rust, P., et al. (2023).** How Good is Your Tokenizer? On the Language Specificity of Multilingual Tokenizers. *Proceedings of ACL*, 3118-3133.
+13. **Rust, P., et al. (2023).** How Good is Your Tokenizer? On the Language Specificity of Multilingual Tokenizers. _Proceedings of ACL_, 3118-3133.
 
-14. **Dobler, K., & de Melo, G. (2023).** Tokenization in the Era of Commercial Language Models. *Proceedings of EMNLP*, 12147-12157.
+14. **Dobler, K., & de Melo, G. (2023).** Tokenization in the Era of Commercial Language Models. _Proceedings of EMNLP_, 12147-12157.
 
 ### Code and Domain-Specific
 
-15. **Ahmad, W. U., et al. (2021).** PLBART: A Sequence-to-Sequence Model for Program and Natural Language Processing. *arXiv preprint arXiv:2103.06333*.
+15. **Ahmad, W. U., et al. (2021).** PLBART: A Sequence-to-Sequence Model for Program and Natural Language Processing. _arXiv preprint arXiv:2103.06333_.
 
-16. **Wang, Y., et al. (2021).** CodeT5: Identifier-aware Unified Pre-trained Encoder-Decoder Models for Code Understanding and Generation. *Proceedings of EMNLP*, 8696-8708.
+16. **Wang, Y., et al. (2021).** CodeT5: Identifier-aware Unified Pre-trained Encoder-Decoder Models for Code Understanding and Generation. _Proceedings of EMNLP_, 8696-8708.
 
-17. **Feng, Z., et al. (2020).** CodeBERT: A Pre-Trained Model for Programming and Natural Languages. *Proceedings of EMNLP*, 1536-1547.
+17. **Feng, Z., et al. (2020).** CodeBERT: A Pre-Trained Model for Programming and Natural Languages. _Proceedings of EMNLP_, 1536-1547.
 
 ---
 
@@ -861,11 +878,13 @@ where P(x) = ∏ P(x_i) for tokens x_i in segmentation
 ### 13.3 Unigram EM Algorithm
 
 **E-step:**
+
 ```
 Q(θ|θ^(t)) = E[log P(X,Z|θ) | X, θ^(t)]
 ```
 
 **M-step:**
+
 ```
 θ^(t+1) = argmax_θ Q(θ|θ^(t))
 ```
@@ -874,27 +893,27 @@ Q(θ|θ^(t)) = E[log P(X,Z|θ) | X, θ^(t)]
 
 ## 14. Appendix B: Glossary
 
-| Term | Definition |
-|------|------------|
-| **BPE** | Byte-Pair Encoding, a subword tokenization algorithm |
-| **BBPE** | Byte-level BPE, operates on raw bytes |
-| **OOV** | Out-of-Vocabulary, words not in the tokenizer's vocabulary |
-| **Subword** | A token representing part of a word |
-| **Vocabulary** | The set of all tokens known to the tokenizer |
-| **Pre-tokenization** | Initial splitting before subword tokenization |
-| **Normalization** | Text standardization (Unicode, case, etc.) |
-| **Detokenization** | Converting tokens back to text |
-| **Viterbi** | Dynamic programming algorithm for optimal sequences |
-| **EM Algorithm** | Expectation-Maximization for probabilistic models |
+| Term                 | Definition                                                 |
+| -------------------- | ---------------------------------------------------------- |
+| **BPE**              | Byte-Pair Encoding, a subword tokenization algorithm       |
+| **BBPE**             | Byte-level BPE, operates on raw bytes                      |
+| **OOV**              | Out-of-Vocabulary, words not in the tokenizer's vocabulary |
+| **Subword**          | A token representing part of a word                        |
+| **Vocabulary**       | The set of all tokens known to the tokenizer               |
+| **Pre-tokenization** | Initial splitting before subword tokenization              |
+| **Normalization**    | Text standardization (Unicode, case, etc.)                 |
+| **Detokenization**   | Converting tokens back to text                             |
+| **Viterbi**          | Dynamic programming algorithm for optimal sequences        |
+| **EM Algorithm**     | Expectation-Maximization for probabilistic models          |
 
 ---
 
 ## Document History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | 2026-04-04 | Tokn Research Team | Initial comprehensive SOTA analysis |
+| Version | Date       | Author             | Changes                             |
+| ------- | ---------- | ------------------ | ----------------------------------- |
+| 1.0     | 2026-04-04 | Tokn Research Team | Initial comprehensive SOTA analysis |
 
 ---
 
-*End of Document - 759 lines*
+_End of Document - 759 lines_

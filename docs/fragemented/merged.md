@@ -38,33 +38,36 @@ This contract defines the normalized JSONL event shape used by `monthly`, `daily
 
 ## Field contract
 
-| Field | Type | Required | Notes |
-| --- | --- | --- | --- |
-| `provider` | string | yes | Provider key (alias values are allowed on input; canonicalized against pricing aliases before filtering/costing). |
-| `model` | string | yes | Model key (alias values are allowed on input; canonicalized against provider model aliases before filtering/costing). |
-| `session_id` | string | yes | Logical session identifier used in session counts and dedupe keys. |
-| `timestamp` | RFC3339 datetime string | yes | Must parse as UTC datetime (`DateTime<Utc>`). |
-| `usage` | object | yes | Token usage payload (see subfields below). |
-| `usage.input_tokens` | non-negative integer | yes | Input prompt tokens. |
-| `usage.output_tokens` | non-negative integer | yes | Output/completion tokens. |
-| `usage.cache_write_tokens` | non-negative integer | yes | Cache write tokens. |
-| `usage.cache_read_tokens` | non-negative integer | yes | Cache read tokens. |
-| `usage.tool_input_tokens` | non-negative integer | yes | Tool input tokens. |
-| `usage.tool_output_tokens` | non-negative integer | yes | Tool output tokens. |
+| Field                      | Type                    | Required | Notes                                                                                                                 |
+| -------------------------- | ----------------------- | -------- | --------------------------------------------------------------------------------------------------------------------- |
+| `provider`                 | string                  | yes      | Provider key (alias values are allowed on input; canonicalized against pricing aliases before filtering/costing).     |
+| `model`                    | string                  | yes      | Model key (alias values are allowed on input; canonicalized against provider model aliases before filtering/costing). |
+| `session_id`               | string                  | yes      | Logical session identifier used in session counts and dedupe keys.                                                    |
+| `timestamp`                | RFC3339 datetime string | yes      | Must parse as UTC datetime (`DateTime<Utc>`).                                                                         |
+| `usage`                    | object                  | yes      | Token usage payload (see subfields below).                                                                            |
+| `usage.input_tokens`       | non-negative integer    | yes      | Input prompt tokens.                                                                                                  |
+| `usage.output_tokens`      | non-negative integer    | yes      | Output/completion tokens.                                                                                             |
+| `usage.cache_write_tokens` | non-negative integer    | yes      | Cache write tokens.                                                                                                   |
+| `usage.cache_read_tokens`  | non-negative integer    | yes      | Cache read tokens.                                                                                                    |
+| `usage.tool_input_tokens`  | non-negative integer    | yes      | Tool input tokens.                                                                                                    |
+| `usage.tool_output_tokens` | non-negative integer    | yes      | Tool output tokens.                                                                                                   |
 
 ## Invariants
 
 1. `usage_total_tokens` is defined as:
-`input_tokens + output_tokens + cache_write_tokens + cache_read_tokens + tool_input_tokens + tool_output_tokens`.
+   `input_tokens + output_tokens + cache_write_tokens + cache_read_tokens + tool_input_tokens + tool_output_tokens`.
 2. Consumers must treat the payload as append-only for unknown keys (ignore unknown fields).
 3. Empty event sets after month/provider/model filters are treated as an execution error for report/snapshot generation.
 
 ## Compatibility policy
 
 1. `v1` is additive-forward-compatible:
+
 - adding optional fields is non-breaking,
 - adding top-level metadata fields is non-breaking.
+
 2. Breaking changes require `v2`:
+
 - renaming/removing required fields,
 - changing numeric semantics,
 - changing timestamp format away from RFC3339 UTC.
@@ -75,9 +78,7 @@ This contract defines the normalized JSONL event shape used by `monthly`, `daily
 2. Consumers should not rely on field order.
 3. Downstream UI/extensions should consume normalized artifacts, not provider-native raw logs.
 
-
 ---
-
 
 ## Source: contracts/UI_SNAPSHOT_SCHEMA_CONTRACT_V1.md
 
@@ -134,28 +135,27 @@ It is intended for file-based extension and statusbar integrations (CodexBar/Ope
       "session_count": 2
     }
   ],
-  "suggestions": [
-    "tip"
-  ],
+  "suggestions": ["tip"],
   "reconcile_latest_summary_path": "benchmarks/results/reconcile-latest-summary.json"
 }
 ```
 
 ## Field contract
 
-| Field | Type | Required | Notes |
-| --- | --- | --- | --- |
-| `schema_version` | integer | yes | Compatibility gate for consumers. |
-| `generated_at` | RFC3339 datetime string | yes | Snapshot generation timestamp (UTC). |
-| `month` | string | yes | Snapshot month in `YYYY-MM`. |
-| `mode` | enum | yes | `compact` or `extended`. |
-| `totals` | object | yes | Aggregate cost/token/session metrics. |
-| `top_providers` | array | yes | Provider-level rows sorted by token volume. |
-| `top_models` | array | yes | Model-level rows sorted by token volume. |
-| `suggestions` | array of string | yes | Optimization suggestions from report pipeline. |
-| `reconcile_latest_summary_path` | string | no | Present when latest reconcile summary pointer exists. |
+| Field                           | Type                    | Required | Notes                                                 |
+| ------------------------------- | ----------------------- | -------- | ----------------------------------------------------- |
+| `schema_version`                | integer                 | yes      | Compatibility gate for consumers.                     |
+| `generated_at`                  | RFC3339 datetime string | yes      | Snapshot generation timestamp (UTC).                  |
+| `month`                         | string                  | yes      | Snapshot month in `YYYY-MM`.                          |
+| `mode`                          | enum                    | yes      | `compact` or `extended`.                              |
+| `totals`                        | object                  | yes      | Aggregate cost/token/session metrics.                 |
+| `top_providers`                 | array                   | yes      | Provider-level rows sorted by token volume.           |
+| `top_models`                    | array                   | yes      | Model-level rows sorted by token volume.              |
+| `suggestions`                   | array of string         | yes      | Optimization suggestions from report pipeline.        |
+| `reconcile_latest_summary_path` | string                  | no       | Present when latest reconcile summary pointer exists. |
 
 `totals` fields:
+
 - `cost_usd` (number)
 - `tokens` (non-negative integer)
 - `blended_usd_per_mtok` (number)
@@ -163,6 +163,7 @@ It is intended for file-based extension and statusbar integrations (CodexBar/Ope
 - `skipped_unpriced_count` (non-negative integer)
 
 Row fields in `top_providers[]` and `top_models[]`:
+
 - `name` (string)
 - `tokens` (non-negative integer)
 - `total_cost_usd` (number)
@@ -172,8 +173,11 @@ Row fields in `top_providers[]` and `top_models[]`:
 ## Mode semantics
 
 1. `compact`:
+
 - `top_providers` and `top_models` are top-N slices (currently N=5).
+
 2. `extended`:
+
 - `top_providers` and `top_models` include full breakdowns.
 
 ## Compatibility policy
@@ -182,6 +186,7 @@ Row fields in `top_providers[]` and `top_models[]`:
 2. Additive fields in `v1` are non-breaking; consumers must ignore unknown keys.
 3. `mode` additions are non-breaking if existing values and field semantics are preserved.
 4. Any of the following requires a major contract bump (`schema_version: 2`):
+
 - required field removal/rename,
 - type change for existing fields,
 - semantic redefinition of totals or row metrics.
@@ -192,9 +197,7 @@ Row fields in `top_providers[]` and `top_models[]`:
 2. Use atomic read strategy (`readFile` + parse; retry on parse error).
 3. If `schema_version` is unsupported, surface a clear integration error and ignore payload contents.
 
-
 ---
-
 
 ## Source: governance/PIPELINE_GOVERNANCE_AND_ARTIFACT_POLICY.md
 
@@ -209,9 +212,11 @@ Row fields in `top_providers[]` and `top_models[]`:
 ## Required Artifacts
 
 1. Ingest summary:
+
 - `--summary-json-path`
 
 2. Reconcile artifacts:
+
 - per-run directory `reconcile-YYYYMMDD-HHMMSS/`
 - `pricing-patch.reconcile.json`
 - `unpriced-events.reconcile.jsonl`
@@ -219,13 +224,16 @@ Row fields in `top_providers[]` and `top_models[]`:
 - rolling pointer: `reconcile-latest-summary.json`
 
 3. Bench artifacts:
+
 - timestamped `bench-*.json`
 - rolling `latest-summary.json`
 
 4. UI artifact (optional):
+
 - `ui-snapshot.json`
 
 5. Cache artifacts (optional but recommended for operator runs):
+
 - ingest cache metadata: `--ingest-cache-path`
 - aggregate cache entries: `--aggregate-cache-path`
 
@@ -271,9 +279,11 @@ Operational behavior:
 Each aggregate cache entry is keyed by:
 
 1. selector:
+
 - `month`
 - provider/model filters
 - `on_unpriced` mode
+
 2. pricing hash (from `--pricing` content)
 3. events fingerprint (from `--events-out` content/metadata)
 
@@ -293,9 +303,7 @@ Operational behavior:
 4. `enabled`
 5. `cache_path`
 
-
 ---
-
 
 ## Source: index.md
 
@@ -303,25 +311,22 @@ Operational behavior:
 
 ## Files
 
-
 ## Subdirectories
 
-* `contracts/index.md`
-* `contracts/merged.md`
-* `governance/index.md`
-* `governance/merged.md`
-* `integrations/index.md`
-* `integrations/merged.md`
-* `plans/index.md`
-* `plans/merged.md`
-* `research/index.md`
-* `research/merged.md`
-* `worklog/index.md`
-* `worklog/merged.md`
-
+- `contracts/index.md`
+- `contracts/merged.md`
+- `governance/index.md`
+- `governance/merged.md`
+- `integrations/index.md`
+- `integrations/merged.md`
+- `plans/index.md`
+- `plans/merged.md`
+- `research/index.md`
+- `research/merged.md`
+- `worklog/index.md`
+- `worklog/merged.md`
 
 ---
-
 
 ## Source: integrations/EXTENSION_FILE_READ_INTEGRATION_EXAMPLES.md
 
@@ -349,10 +354,15 @@ cargo run -- orchestrate \
 ## Files to read
 
 1. Primary UI payload:
+
 - `./benchmarks/results/ui-snapshot.json`
+
 2. Optional reconcile details pointer:
+
 - `reconcile_latest_summary_path` inside snapshot
+
 3. Optional pipeline status:
+
 - `./benchmarks/results/orchestrate-summary.json`
 
 ## Example A: Polling reader (TypeScript/Node)
@@ -441,9 +451,7 @@ watch(path, () => {
 4. Keep reads local-only and low frequency (1-5s polling) unless fs-watch is available.
 5. Optionally read `reconcile_latest_summary_path` when present for detail views.
 
-
 ---
-
 
 ## Source: plans/INDEX.md
 
@@ -452,9 +460,7 @@ watch(path, () => {
 - `docs/plans/UNIFIED_E2E_EXECUTION_PLAN.md`
 - `docs/plans/UNIFIED_MODEL_PROVIDER_LEDGER_PLAN_2026-02-21.md`
 
-
 ---
-
 
 ## Source: plans/UNIFIED_E2E_EXECUTION_PLAN.md
 
@@ -475,6 +481,7 @@ Deliver a production-ready local-first analytics pipeline with extension-ready U
 3. Lock benchmark correctness golden baselines.
 
 Exit criteria:
+
 - Contract docs and tests exist,
 - schema changes require explicit migration notes.
 
@@ -485,6 +492,7 @@ Exit criteria:
 3. Expand provider conformance fixtures/tests.
 
 Exit criteria:
+
 - Cursor DB fixtures parse deterministically,
 - adapter test matrix covers all providers.
 
@@ -495,6 +503,7 @@ Exit criteria:
 3. Add cache metrics (hit/miss, invalidate counts).
 
 Exit criteria:
+
 - warm runs materially faster than cold,
 - correctness equivalent to uncached path.
 
@@ -505,6 +514,7 @@ Exit criteria:
 3. Provide extension integration examples (CodexBar/OpenCode style).
 
 Exit criteria:
+
 - extension reads file artifact only,
 - no additional runtime service required.
 
@@ -515,21 +525,25 @@ Exit criteria:
 3. Enforce perf and correctness gates with baseline handling.
 
 Exit criteria:
+
 - do:all:next outputs complete artifact bundle,
 - CI catches correctness/perf regressions.
 
 ## Phase 5: Unified Model + Provider Ledger
 
 1. Build deterministic ledger generator from:
+
 - `pricing.example.json`
 - `models_normalized.csv`
 
 2. Emit machine-consumable artifacts:
+
 - unified ledger CSV
 - SQL schema
 - SQL seed
 
 3. Include mapping provenance:
+
 - provider mapping rule + confidence,
 - model mapping rule + confidence,
 - benchmark prior coverage stats.
@@ -537,6 +551,7 @@ Exit criteria:
 4. Feed cliproxyapi telemetry (Proxyapi adapter) into the same canonical ledger join model.
 
 Exit criteria:
+
 - unified ledger artifacts regenerate deterministically from one command,
 - ledger provides pricing + benchmark priors on one row surface,
 - feeder contracts documented for cliproxyapi/OTEL-derived usage.
@@ -552,18 +567,23 @@ Exit criteria:
 ## Risks and Mitigations
 
 1. Provider schema churn:
+
 - Mitigation: versioned adapter mappers + fixture updates.
 
 2. Cache staleness:
+
 - Mitigation: strict fingerprint keys + bypass flag.
 
 3. UI contract drift:
+
 - Mitigation: schema version and compatibility table.
 
 4. Perf false regressions:
+
 - Mitigation: baseline month/workload matching and trend windows.
 
 5. Ledger mapping drift:
+
 - Mitigation: explicit mapping rule/confidence fields and deterministic regeneration from source seeds.
 
 ## Milestone Acceptance
@@ -579,19 +599,24 @@ Exit criteria:
 The following closure items are now completed:
 
 1. Normalized event schema contract v1:
+
 - `docs/contracts/NORMALIZED_EVENT_SCHEMA_CONTRACT_V1.md`
 
 2. UI snapshot schema contract v1 + compatibility policy:
+
 - `docs/contracts/UI_SNAPSHOT_SCHEMA_CONTRACT_V1.md`
 
 3. Extension integration examples for CodexBar/OpenCode-style file reads:
+
 - `docs/integrations/EXTENSION_FILE_READ_INTEGRATION_EXAMPLES.md`
 
 4. CI workflow for pricing governance checks:
+
 - `.github/workflows/pricing-governance-check.yml`
 - runs `pricing-lint`, `pricing-audit`, and `pricing-check`
 
 5. Operator shortcuts and docs references:
+
 - `task pricing:ci`
 - `cargo run -- pricing-lint --pricing ./pricing.example.json`
 - `cargo run -- pricing-audit --pricing ./pricing.example.json`
@@ -602,20 +627,25 @@ The following closure items are now completed:
 The following cache-layer closure items are completed:
 
 1. Task wiring for aggregate cache orchestration:
+
 - `task orchestrate`, `task orchestrate:ui`, and `task do:all:next` now pass `--aggregate-cache-path`.
 - Added `task orchestrate:cache` for sample-data aggregate cache warm runs.
 
 2. Cache metrics validation operator task:
+
 - Added `task orchestrate:cache:metrics:validate`.
 - Validates `miss -> hit -> invalidate` transitions via `aggregate_cache` metrics in pipeline summaries.
 
 3. README operator command updates:
+
 - Orchestrate command examples now include `--aggregate-cache-path`.
 
 4. Cache semantics documentation:
+
 - Added cache key and metrics semantics (`hit/miss/invalidate`) in governance docs.
 
 5. CI cache-path exercise profile:
+
 - Added pricing-governance CI step that runs sample-data orchestrate with aggregate cache and validates cache metrics on second run.
 
 ## Closeout Batch: Baseline and Contract Guards (2026-02-21)
@@ -623,21 +653,23 @@ The following cache-layer closure items are completed:
 The following governance gaps are now closed:
 
 1. Benchmark golden baseline lock procedure:
+
 - Added `task bench:golden:lock` to regenerate fixture from canonical sample inputs.
 - Added `task bench:golden:lock:verify` to regenerate and immediately verify with `--golden`.
 
 2. Golden baseline enforcement in CI:
+
 - `.github/workflows/bench-perf-gate.yml` now runs a golden verification step before strict perf-gate checks.
 
 3. Golden fixture strictness hardening:
+
 - runtime verification now fails when golden contains scenarios absent from current report output.
 
 4. Cache contract version guards:
+
 - ingest and aggregate cache loaders ignore/reset stale versioned cache payloads instead of reusing incompatible serialized state.
 
-
 ---
-
 
 ## Source: plans/UNIFIED_MODEL_PROVIDER_LEDGER_PLAN_2026-02-21.md
 
@@ -675,17 +707,20 @@ Create one canonical ledger that joins:
 ## Mapping methodology
 
 1. Provider mapping:
+
 - deterministic token/prefix-based heuristics,
 - explicit `provider_mapping_rule`,
 - integer `provider_mapping_confidence`.
 
 2. Model mapping:
+
 - exact pricing model match first,
 - alias/model-family heuristics second,
 - explicit `model_mapping_rule`,
 - integer `model_mapping_confidence`.
 
 3. Unknown/unmapped models:
+
 - retained in output with null pricing,
 - benchmark priors preserved for analysis.
 
@@ -705,32 +740,36 @@ Create one canonical ledger that joins:
 ## Execution checklist
 
 1. Run generator:
+
 - `python3 ./scripts/build_unified_ledger.py`
 
 2. Validate load:
+
 - `sqlite3 :memory: ".read ./ledger/unified_model_provider_ledger.schema.sql" ".read ./ledger/unified_model_provider_ledger.seed.sql" "SELECT COUNT(*) FROM unified_model_provider_ledger;"`
 
 3. Validate feeder:
+
 - `cargo run -- ingest --provider proxyapi --output ./artifacts/proxyapi-events.jsonl`
 
 4. Validate end-to-end orchestrate:
+
 - `cargo run -- orchestrate --providers proxyapi --events-out ./artifacts/proxyapi-events.jsonl --summary-json-path ./benchmarks/results/ingest-summary.json --ingest-cache-path ./benchmarks/results/orchestrate-ingest-cache.json --pipeline-summary-path ./benchmarks/results/orchestrate-summary.json --pricing-reconcile-dry-run`
 
 ## Closeout update (2026-02-21)
 
 1. ProxyAPI feeder validation taskchain is now explicit and repeatable:
+
 - `task ingest:proxyapi:validate`
 - `task orchestrate:proxyapi:validate`
 - `task ledger:proxyapi:e2e:validate` (runs both in sequence)
 
 2. End-to-end orchestrate validation now persists summary artifacts under:
+
 - `benchmarks/results/proxyapi-ingest-summary.json`
 - `benchmarks/results/proxyapi-orchestrate-summary.json`
 - `benchmarks/results/proxyapi-ui-snapshot.json`
 
-
 ---
-
 
 ## Source: research/ADAPTER_BASE_LIBS_AND_FORK_STRATEGY_2026-02-21.md
 
@@ -789,15 +828,18 @@ Each provider adapter must emit normalized JSONL records directly consumable by 
 ## Fork/import policy per provider
 
 1. Import upstream parser/lib when:
+
 - data contract is stable,
 - dependency/license is acceptable,
 - integration surface is small.
 
 2. Fork adapter slice when:
+
 - parser quality is good but tightly coupled to its own CLI/UI,
 - only a narrow extraction layer is needed.
 
 3. Re-implement in-house when:
+
 - upstream churn is high or project is abandonware,
 - licensing blocks intended distribution,
 - parser logic is smaller than integration overhead.
@@ -806,15 +848,19 @@ Each provider adapter must emit normalized JSONL records directly consumable by 
 
 1. Pin every external import/fork to explicit commit/tag.
 2. Keep one adapter directory per provider with:
+
 - source attribution,
 - patch log,
 - update script/checklist,
 - fixture corpus.
+
 3. Run adapter conformance tests into normalized golden JSONL.
 4. Enforce bench gates on:
+
 - cold backfill,
 - warm tail,
 - burst ingest.
+
 5. Treat model-provider mapping and pricing mapping as separate audited layers.
 
 ## Performance-first implementation guidance
@@ -828,6 +874,7 @@ Each provider adapter must emit normalized JSONL records directly consumable by 
 ### Disk cache
 
 1. Add optional disk-backed cache layer for:
+
 - normalized-event dedupe indexes,
 - monthly aggregate materializations,
 - provider model metadata snapshots.
@@ -843,9 +890,11 @@ Each provider adapter must emit normalized JSONL records directly consumable by 
 ## Pricing methodology alignment (subscription + token-based providers)
 
 1. Token-priced providers:
+
 - direct `USD / Mtok` using configured input/output/cache/tool rates.
 
 2. Subscription/session-priced providers:
+
 - derive effective monthly budget:
   - either explicit user-entered monthly USD value, or
   - programmatic derivation from plan price and billing metadata.
@@ -853,17 +902,20 @@ Each provider adapter must emit normalized JSONL records directly consumable by 
 - compute effective blended `USD / Mtok` per model and provider.
 
 3. Keep both in one comparable surface:
+
 - `effective_cost_usd`
 - `effective_usd_per_mtok`
 - `blended_provider_usd_per_mtok`
 - `blended_global_usd_per_mtok`
 
 4. Mark derivation method in output metadata:
+
 - `pricing_mode = token|subscription_derived|subscription_manual`
 
 ## Concrete next steps (execution order)
 
 1. Build real adapters:
+
 - `~/.claude`
 - `~/.codex`
 - Cursor DB/logs
@@ -872,6 +924,7 @@ Each provider adapter must emit normalized JSONL records directly consumable by 
 2. Emit normalized JSONL directly to `tokenledger ingest`.
 3. Add fixture-backed conformance tests for each adapter.
 4. Add benchmark harness perf gates and enforce in CI:
+
 - cold backfill,
 - warm tail,
 - burst.
@@ -887,9 +940,7 @@ No, do not fork a full monolith.
 
 Keep `tokenledger` as the core, and treat adapters as replaceable, benchmarked, governed modules.
 
-
 ---
-
 
 ## Source: research/DEEP_RESEARCH_AND_OPTIMIZATION_PLAN.md
 
@@ -1064,9 +1115,7 @@ Optimization levers:
 - Are p95 latency and memory bounded under mixed-provider burst workloads?
 - Can we migrate from local-first to split-service without parser rewrites?
 
-
 ---
-
 
 ## Source: research/INDEX.md
 
@@ -1077,9 +1126,7 @@ Optimization levers:
 - `docs/research/UNIFIED_E2E_RESEARCH_AND_ARCHITECTURE_2026-02-21.md`
 - `docs/research/ADAPTER_BASE_LIBS_AND_FORK_STRATEGY_2026-02-21.md`
 
-
 ---
-
 
 ## Source: research/UNIFIED_E2E_RESEARCH_AND_ARCHITECTURE_2026-02-21.md
 
@@ -1106,31 +1153,37 @@ Define an end-to-end architecture for usage/cost analytics across Cursor, Droid,
 ## Reference Architecture
 
 1. Ingest adapters:
+
 - Claude JSONL
 - Codex JSONL
 - Cursor logs + real SQLite tables
 - Droid JSON/JSONL
 
 2. Normalization:
+
 - Canonical `UsageEvent`
 - Provider/model alias resolution
 - Contract and conformance tests
 
 3. Pricing engine:
+
 - Coverage/patch/apply/check lifecycle
 - Metadata audit and provenance controls
 - Recompute-friendly immutable token events
 
 4. Analytics:
+
 - Monthly/daily blended economics
 - Per-provider and per-model drilldown
 - Suggestions/optimization signals
 
 5. Snapshot/UI:
+
 - Compact snapshot JSON for statusbar/extension use
 - Optional richer local API later if needed
 
 6. Perf and governance:
+
 - Bench (cold/warm/burst), baseline and trend checks
 - Correctness goldens
 - Reconcile and pipeline artifacts per run
@@ -1138,15 +1191,19 @@ Define an end-to-end architecture for usage/cost analytics across Cursor, Droid,
 ## Integration Model for CodexBar/OpenCode-style UX
 
 1. Producer:
+
 - `tokenledger orchestrate --ui-snapshot-path <path>`
 
 2. Consumer:
+
 - Extension polls snapshot file at low interval (1-5s) or on fs-watch.
 
 3. Contract:
+
 - fixed schema versioning recommended before publishing external extension.
 
 4. Overhead controls:
+
 - snapshot generation only when flag enabled,
 - small payload (totals + top rows + suggestions),
 - no daemon/network required for baseline integration.
@@ -1155,14 +1212,14 @@ Define an end-to-end architecture for usage/cost analytics across Cursor, Droid,
 
 1. Real Cursor SQLite adapter with deterministic table mapping.
 2. Disk-backed caches:
+
 - parsed normalized event cache,
 - aggregate snapshot cache keyed by month/filter/pricing hash.
+
 3. UI payload schema version + compatibility policy.
 4. Orchestrate pipeline summary artifact for machine consumers (in addition to reconcile summary).
 
-
 ---
-
 
 ## Source: research/USAGE_AUDIT_AND_MARKET_SCAN.md
 
@@ -1188,9 +1245,7 @@ Date: 2026-02-20
 - Use Rust for streaming ingest + aggregation path.
 - Support normalized events so existing local collectors can pipe data into core immediately.
 
-
 ---
-
 
 ## Source: worklog/INDEX.md
 
@@ -1201,9 +1256,7 @@ Date: 2026-02-20
 - `docs/worklog/WORKLOG_2026-02-21_MODEL_DB_SEED_NORMALIZATION.md`
 - `docs/worklog/WORKLOG_2026-02-21_UNIFIED_MODEL_PROVIDER_LEDGER_AND_CLIPROXYAPI_FEEDER.md`
 
-
 ---
-
 
 ## Source: worklog/WORKLOG_2026-02-21_ADAPTER_FORK_STRATEGY_AND_WEB_RESEARCH.md
 
@@ -1216,16 +1269,19 @@ User requested an explicit decision on whether to fork a full Rust monolith vers
 ## What was completed
 
 1. Performed wider web scan for:
+
 - multi-provider usage trackers and UI references,
 - Rust/Go parser and pipeline candidates,
 - performance-oriented crate options for tail/parse/cache/bench.
 
 2. Codified architecture decision:
+
 - no monolithic Rust fork,
 - yes to separate provider-focused adapter imports/forks,
 - `tokenledger` remains canonical core.
 
 3. Added formal research/policy document:
+
 - `docs/research/ADAPTER_BASE_LIBS_AND_FORK_STRATEGY_2026-02-21.md`
 
 4. Captured subscription and token pricing methodology in a unified blended Mtok model, including derivation metadata modes and comparability outputs.
@@ -1259,13 +1315,13 @@ User requested an explicit decision on whether to fork a full Rust monolith vers
 1. Adapter coverage is active for Claude/Codex/Cursor (logs + SQLite), ProxyAPI/CLIProxyAPI, and Droid sources in ingest discovery + normalization paths.
 2. Provider fixture/conformance coverage is present in `src/main.rs` tests, including adapter-shape normalization and Cursor SQLite deterministic selection/fallback behavior.
 3. CI benchmark/perf gating added at `.github/workflows/bench-perf-gate.yml`:
+
 - runs `bench --scenario all`
 - enforces strict perf gates via `scripts/perf_gate.sh` with baseline.
+
 4. Optional SQLite + disk cache acceleration is active via SQLite ingestion path and orchestrate ingest cache controls.
 
-
 ---
-
 
 ## Source: worklog/WORKLOG_2026-02-21_E2E_PLAN_AND_UI_INTEGRATION.md
 
@@ -1278,15 +1334,18 @@ User requested full end-to-end planning and unified docs structure following the
 ## Completed in this cycle
 
 1. Added orchestrate-based UI snapshot export for statusbar/extension integration:
+
 - `--ui-snapshot-path`
 - compact payload with totals, top providers/models, suggestions.
 
 2. Added reconcile governance artifacts:
+
 - per-run reconcile directories,
 - reconcile summary outputs,
 - rolling latest reconcile summary.
 
 3. Hardened orchestration with additional regression tests around:
+
 - allow-unpriced logic,
 - baseline month matching,
 - perf gate strict/missing scenario failures.
@@ -1296,15 +1355,19 @@ User requested full end-to-end planning and unified docs structure following the
 ## Planning outcome captured
 
 1. Research artifact:
+
 - `docs/research/UNIFIED_E2E_RESEARCH_AND_ARCHITECTURE_2026-02-21.md`
 
 2. Execution plan:
+
 - `docs/plans/UNIFIED_E2E_EXECUTION_PLAN.md`
 
 3. Governance policy:
+
 - `docs/governance/PIPELINE_GOVERNANCE_AND_ARTIFACT_POLICY.md`
 
 4. Docs indices:
+
 - `docs/index.md`
 - `docs/research/INDEX.md`
 - `docs/plans/INDEX.md`
@@ -1325,6 +1388,7 @@ User requested full end-to-end planning and unified docs structure following the
 ## Validation notes
 
 1. Keep using:
+
 - `cargo fmt --all -- --check`
 - `cargo clippy --all-targets --all-features -- -D warnings`
 - `cargo test`
@@ -1332,6 +1396,7 @@ User requested full end-to-end planning and unified docs structure following the
 - `task orchestrate:ui`
 
 2. Verify artifacts after each run:
+
 - `benchmarks/results/reconcile-*/`
 - `benchmarks/results/reconcile-latest-summary.json`
 - `benchmarks/results/ui-snapshot.json` (when enabled)
@@ -1339,51 +1404,60 @@ User requested full end-to-end planning and unified docs structure following the
 ## Follow-up closeout (command reliability)
 
 1. Added explicit artifact bootstrap task and dependency wiring:
+
 - `task artifacts:ensure` now creates `./artifacts` and `./benchmarks/results` before orchestrate-style task runs.
 - `task do:all:next`, `task orchestrate`, and `task orchestrate:ui` depend on `artifacts:ensure`.
 
 2. Moved orchestrate sample ingest output to artifact-managed paths:
+
 - `--events-out ./artifacts/ingested.sample.jsonl` for codex orchestrate flows.
 - committed keepfile at `artifacts/.gitkeep` so artifact output location exists in clean checkouts.
 
 3. Added proxyapi validation shortcuts for fast execution checks:
+
 - `task ingest:proxyapi:validate`
 - `task orchestrate:proxyapi:validate`
 
 ## Follow-up closeout (contracts + pricing governance CI)
 
 1. Added normalized event schema contract v1:
+
 - `docs/contracts/NORMALIZED_EVENT_SCHEMA_CONTRACT_V1.md`
 
 2. Added UI snapshot schema contract v1 with compatibility policy:
+
 - `docs/contracts/UI_SNAPSHOT_SCHEMA_CONTRACT_V1.md`
 
 3. Added extension integration examples for file-based consumers:
+
 - `docs/integrations/EXTENSION_FILE_READ_INTEGRATION_EXAMPLES.md`
 
 4. Added pricing governance CI workflow:
+
 - `.github/workflows/pricing-governance-check.yml`
 - stages: `pricing-lint`, `pricing-audit`, `pricing-check`
 
 5. Added operator shortcut for local parity with CI:
+
 - `task pricing:ci`
 
 ## Follow-up closeout (baseline + cache contract guards)
 
 1. Added golden baseline lock flow:
+
 - `task bench:golden:lock`
 - `task bench:golden:lock:verify`
 
 2. Bench/perf CI now verifies golden fixture correctness before strict perf gating:
+
 - `.github/workflows/bench-perf-gate.yml`
 
 3. Hardened cache contract handling:
+
 - stale ingest cache versions are ignored,
 - stale aggregate cache versions are reset to empty before reuse.
 
-
 ---
-
 
 ## Source: worklog/WORKLOG_2026-02-21_MODEL_DB_SEED_NORMALIZATION.md
 
@@ -1396,13 +1470,16 @@ User requested full end-to-end planning and unified docs structure following the
 ## Completed
 
 1. Added reproducible generator:
+
 - `scripts/build_model_seed.py`
 
 2. Generated review/query artifacts from `models.csv`:
+
 - `models_normalized.csv` (valid long-format CSV)
 - `models_schema_seed.sql` (DDL + inserts for SQL workflows)
 
 3. Added README instructions under:
+
 - `Model Database Seed (CSV + SQL)`
 
 ## Normalization rules
@@ -1417,9 +1494,7 @@ User requested full end-to-end planning and unified docs structure following the
 1. SQL seed loads in SQLite memory DB.
 2. Inserted rows match normalized CSV row count.
 
-
 ---
-
 
 ## Source: worklog/WORKLOG_2026-02-21_UNIFIED_MODEL_PROVIDER_LEDGER_AND_CLIPROXYAPI_FEEDER.md
 
@@ -1432,18 +1507,22 @@ User requested a unified model+provider ledger and explicit planning/worklog cov
 ## Completed
 
 1. Added unified ledger generator:
+
 - `scripts/build_unified_ledger.py`
 
 2. Generated deterministic ledger artifacts:
+
 - `ledger/unified_model_provider_ledger.csv`
 - `ledger/unified_model_provider_ledger.schema.sql`
 - `ledger/unified_model_provider_ledger.seed.sql`
 
 3. Added plan coverage:
+
 - updated `docs/plans/UNIFIED_E2E_EXECUTION_PLAN.md` with Phase 5 + WP-E
 - added `docs/plans/UNIFIED_MODEL_PROVIDER_LEDGER_PLAN_2026-02-21.md`
 
 4. Added index links:
+
 - `docs/index.md`
 - `docs/plans/INDEX.md`
 - `docs/worklog/INDEX.md`
@@ -1451,11 +1530,13 @@ User requested a unified model+provider ledger and explicit planning/worklog cov
 ## Ledger characteristics
 
 1. One-row surface for model/provider joins with:
+
 - pricing fields,
 - benchmark prior coverage counts,
 - mapping provenance fields (`rule` + `confidence`).
 
 2. Deterministic generation from:
+
 - `pricing.example.json`
 - `models_normalized.csv`
 
@@ -1464,6 +1545,7 @@ User requested a unified model+provider ledger and explicit planning/worklog cov
 ## Validation outcomes
 
 1. Generator run produced:
+
 - `ledger_rows=56`
 - `priors_aggregation_rows=13`
 
@@ -1483,25 +1565,28 @@ User requested a unified model+provider ledger and explicit planning/worklog cov
 ## Closeout update (implemented)
 
 1. Pareto scoring artifacts added:
+
 - `scripts/refresh_ledger.py`
 - `ledger/unified_model_provider_pareto.csv`
 - `ledger/unified_model_provider_pareto.view.sql`
 
 2. CLIProxyAPI snapshot import wired into recurring refresh flow:
+
 - snapshot auto-discovery + explicit `--cliproxyapi-snapshot` support in `scripts/refresh_ledger.py`
 - normalized runtime snapshot export at `ledger/cliproxyapi_runtime_metrics_snapshot.csv`
 
 3. CI diff check added:
+
 - `.github/workflows/ledger-diff-check.yml`
 - deterministic regeneration command: `python3 ./scripts/refresh_ledger.py --allow-missing-snapshot --skip-runtime-discovery`
 
 ## Follow-up closeout (validation shortcut)
 
 1. Added Taskfile SQL validation shortcut for ledger artifacts:
+
 - `task ledger:sql:validate`
 - loads `ledger/unified_model_provider_ledger.schema.sql` + `ledger/unified_model_provider_ledger.seed.sql` into in-memory SQLite and prints `ledger_rows=<count>`.
 
 2. Exposed this shortcut in operator docs (`README.md`) under Task shortcuts to make recurring SQL validation explicit and repeatable.
-
 
 ---

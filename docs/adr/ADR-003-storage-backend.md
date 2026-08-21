@@ -3,7 +3,7 @@
 **Status:** Proposed  
 **Date:** 2026-04-02  
 **Author:** Tokn Architecture Team  
-**Line Count Target:** 400+ lines  
+**Line Count Target:** 400+ lines
 
 ---
 
@@ -18,6 +18,7 @@ Tokn requires persistent storage for:
 5. **Cache** - Validation results, JWKS cache
 
 The storage architecture must support:
+
 - High read throughput (token validation is read-heavy)
 - Moderate write throughput (token issuance, revocation)
 - Strong consistency for security-critical operations
@@ -102,18 +103,21 @@ Tokn will adopt a **hybrid storage architecture**:
 **Description:** All token data stored in PostgreSQL with connection pooling.
 
 **Pros:**
+
 - Single source of truth, no consistency concerns
 - ACID transactions for all operations
 - Rich query capabilities
 - Excellent audit trail
 
 **Cons:**
+
 - Higher read latency (network + query time)
 - Connection limits for high throughput
 - Scaling challenges for global distribution
 - Revocation broadcast requires polling or triggers
 
 **Performance Projection:**
+
 ```
 ┌────────────────────────────────────────────────────────────┐
 │ Pure PostgreSQL Performance (Estimated)                  │
@@ -136,12 +140,14 @@ Tokn will adopt a **hybrid storage architecture**:
 **Description:** All token data stored in Redis with AOF persistence.
 
 **Pros:**
+
 - Sub-millisecond latency
 - High throughput (100K+ ops/sec)
 - Built-in TTL for automatic expiration
 - Pub/sub for instant revocation broadcast
 
 **Cons:**
+
 - Eventual persistence (AOF fsync intervals)
 - Limited query capabilities
 - Data loss risk on unclean shutdown
@@ -149,6 +155,7 @@ Tokn will adopt a **hybrid storage architecture**:
 - Audit trail requires separate logging
 
 **Risk Assessment:**
+
 ```
 ┌────────────────────────────────────────────────────────────┐
 │ Pure Redis Risk Analysis                                   │
@@ -173,12 +180,14 @@ Tokn will adopt a **hybrid storage architecture**:
 **Description:** Apache Cassandra for distributed storage.
 
 **Pros:**
+
 - Excellent horizontal scalability
 - Tunable consistency
 - Multi-datacenter support
 - High write throughput
 
 **Cons:**
+
 - Operational complexity
 - Read-before-write for updates
 - Consistency tuning required
@@ -191,12 +200,14 @@ Tokn will adopt a **hybrid storage architecture**:
 **Description:** AWS DynamoDB or equivalent cloud-native storage.
 
 **Pros:**
+
 - Fully managed, no operational burden
 - Automatic scaling
 - Global tables for multi-region
 - TTL support
 
 **Cons:**
+
 - Vendor lock-in
 - Cost at scale
 - Limited query flexibility
@@ -307,17 +318,17 @@ impl HybridStorage {
             WriteStrategy::WriteThroughInvalidate => {
                 // 1. Write to PostgreSQL
                 self.postgres.store_token(token).await?;
-                
+
                 // 2. Invalidate cache (delete, don't update)
                 self.redis.delete(&token.jti).await?;
-                
+
                 // 3. Invalidate any related cached queries
                 self.invalidate_subject_cache(&token.subject).await?;
             }
             WriteStrategy::WriteThroughPopulate => {
                 // 1. Write to PostgreSQL
                 self.postgres.store_token(token).await?;
-                
+
                 // 2. Populate cache
                 let ttl = self.calculate_ttl(token);
                 self.redis.store_token(token, ttl).await?;
@@ -327,10 +338,10 @@ impl HybridStorage {
                 self.postgres.store_token(token).await?;
             }
         }
-        
+
         Ok(())
     }
-    
+
     /// Retrieve token (read path with cache-aside)
     pub async fn get_token(&self, jti: &str) -> Result<Option<Token>, StorageError> {
         // 1. Try cache first
@@ -338,20 +349,20 @@ impl HybridStorage {
             tracing::debug!("Token {} cache hit", jti);
             return Ok(Some(cached));
         }
-        
+
         // 2. Cache miss - query PostgreSQL
         tracing::debug!("Token {} cache miss", jti);
         let token = self.postgres.get_token(jti).await?;
-        
+
         // 3. Populate cache if found
         if let Some(ref t) = token {
             let ttl = self.calculate_ttl(t);
             self.redis.store_token(t, ttl).await?;
         }
-        
+
         Ok(token)
     }
-    
+
     /// Revoke token (with immediate broadcast)
     pub async fn revoke_token(
         &self,
@@ -360,27 +371,27 @@ impl HybridStorage {
     ) -> Result<(), StorageError> {
         // 1. Transaction: mark revoked in PostgreSQL
         self.postgres.revoke_token(jti).await?;
-        
+
         // 2. Add to revocation set in Redis (TTL = time until token expires)
         let ttl = (expires_at - Utc::now()).to_std()?;
         self.redis.add_to_revocation_set(jti, ttl).await?;
-        
+
         // 3. Publish revocation event for distributed consumers
         self.redis.publish_revocation(jti).await?;
-        
+
         // 4. Invalidate cache
         self.redis.delete(jti).await?;
-        
+
         Ok(())
     }
-    
+
     fn calculate_ttl(&self, token: &Token) -> Duration {
         let remaining = token.expires_at - Utc::now();
-        
+
         // Cap at configured maximum
         remaining.to_std().unwrap_or(self.cache_config.token_ttl)
     }
-    
+
     async fn invalidate_subject_cache(&self, subject: &str) -> Result<(), StorageError> {
         // Pattern-based invalidation for subject queries
         self.redis.invalidate_pattern(&format!("subject:{}:*", subject)).await?;
@@ -404,23 +415,23 @@ pub mod redis_structures {
         pub expires_at: String, // Unix timestamp
         pub claims: String, // JSON
     }
-    
+
     /// Revocation set (set for O(1) lookup)
     /// Key: revoked:tokens
     /// TTL: sliding window (max token lifetime)
     pub struct RevocationSet;
-    
+
     /// Subject token index (sorted set by expiration)
     /// Key: subject:{subject}:tokens
     /// Score: expiration timestamp
     /// Member: jti
     pub struct SubjectTokenIndex;
-    
+
     /// Rate limiting (sliding window)
     /// Key: ratelimit:{subject}:{window}
     /// Value: counter
     pub struct RateLimitCounter;
-    
+
     /// JWKS cache (string)
     /// Key: jwks:{kid}
     /// TTL: JWKS refresh interval
@@ -455,7 +466,7 @@ CREATE INDEX idx_tokens_expires ON tokens(expires_at);
 CREATE INDEX idx_tokens_revoked ON tokens(revoked_at) WHERE revoked_at IS NOT NULL;
 
 -- Partial index for active tokens (most queries)
-CREATE INDEX idx_tokens_active ON tokens(jti) 
+CREATE INDEX idx_tokens_active ON tokens(jti)
     WHERE revoked_at IS NULL AND expires_at > NOW();
 
 -- Audit log (immutable, partitioned by time)
@@ -518,7 +529,7 @@ impl ConsistencyManager {
         F: Fn() -> futures::future::BoxFuture<'_, Result<T, StorageError>>,
     {
         let mut delay = self.retry_policy.base_delay;
-        
+
         for attempt in 0..self.retry_policy.max_retries {
             match operation().await {
                 Ok(result) => return Ok(result),
@@ -535,15 +546,15 @@ impl ConsistencyManager {
                 Err(e) => return Err(e),
             }
         }
-        
+
         unreachable!()
     }
-    
+
     /// Handle cache-DB inconsistency
     pub async fn reconcile_cache(&self, jti: &str) -> Result<(), StorageError> {
         // Source of truth is PostgreSQL
         let db_token = self.storage.postgres.get_token(jti).await?;
-        
+
         match db_token {
             Some(token) => {
                 // Update cache to match DB
@@ -554,10 +565,10 @@ impl ConsistencyManager {
                 self.storage.redis.delete(jti).await?;
             }
         }
-        
+
         Ok(())
     }
-    
+
     /// Circuit breaker for cache failures
     pub async fn read_with_circuit_breaker(
         &self,
@@ -571,7 +582,7 @@ impl ConsistencyManager {
             self.storage.postgres.get_token(jti).await
         }
     }
-    
+
     async fn is_cache_healthy(&self) -> bool {
         // Check recent error rate
         // Implementation: track errors in rolling window
@@ -633,7 +644,7 @@ impl StorageMonitor {
     pub async fn check_health(&self) -> StorageHealth {
         let postgres_health = self.check_postgres().await;
         let redis_health = self.check_redis().await;
-        
+
         StorageHealth {
             postgres: postgres_health,
             redis: redis_health,
@@ -646,24 +657,24 @@ impl StorageMonitor {
             },
         }
     }
-    
+
     async fn check_postgres(&self) -> ComponentHealth {
         let start = Instant::now();
         let result = sqlx::query("SELECT 1").fetch_one(&self.pg_pool).await;
         let latency = start.elapsed();
-        
+
         ComponentHealth {
             healthy: result.is_ok(),
             latency_ms: latency.as_millis() as u64,
             error_rate: self.metrics.get_error_rate("postgres"),
         }
     }
-    
+
     async fn check_redis(&self) -> ComponentHealth {
         let start = Instant::now();
         let result = self.redis.ping().await;
         let latency = start.elapsed();
-        
+
         ComponentHealth {
             healthy: result.is_ok(),
             latency_ms: latency.as_millis() as u64,
@@ -700,12 +711,12 @@ impl StorageMonitor {
 
 ### Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Complexity | Abstract behind `Storage` trait; swap implementations easily |
-| Consistency | Write-through with immediate invalidation; periodic reconciliation |
-| Write latency | Async cache invalidation; don't block on cache ops |
-| Cost | Can run Redis on same node for small deployments |
+| Risk          | Mitigation                                                         |
+| ------------- | ------------------------------------------------------------------ |
+| Complexity    | Abstract behind `Storage` trait; swap implementations easily       |
+| Consistency   | Write-through with immediate invalidation; periodic reconciliation |
+| Write latency | Async cache invalidation; don't block on cache ops                 |
+| Cost          | Can run Redis on same node for small deployments                   |
 
 ---
 

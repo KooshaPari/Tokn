@@ -2,7 +2,7 @@
 
 **Status:** Accepted  
 **Date:** 2026-04-02  
-**Deciders:** Architecture Team  
+**Deciders:** Architecture Team
 
 ---
 
@@ -11,6 +11,7 @@
 We need an extensible plugin system that allows custom functionality without risking the core system. Plugins must be able to extend storage backends, audit logging, rate limiting, and custom claim validation.
 
 Traditional approaches:
+
 - **Dynamic library loading (dylib)** - Dangerous, crashes affect core
 - **IPC/RPC** - Latency overhead, complex setup
 - **Scripting languages** - Security concerns, limited capability
@@ -82,14 +83,14 @@ pub trait AuditPlugin {
 
 ### Rationale
 
-| Aspect | WASM | Native Plugins | RPC | Scripting |
-|--------|------|----------------|-----|-----------|
-| **Isolation** | ✅ Strong | ❌ None | ✅ Strong | ⚠️ Limited |
-| **Performance** | ✅ Near-native | ✅ Native | ❌ Overhead | ⚠️ Slow |
-| **Security** | ✅ Sandboxed | ❌ Dangerous | ✅ Sandboxed | ❌ Risky |
-| **Portability** | ✅ Cross-platform | ❌ Platform-specific | ✅ Any | ✅ Any |
-| **Complexity** | Medium | Low | High | Low |
-| **Hot Reload** | ✅ Yes | ⚠️ Complex | ✅ Yes | ✅ Yes |
+| Aspect          | WASM              | Native Plugins       | RPC          | Scripting  |
+| --------------- | ----------------- | -------------------- | ------------ | ---------- |
+| **Isolation**   | ✅ Strong         | ❌ None              | ✅ Strong    | ⚠️ Limited |
+| **Performance** | ✅ Near-native    | ✅ Native            | ❌ Overhead  | ⚠️ Slow    |
+| **Security**    | ✅ Sandboxed      | ❌ Dangerous         | ✅ Sandboxed | ❌ Risky   |
+| **Portability** | ✅ Cross-platform | ❌ Platform-specific | ✅ Any       | ✅ Any     |
+| **Complexity**  | Medium            | Low                  | High         | Low        |
+| **Hot Reload**  | ✅ Yes            | ⚠️ Complex           | ✅ Yes       | ✅ Yes     |
 
 ### Plugin Capabilities
 
@@ -119,6 +120,7 @@ pub trait AuditPlugin {
 ## Consequences
 
 ### Positive
+
 - Strong isolation prevents plugin crashes from affecting core
 - Memory safety guarantees prevent buffer overflows
 - Cross-platform plugin compatibility
@@ -126,12 +128,14 @@ pub trait AuditPlugin {
 - Sandboxed execution limits attack surface
 
 ### Negative
+
 - WASM runtime adds ~5MB to binary size
 - Some restrictions on what plugins can do (no native threads)
 - Debugging WASM plugins more complex
 - Learning curve for plugin developers
 
 ### Mitigation
+
 - Provide rich SDK for common languages (Rust, Go, Python)
 - Comprehensive plugin testing framework
 - Performance profiling tools

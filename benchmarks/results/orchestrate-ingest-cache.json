@@ -1,8 +1,6 @@
 {
   "version": 1,
-  "providers": [
-    "codex"
-  ],
+  "providers": ["codex"],
   "since": null,
   "limit": 500,
   "events_out": "./artifacts/ingested.sample.jsonl",

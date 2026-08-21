@@ -26,10 +26,15 @@ cargo run -- orchestrate \
 ## Files to read
 
 1. Primary UI payload:
+
 - `./benchmarks/results/ui-snapshot.json`
+
 2. Optional reconcile details pointer:
+
 - `reconcile_latest_summary_path` inside snapshot
+
 3. Optional pipeline status:
+
 - `./benchmarks/results/orchestrate-summary.json`
 
 ## Example A: Polling reader (TypeScript/Node)

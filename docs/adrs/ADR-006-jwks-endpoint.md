@@ -2,13 +2,14 @@
 
 **Status:** Accepted  
 **Date:** 2026-04-02  
-**Deciders:** Architecture Team  
+**Deciders:** Architecture Team
 
 ---
 
 ## Context
 
 Token validation by external parties requires access to public keys. We need:
+
 - Standardized key distribution mechanism
 - Support for key rotation without service disruption
 - Multiple algorithm support
@@ -90,16 +91,16 @@ pub struct Jwk {
     pub alg: Option<String>,
     pub kid: String,
     pub exp: Option<i64>,
-    
+
     // RSA-specific
     pub n: Option<String>,  // Modulus
     pub e: Option<String>,  // Exponent
-    
+
     // EC-specific
     pub crv: Option<String>,
     pub x: Option<String>,
     pub y: Option<String>,
-    
+
     // OKP-specific (Ed25519, X25519)
     pub x: Option<String>,
 }
@@ -107,22 +108,22 @@ pub struct Jwk {
 impl JwksEndpoint {
     pub async fn get_jwks(&self) -> Result<JwksResponse, Error> {
         let keys = self.key_service.get_active_keys().await?;
-        
+
         Ok(JwksResponse {
             keys: keys.into_iter().map(|k| k.into_jwk()).collect(),
         })
     }
-    
+
     pub async fn rotate_keys(&self) -> Result<KeyRotationResult, Error> {
         // 1. Generate new key pair
         let new_key = self.key_service.generate_key(KeyType::Ed25519).await?;
-        
+
         // 2. Add new key to active set (old keys still valid)
         self.key_service.add_key(new_key).await?;
-        
+
         // 3. Schedule old key expiration (90 days)
         self.key_service.schedule_expiration(old_key_id, Duration::days(90)).await?;
-        
+
         Ok(KeyRotationResult {
             new_key_id: new_key.kid,
             old_key_expires: expiration_date,
@@ -133,22 +134,23 @@ impl JwksEndpoint {
 
 ### RFC 7517 Compliance
 
-| Requirement | Implementation | Status |
-|-------------|---------------|--------|
-| **kty (Key Type)** | OKP (Ed25519), RSA, EC | ✅ Implemented |
-| **use (Public Key Use)** | sig (signature) | ✅ Implemented |
-| **alg (Algorithm)** | EdDSA, RS256, ES256 | ✅ Implemented |
-| **kid (Key ID)** | Date-based with increment | ✅ Implemented |
-| **exp (Expiration)** | Unix timestamp | ✅ Implemented |
-| **x, y (Coordinates)** | Base64url encoded | ✅ Implemented |
-| **n, e (RSA params)** | Base64url encoded | ✅ Implemented |
-| **crv (Curve)** | P-256, P-384, Ed25519 | ✅ Implemented |
+| Requirement              | Implementation            | Status         |
+| ------------------------ | ------------------------- | -------------- |
+| **kty (Key Type)**       | OKP (Ed25519), RSA, EC    | ✅ Implemented |
+| **use (Public Key Use)** | sig (signature)           | ✅ Implemented |
+| **alg (Algorithm)**      | EdDSA, RS256, ES256       | ✅ Implemented |
+| **kid (Key ID)**         | Date-based with increment | ✅ Implemented |
+| **exp (Expiration)**     | Unix timestamp            | ✅ Implemented |
+| **x, y (Coordinates)**   | Base64url encoded         | ✅ Implemented |
+| **n, e (RSA params)**    | Base64url encoded         | ✅ Implemented |
+| **crv (Curve)**          | P-256, P-384, Ed25519     | ✅ Implemented |
 
 ---
 
 ## Consequences
 
 ### Positive
+
 - Standard-compliant key distribution
 - Supports multiple algorithms simultaneously
 - Key rotation without service disruption
@@ -156,12 +158,14 @@ impl JwksEndpoint {
 - Compatible with major JWT libraries
 
 ### Negative
+
 - Key rotation requires careful coordination
 - Cache invalidation delays can cause validation failures
 - Multiple key versions increase complexity
 - Additional infrastructure for key storage
 
 ### Mitigation
+
 - Overlap period for key rotation (old + new valid)
 - Implement key ID caching with TTL
 - Provide rotation status endpoint for monitoring

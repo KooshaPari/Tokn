@@ -21,31 +21,37 @@ Define an end-to-end architecture for usage/cost analytics across Cursor, Droid,
 ## Reference Architecture
 
 1. Ingest adapters:
+
 - Claude JSONL
 - Codex JSONL
 - Cursor logs + real SQLite tables
 - Droid JSON/JSONL
 
 2. Normalization:
+
 - Canonical `UsageEvent`
 - Provider/model alias resolution
 - Contract and conformance tests
 
 3. Pricing engine:
+
 - Coverage/patch/apply/check lifecycle
 - Metadata audit and provenance controls
 - Recompute-friendly immutable token events
 
 4. Analytics:
+
 - Monthly/daily blended economics
 - Per-provider and per-model drilldown
 - Suggestions/optimization signals
 
 5. Snapshot/UI:
+
 - Compact snapshot JSON for statusbar/extension use
 - Optional richer local API later if needed
 
 6. Perf and governance:
+
 - Bench (cold/warm/burst), baseline and trend checks
 - Correctness goldens
 - Reconcile and pipeline artifacts per run
@@ -53,15 +59,19 @@ Define an end-to-end architecture for usage/cost analytics across Cursor, Droid,
 ## Integration Model for CodexBar/OpenCode-style UX
 
 1. Producer:
+
 - `tokenledger orchestrate --ui-snapshot-path <path>`
 
 2. Consumer:
+
 - Extension polls snapshot file at low interval (1-5s) or on fs-watch.
 
 3. Contract:
+
 - fixed schema versioning recommended before publishing external extension.
 
 4. Overhead controls:
+
 - snapshot generation only when flag enabled,
 - small payload (totals + top rows + suggestions),
 - no daemon/network required for baseline integration.
@@ -70,7 +80,9 @@ Define an end-to-end architecture for usage/cost analytics across Cursor, Droid,
 
 1. Real Cursor SQLite adapter with deterministic table mapping.
 2. Disk-backed caches:
+
 - parsed normalized event cache,
 - aggregate snapshot cache keyed by month/filter/pricing hash.
+
 3. UI payload schema version + compatibility policy.
 4. Orchestrate pipeline summary artifact for machine consumers (in addition to reconcile summary).
