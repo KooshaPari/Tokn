@@ -217,3 +217,216 @@ pub struct PriceChange {
     pub input_pct_change: f64,
     pub output_pct_change: f64,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn make_harness(
+        provider: &str,
+        model: &str,
+        input_cost: f64,
+        output_cost: f64,
+        latency_ms: Option<f64>,
+        success_rate: f64,
+    ) -> ProviderHarness {
+        ProviderHarness {
+            provider: provider.to_string(),
+            model: model.to_string(),
+            input_cost,
+            output_cost,
+            p50_latency_ms: latency_ms,
+            p95_latency_ms: latency_ms,
+            success_rate,
+        }
+    }
+
+    #[test]
+    fn test_select_pareto_optimal_empty() {
+        let result = select_pareto_optimal(&[], RoutingCriteria::Balanced);
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn test_select_pareto_optimal_single() {
+        let h = make_harness("openai", "gpt-4o", 0.01, 0.03, Some(100.0), 0.99);
+        let result = select_pareto_optimal(&[h.clone()], RoutingCriteria::Balanced);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].provider, "openai");
+    }
+
+    #[test]
+    fn test_select_pareto_optimal_cost_dominance() {
+        let cheap = make_harness("a", "m1", 0.01, 0.01, Some(200.0), 0.95);
+        let expensive = make_harness("b", "m2", 0.05, 0.05, Some(100.0), 0.99);
+        // Cost criteria: cheap dominates expensive on cost
+        let result = select_pareto_optimal(&[cheap, expensive], RoutingCriteria::Cost);
+        // The cheap one should rank first
+        assert_eq!(result[0].provider, "a");
+    }
+
+    #[test]
+    fn test_compute_routing_score_cost() {
+        let h = make_harness("openai", "gpt-4o", 0.01, 0.03, Some(100.0), 0.99);
+        let score = compute_routing_score(&h, RoutingCriteria::Cost);
+        // total_cost = 0.04, score = 1/0.04 = 25.0
+        assert!((score - 25.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_compute_routing_score_cost_zero() {
+        let h = make_harness("free", "free-model", 0.0, 0.0, Some(100.0), 0.99);
+        let score = compute_routing_score(&h, RoutingCriteria::Cost);
+        assert!(score.is_infinite());
+    }
+
+    #[test]
+    fn test_compute_routing_score_latency() {
+        let h = make_harness("openai", "gpt-4o", 0.01, 0.03, Some(100.0), 0.99);
+        let score = compute_routing_score(&h, RoutingCriteria::Latency);
+        assert_eq!(score, -100.0);
+    }
+
+    #[test]
+    fn test_compute_routing_score_latency_none() {
+        let h = make_harness("openai", "gpt-4o", 0.01, 0.03, None, 0.99);
+        let score = compute_routing_score(&h, RoutingCriteria::Latency);
+        assert_eq!(score, 0.0);
+    }
+
+    #[test]
+    fn test_compute_routing_score_balanced() {
+        let h = make_harness("openai", "gpt-4o", 0.01, 0.03, Some(100.0), 0.99);
+        let score = compute_routing_score(&h, RoutingCriteria::Balanced);
+        // 0.4 * (1/0.04) + 0.3 * (1/100) + 0.3 * 0.99
+        // = 0.4 * 25.0 + 0.3 * 0.01 + 0.3 * 0.99
+        // = 10.0 + 0.003 + 0.297 = 10.3
+        assert!((score - 10.3).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_pct_diff_basic() {
+        let diff = pct_diff(100.0, 150.0);
+        assert!((diff - 50.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_pct_diff_zero_old() {
+        let diff = pct_diff(0.0, 100.0);
+        assert_eq!(diff, 0.0);
+    }
+
+    #[test]
+    fn test_pct_diff_equal() {
+        let diff = pct_diff(50.0, 50.0);
+        assert_eq!(diff, 0.0);
+    }
+
+    #[test]
+    fn test_find_model_price_found() {
+        let prices = vec![
+            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 },
+        ];
+        let found = find_model_price(&prices, "openai", "gpt-4o");
+        assert!(found.is_some());
+        assert_eq!(found.unwrap().input_per_m, 2.5);
+    }
+
+    #[test]
+    fn test_find_model_price_not_found() {
+        let prices = vec![
+            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 },
+        ];
+        let found = find_model_price(&prices, "anthropic", "claude-3");
+        assert!(found.is_none());
+    }
+
+    #[test]
+    fn test_build_price_map() {
+        let prices = vec![
+            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 },
+            ModelPricing { provider: "anthropic".into(), model: "claude-3".into(), input_per_m: 3.0, output_per_m: 15.0 },
+        ];
+        let map = build_price_map(&prices);
+        assert_eq!(map.len(), 2);
+        assert!(map.contains_key(&("openai".into(), "gpt-4o".into())));
+        assert!(map.contains_key(&("anthropic".into(), "claude-3".into())));
+    }
+
+    #[test]
+    fn test_diff_pricing_added() {
+        let old: Vec<ModelPricing> = vec![];
+        let new = vec![
+            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 },
+        ];
+        let diff = diff_pricing(&old, &new, 1.0);
+        assert_eq!(diff.added.len(), 1);
+        assert_eq!(diff.changed.len(), 0);
+        assert_eq!(diff.removed.len(), 0);
+    }
+
+    #[test]
+    fn test_diff_pricing_removed() {
+        let old = vec![
+            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 },
+        ];
+        let new: Vec<ModelPricing> = vec![];
+        let diff = diff_pricing(&old, &new, 1.0);
+        assert_eq!(diff.added.len(), 0);
+        assert_eq!(diff.removed.len(), 1);
+    }
+
+    #[test]
+    fn test_diff_pricing_changed() {
+        let old = vec![
+            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.0, output_per_m: 10.0 },
+        ];
+        let new = vec![
+            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 3.0, output_per_m: 10.0 },
+        ];
+        let diff = diff_pricing(&old, &new, 1.0);
+        assert_eq!(diff.added.len(), 0);
+        assert_eq!(diff.changed.len(), 1);
+        assert_eq!(diff.removed.len(), 0);
+        assert_eq!(diff.changed[0].model, "gpt-4o");
+    }
+
+    #[test]
+    fn test_diff_pricing_no_change_below_threshold() {
+        let old = vec![
+            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.0, output_per_m: 10.0 },
+        ];
+        let new = vec![
+            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.01, output_per_m: 10.0 },
+        ];
+        let diff = diff_pricing(&old, &new, 1.0);
+        assert_eq!(diff.added.len(), 0);
+        assert_eq!(diff.changed.len(), 0);
+        assert_eq!(diff.removed.len(), 0);
+    }
+
+    #[test]
+    fn test_serialize_pricing_yaml_roundtrip() {
+        let prices = vec![
+            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 },
+        ];
+        let yaml = serialize_pricing_yaml(&prices).unwrap();
+        let parsed = parse_pricing_yaml(&yaml).unwrap();
+        assert_eq!(parsed.len(), 1);
+        assert_eq!(parsed[0].provider, "openai");
+        assert_eq!(parsed[0].input_per_m, 2.5);
+    }
+
+    #[test]
+    fn test_parse_pricing_yaml_invalid() {
+        let result = parse_pricing_yaml("not: valid: yaml: [unclosed");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_routing_criteria_display() {
+        assert_eq!(RoutingCriteria::Cost.to_string(), "cost");
+        assert_eq!(RoutingCriteria::Latency.to_string(), "latency");
+        assert_eq!(RoutingCriteria::Balanced.to_string(), "balanced");
+    }
+}

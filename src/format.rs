@@ -271,3 +271,81 @@ pub fn round2(v: f64) -> f64 {
 pub fn round4(v: f64) -> f64 {
     (v * 10_000.0).round() / 10_000.0
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_round2_basic() {
+        assert_eq!(round2(1.234), 1.23);
+        assert_eq!(round2(1.999), 2.00);
+    }
+
+    #[test]
+    fn test_round2_zero() {
+        assert_eq!(round2(0.0), 0.0);
+    }
+
+    #[test]
+    fn test_round4_basic() {
+        assert_eq!(round4(1.23456), 1.2346);
+    }
+
+    #[test]
+    fn test_round4_zero() {
+        assert_eq!(round4(0.0), 0.0);
+    }
+
+    #[test]
+    fn test_top_rows_empty() {
+        let rows: Vec<NamedMetric> = vec![];
+        let result = top_rows(&rows, None);
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn test_top_rows_sorted_by_tokens() {
+        let rows = vec![
+            NamedMetric { name: "a".into(), tokens: 100, mtok: 0.0001, variable_cost_usd: 0.01, subscription_allocated_usd: 0.0, total_cost_usd: 0.01, blended_usd_per_mtok: 100.0, session_count: 1, tool_share: 0.0 },
+            NamedMetric { name: "b".into(), tokens: 500, mtok: 0.0005, variable_cost_usd: 0.05, subscription_allocated_usd: 0.0, total_cost_usd: 0.05, blended_usd_per_mtok: 100.0, session_count: 1, tool_share: 0.0 },
+            NamedMetric { name: "c".into(), tokens: 200, mtok: 0.0002, variable_cost_usd: 0.02, subscription_allocated_usd: 0.0, total_cost_usd: 0.02, blended_usd_per_mtok: 100.0, session_count: 1, tool_share: 0.0 },
+        ];
+        let result = top_rows(&rows, None);
+        assert_eq!(result[0].name, "b");
+        assert_eq!(result[1].name, "c");
+        assert_eq!(result[2].name, "a");
+    }
+
+    #[test]
+    fn test_top_rows_with_limit() {
+        let rows = vec![
+            NamedMetric { name: "a".into(), tokens: 100, mtok: 0.0001, variable_cost_usd: 0.01, subscription_allocated_usd: 0.0, total_cost_usd: 0.01, blended_usd_per_mtok: 100.0, session_count: 1, tool_share: 0.0 },
+            NamedMetric { name: "b".into(), tokens: 500, mtok: 0.0005, variable_cost_usd: 0.05, subscription_allocated_usd: 0.0, total_cost_usd: 0.05, blended_usd_per_mtok: 100.0, session_count: 1, tool_share: 0.0 },
+            NamedMetric { name: "c".into(), tokens: 200, mtok: 0.0002, variable_cost_usd: 0.02, subscription_allocated_usd: 0.0, total_cost_usd: 0.02, blended_usd_per_mtok: 100.0, session_count: 1, tool_share: 0.0 },
+        ];
+        let result = top_rows(&rows, Some(2));
+        assert_eq!(result.len(), 2);
+        assert_eq!(result[0].name, "b");
+        assert_eq!(result[1].name, "c");
+    }
+
+    #[test]
+    fn test_top_rows_tiebreak_by_name() {
+        let rows = vec![
+            NamedMetric { name: "beta".into(), tokens: 100, mtok: 0.0001, variable_cost_usd: 0.01, subscription_allocated_usd: 0.0, total_cost_usd: 0.01, blended_usd_per_mtok: 100.0, session_count: 1, tool_share: 0.0 },
+            NamedMetric { name: "alpha".into(), tokens: 100, mtok: 0.0001, variable_cost_usd: 0.01, subscription_allocated_usd: 0.0, total_cost_usd: 0.01, blended_usd_per_mtok: 100.0, session_count: 1, tool_share: 0.0 },
+        ];
+        let result = top_rows(&rows, None);
+        // Tie-break by name alphabetically
+        assert_eq!(result[0].name, "alpha");
+        assert_eq!(result[1].name, "beta");
+    }
+
+    #[test]
+    fn test_default_generated_at() {
+        let ts = default_generated_at();
+        // Should return a valid DateTime
+        assert!(ts.timestamp() > 0);
+    }
+}

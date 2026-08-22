@@ -230,3 +230,299 @@ pub fn event_pricing<'a>(evt: &UsageEvent, pricing: &'a PricingBook) -> Option<(
     let rate = provider.models.get(&model_name)?;
     Some((provider, rate))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn test_pricing() -> PricingBook {
+        let mut models = HashMap::new();
+        models.insert(
+            "gpt-4o".to_string(),
+            ModelRate {
+                input_usd_per_mtok: 2.5,
+                output_usd_per_mtok: 10.0,
+                cache_write_usd_per_mtok: None,
+                cache_read_usd_per_mtok: None,
+                tool_input_usd_per_mtok: None,
+                tool_output_usd_per_mtok: None,
+            },
+        );
+        let mut providers = HashMap::new();
+        providers.insert(
+            "openai".to_string(),
+            ProviderPricing {
+                subscription_usd_month: 5.0,
+                models,
+                model_aliases: HashMap::new(),
+            },
+        );
+        PricingBook {
+            providers,
+            provider_aliases: HashMap::new(),
+            meta: None,
+        }
+    }
+
+    fn test_event(provider: &str, model: &str, input: u64, output: u64) -> UsageEvent {
+        UsageEvent {
+            provider: provider.to_string(),
+            model: model.to_string(),
+            session_id: "sess-1".to_string(),
+            timestamp: chrono::Utc::now(),
+            usage: TokenUsage {
+                input_tokens: input,
+                output_tokens: output,
+                cache_write_tokens: 0,
+                cache_read_tokens: 0,
+                tool_input_tokens: 0,
+                tool_output_tokens: 0,
+            },
+        }
+    }
+
+    #[test]
+    fn test_calc_variable_cost_basic() {
+        let usage = TokenUsage {
+            input_tokens: 1_000_000,
+            output_tokens: 500_000,
+            cache_write_tokens: 0,
+            cache_read_tokens: 0,
+            tool_input_tokens: 0,
+            tool_output_tokens: 0,
+        };
+        let rate = ModelRate {
+            input_usd_per_mtok: 2.5,
+            output_usd_per_mtok: 10.0,
+            cache_write_usd_per_mtok: None,
+            cache_read_usd_per_mtok: None,
+            tool_input_usd_per_mtok: None,
+            tool_output_usd_per_mtok: None,
+        };
+        let cost = calc_variable_cost(&usage, &rate);
+        assert!((cost - 7.5).abs() < 0.001, "Expected ~7.5, got {}", cost);
+    }
+
+    #[test]
+    fn test_calc_variable_cost_zero_tokens() {
+        let usage = TokenUsage { input_tokens: 0, output_tokens: 0, cache_write_tokens: 0, cache_read_tokens: 0, tool_input_tokens: 0, tool_output_tokens: 0 };
+        let rate = ModelRate { input_usd_per_mtok: 2.5, output_usd_per_mtok: 10.0, cache_write_usd_per_mtok: None, cache_read_usd_per_mtok: None, tool_input_usd_per_mtok: None, tool_output_usd_per_mtok: None };
+        assert_eq!(calc_variable_cost(&usage, &rate), 0.0);
+    }
+
+    #[test]
+    fn test_calc_variable_cost_with_cache_and_tools() {
+        let usage = TokenUsage {
+            input_tokens: 0,
+            output_tokens: 0,
+            cache_write_tokens: 1_000_000,
+            cache_read_tokens: 2_000_000,
+            tool_input_tokens: 500_000,
+            tool_output_tokens: 100_000,
+        };
+        let rate = ModelRate {
+            input_usd_per_mtok: 2.0,
+            output_usd_per_mtok: 8.0,
+            cache_write_usd_per_mtok: Some(3.0),
+            cache_read_usd_per_mtok: Some(0.5),
+            tool_input_usd_per_mtok: Some(1.0),
+            tool_output_usd_per_mtok: Some(4.0),
+        };
+        let cost = calc_variable_cost(&usage, &rate);
+        // cache_write: 1M * 3.0 = 3.0
+        // cache_read: 2M * 0.5 = 1.0
+        // tool_in: 0.5M * 1.0 = 0.5
+        // tool_out: 0.1M * 4.0 = 0.4
+        assert!((cost - 4.9).abs() < 0.001, "Expected ~4.9, got {}", cost);
+    }
+
+    #[test]
+    fn test_allocate_subscription_basic() {
+        let alloc = allocate_subscription(100, 1000, 100.0);
+        assert!((alloc - 10.0).abs() < 0.001);
+    }
+
+    #[test]
+    fn test_allocate_subscription_zero_total() {
+        let alloc = allocate_subscription(100, 0, 100.0);
+        assert_eq!(alloc, 0.0);
+    }
+
+    #[test]
+    fn test_allocate_subscription_zero_subscription() {
+        let alloc = allocate_subscription(100, 1000, 0.0);
+        assert_eq!(alloc, 0.0);
+    }
+
+    #[test]
+    fn test_session_hash_deterministic() {
+        let h1 = session_hash("openai", "sess-1");
+        let h2 = session_hash("openai", "sess-1");
+        assert_eq!(h1, h2);
+    }
+
+    #[test]
+    fn test_session_hash_different_inputs() {
+        let h1 = session_hash("openai", "sess-1");
+        let h2 = session_hash("openai", "sess-2");
+        assert_ne!(h1, h2);
+    }
+
+    #[test]
+    fn test_event_pricing_found() {
+        let pricing = test_pricing();
+        let evt = test_event("openai", "gpt-4o", 1000, 500);
+        let result = event_pricing(&evt, &pricing);
+        assert!(result.is_some());
+        let (provider, rate) = result.unwrap();
+        assert_eq!(provider.subscription_usd_month, 5.0);
+        assert_eq!(rate.input_usd_per_mtok, 2.5);
+    }
+
+    #[test]
+    fn test_event_pricing_unknown_provider() {
+        let pricing = test_pricing();
+        let evt = test_event("unknown", "gpt-4o", 1000, 500);
+        assert!(event_pricing(&evt, &pricing).is_none());
+    }
+
+    #[test]
+    fn test_event_pricing_unknown_model() {
+        let pricing = test_pricing();
+        let evt = test_event("openai", "unknown-model", 1000, 500);
+        assert!(event_pricing(&evt, &pricing).is_none());
+    }
+
+    #[test]
+    fn test_event_pricing_with_alias() {
+        let mut pricing = test_pricing();
+        pricing.provider_aliases.insert("claude".to_string(), "openai".to_string());
+        let evt = test_event("claude", "gpt-4o", 1000, 500);
+        let result = event_pricing(&evt, &pricing);
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn test_build_breakdown_empty() {
+        let items: BTreeMap<String, Acc> = BTreeMap::new();
+        let breakdown = build_breakdown(&items);
+        assert!(breakdown.is_empty());
+    }
+
+    #[test]
+    fn test_build_breakdown_single() {
+        let mut items = BTreeMap::new();
+        items.insert("openai".to_string(), Acc {
+            tokens: 1_000_000,
+            input_tokens: 500_000,
+            output_tokens: 500_000,
+            cache_write_tokens: 0,
+            cache_read_tokens: 0,
+            tool_input_tokens: 0,
+            tool_output_tokens: 0,
+            variable_cost_usd: 7.5,
+            subscription_allocated_usd: 2.0,
+            sessions: HashSet::new(),
+        });
+        let breakdown = build_breakdown(&items);
+        assert_eq!(breakdown.len(), 1);
+        assert_eq!(breakdown[0].name, "openai");
+        assert_eq!(breakdown[0].total_cost_usd, 9.5);
+    }
+
+    #[test]
+    fn test_make_suggestions_tool_share_high() {
+        let acc = Acc {
+            tokens: 1000,
+            input_tokens: 100,
+            output_tokens: 100,
+            cache_write_tokens: 0,
+            cache_read_tokens: 0,
+            tool_input_tokens: 400,
+            tool_output_tokens: 400,
+            variable_cost_usd: 5.0,
+            subscription_allocated_usd: 0.0,
+            sessions: HashSet::new(),
+        };
+        let tips = make_suggestions(&acc, 0.0);
+        assert!(tips.iter().any(|t| t.contains("Tool-token share is high")));
+    }
+
+    #[test]
+    fn test_make_suggestions_cache_low() {
+        let acc = Acc {
+            tokens: 1000,
+            input_tokens: 500,
+            output_tokens: 500,
+            cache_write_tokens: 0,
+            cache_read_tokens: 50,
+            tool_input_tokens: 0,
+            tool_output_tokens: 0,
+            variable_cost_usd: 5.0,
+            subscription_allocated_usd: 0.0,
+            sessions: HashSet::new(),
+        };
+        let tips = make_suggestions(&acc, 0.0);
+        assert!(tips.iter().any(|t| t.contains("Cache-read share is low")));
+    }
+
+    #[test]
+    fn test_make_suggestions_subscription_dominant() {
+        let acc = Acc {
+            tokens: 1_000_000,
+            input_tokens: 500_000,
+            output_tokens: 500_000,
+            cache_write_tokens: 0,
+            cache_read_tokens: 0,
+            tool_input_tokens: 0,
+            tool_output_tokens: 0,
+            variable_cost_usd: 5.0,
+            subscription_allocated_usd: 20.0,
+            sessions: HashSet::new(),
+        };
+        let tips = make_suggestions(&acc, 20.0);
+        assert!(tips.iter().any(|t| t.contains("Subscriptions dominate")));
+    }
+
+    #[test]
+    fn test_make_suggestions_none() {
+        let acc = Acc {
+            tokens: 1_000_000,
+            input_tokens: 500_000,
+            output_tokens: 500_000,
+            cache_write_tokens: 100_000,
+            cache_read_tokens: 200_000,
+            tool_input_tokens: 50_000,
+            tool_output_tokens: 50_000,
+            variable_cost_usd: 5.0,
+            subscription_allocated_usd: 1.0,
+            sessions: HashSet::new(),
+        };
+        let tips = make_suggestions(&acc, 1.0);
+        assert!(tips.iter().any(|t| t.contains("No obvious anomalies")));
+    }
+
+    #[test]
+    fn test_merge_acc() {
+        let mut acc = Acc::default();
+        let evt = test_event("openai", "gpt-4o", 1000, 500);
+        merge_acc(&mut acc, &evt, 0.05, 0.01);
+        assert_eq!(acc.tokens, 1500);
+        assert_eq!(acc.input_tokens, 1000);
+        assert_eq!(acc.output_tokens, 500);
+        assert!((acc.variable_cost_usd - 0.05).abs() < 0.001);
+        assert!((acc.subscription_allocated_usd - 0.01).abs() < 0.001);
+        assert_eq!(acc.sessions.len(), 1);
+    }
+
+    #[test]
+    fn test_merge_acc_accumulates() {
+        let mut acc = Acc::default();
+        let evt1 = test_event("openai", "gpt-4o", 1000, 500);
+        let evt2 = test_event("openai", "gpt-4o", 2000, 1000);
+        merge_acc(&mut acc, &evt1, 0.05, 0.01);
+        merge_acc(&mut acc, &evt2, 0.10, 0.02);
+        assert_eq!(acc.tokens, 4500);
+        assert!((acc.variable_cost_usd - 0.15).abs() < 0.001);
+    }
+}

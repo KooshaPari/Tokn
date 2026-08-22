@@ -169,3 +169,178 @@ pub fn resolve_model_alias(provider: &str, model: &str, pricing: &PricingBook) -
         .and_then(|p| p.model_aliases.get(model).cloned())
         .unwrap_or_else(|| model.to_string())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::models::*;
+    use std::collections::HashMap;
+
+    fn test_pricing() -> PricingBook {
+        let mut models = HashMap::new();
+        models.insert(
+            "gpt-4o".to_string(),
+            ModelRate {
+                input_usd_per_mtok: 2.5,
+                output_usd_per_mtok: 10.0,
+                cache_write_usd_per_mtok: None,
+                cache_read_usd_per_mtok: None,
+                tool_input_usd_per_mtok: None,
+                tool_output_usd_per_mtok: None,
+            },
+        );
+        let mut model_aliases = HashMap::new();
+        model_aliases.insert("gpt-4o-2024-08-06".to_string(), "gpt-4o".to_string());
+        let mut providers = HashMap::new();
+        providers.insert(
+            "openai".to_string(),
+            ProviderPricing {
+                subscription_usd_month: 5.0,
+                models,
+                model_aliases,
+            },
+        );
+        let mut provider_aliases = HashMap::new();
+        provider_aliases.insert("claude".to_string(), "anthropic".to_string());
+        PricingBook {
+            providers,
+            provider_aliases,
+            meta: None,
+        }
+    }
+
+    fn test_event(provider: &str, model: &str) -> UsageEvent {
+        UsageEvent {
+            provider: provider.to_string(),
+            model: model.to_string(),
+            session_id: "sess-1".to_string(),
+            timestamp: chrono::Utc::now(),
+            usage: TokenUsage {
+                input_tokens: 1000,
+                output_tokens: 500,
+                cache_write_tokens: 0,
+                cache_read_tokens: 0,
+                tool_input_tokens: 0,
+                tool_output_tokens: 0,
+            },
+        }
+    }
+
+    #[test]
+    fn test_resolve_provider_alias_found() {
+        let pricing = test_pricing();
+        assert_eq!(resolve_provider_alias("claude", &pricing), "anthropic");
+    }
+
+    #[test]
+    fn test_resolve_provider_alias_not_found() {
+        let pricing = test_pricing();
+        assert_eq!(resolve_provider_alias("openai", &pricing), "openai");
+    }
+
+    #[test]
+    fn test_resolve_model_alias_found() {
+        let pricing = test_pricing();
+        assert_eq!(
+            resolve_model_alias("openai", "gpt-4o-2024-08-06", &pricing),
+            "gpt-4o"
+        );
+    }
+
+    #[test]
+    fn test_resolve_model_alias_not_found() {
+        let pricing = test_pricing();
+        assert_eq!(
+            resolve_model_alias("openai", "gpt-4o", &pricing),
+            "gpt-4o"
+        );
+    }
+
+    #[test]
+    fn test_resolve_model_alias_unknown_provider() {
+        let pricing = test_pricing();
+        assert_eq!(
+            resolve_model_alias("unknown", "some-model", &pricing),
+            "some-model"
+        );
+    }
+
+    #[test]
+    fn test_resolve_ingest_providers_empty() {
+        let result = resolve_ingest_providers(&[]);
+        assert_eq!(result.len(), 5);
+        assert!(result.contains(&IngestProvider::Claude));
+        assert!(result.contains(&IngestProvider::Codex));
+        assert!(result.contains(&IngestProvider::Proxyapi));
+        assert!(result.contains(&IngestProvider::Cursor));
+        assert!(result.contains(&IngestProvider::Droid));
+    }
+
+    #[test]
+    fn test_resolve_ingest_providers_explicit() {
+        let providers = vec![IngestProvider::Claude];
+        let result = resolve_ingest_providers(&providers);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0], IngestProvider::Claude);
+    }
+
+    #[test]
+    fn test_collect_unpriced_events_none() {
+        let pricing = test_pricing();
+        let events = vec![test_event("openai", "gpt-4o")];
+        let unpriced = collect_unpriced_events(&events, &pricing);
+        assert!(unpriced.is_empty());
+    }
+
+    #[test]
+    fn test_collect_unpriced_events_all() {
+        let pricing = test_pricing();
+        let events = vec![test_event("openai", "unknown-model")];
+        let unpriced = collect_unpriced_events(&events, &pricing);
+        assert_eq!(unpriced.len(), 1);
+    }
+
+    #[test]
+    fn test_collect_unpriced_events_mixed() {
+        let pricing = test_pricing();
+        let events = vec![
+            test_event("openai", "gpt-4o"),
+            test_event("openai", "unknown-model"),
+            test_event("unknown-provider", "gpt-4o"),
+        ];
+        let unpriced = collect_unpriced_events(&events, &pricing);
+        assert_eq!(unpriced.len(), 2);
+    }
+
+    #[test]
+    fn test_build_coverage_report_basic() {
+        let pricing = test_pricing();
+        let events = vec![test_event("openai", "gpt-4o")];
+        let report = build_coverage_report(&events, &pricing);
+        assert_eq!(report.totals.events, 1);
+        assert_eq!(report.priced_count, 1);
+        assert_eq!(report.unpriced_count, 0);
+        assert!(report.missing_providers.is_empty());
+    }
+
+    #[test]
+    fn test_build_coverage_report_unpriced() {
+        let pricing = test_pricing();
+        let events = vec![
+            test_event("openai", "unknown-model"),
+            test_event("openai", "unknown-model-2"),
+        ];
+        let report = build_coverage_report(&events, &pricing);
+        assert_eq!(report.unpriced_count, 2);
+        assert_eq!(report.priced_count, 0);
+    }
+
+    #[test]
+    fn test_build_coverage_report_missing_provider() {
+        let pricing = test_pricing();
+        let events = vec![test_event("new-provider", "some-model")];
+        let report = build_coverage_report(&events, &pricing);
+        assert_eq!(report.missing_providers.len(), 1);
+        assert_eq!(report.missing_providers[0], "new-provider");
+    }
+}
