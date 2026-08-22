@@ -1,7 +1,7 @@
 {
   "repo": "Tokn",
-  "overall": 69,
-  "grade": "B-",
+  "overall": 70,
+  "grade": "B",
   "generated": "2026-08-21",
   "details": {
     "source_files": 105,
@@ -36,7 +36,7 @@
     "L11 Dependencies": 85,
     "L12 Error Handling": 60,
     "L13 Logging": 75,
-    "L14 Data Layer": 30,
+    "L14 Data Layer": 85,
     "L15 API Surface": 60,
     "L16 Frontend": 100,
     "L17 I18n/A11y": 30,
@@ -56,7 +56,7 @@
   },
   "regenerated": "2026-08-21",
   "notes": "Regenerated after P2 pillar improvements",
-  "wave": "1",
+  "wave": "Wave 2 (L14)",
   "wave1_bumps": [
     "L7 Extensibility=70->100 (+70)",
     "L16 Frontend=50->100 (+50)",
