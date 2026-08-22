@@ -5,9 +5,11 @@
 pub mod cost;
 pub mod format;
 pub mod models;
+pub mod plugin;
 pub mod pricing;
 pub mod utils;
 
 pub use cost::*;
 pub use models::*;
+pub use plugin::*;
 pub use pricing::*;

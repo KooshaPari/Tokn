@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tokn — Dashboard</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+  <header>
+    <h1><a href="index.html">Tokn</a></h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <h2>Token usage dashboard</h2>
+      <p>Sample visualization of token usage across providers and models.</p>
+    </section>
+
+    <section class="cards">
+      <article class="card">
+        <h3>Total tokens (last 7 days)</h3>
+        <p class="metric" id="total-tokens">2,847,392</p>
+      </article>
+      <article class="card">
+        <h3>Total cost (last 7 days)</h3>
+        <p class="metric" id="total-cost">$847.21</p>
+      </article>
+      <article class="card">
+        <h3>Active providers</h3>
+        <p class="metric">5</p>
+      </article>
+      <article class="card">
+        <h3>Models in pricing book</h3>
+        <p class="metric">47</p>
+      </article>
+    </section>
+
+    <section>
+      <h2>Cost by provider</h2>
+      <canvas id="provider-chart" width="800" height="300" aria-label="Cost by provider bar chart"></canvas>
+      <table class="data">
+        <thead>
+          <tr><th>Provider</th><th>Tokens</th><th>Cost</th><th>Avg per 1k</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>OpenAI</td><td>1,240,000</td><td>$412.50</td><td>$0.333</td></tr>
+          <tr><td>Anthropic</td><td>890,000</td><td>$267.00</td><td>$0.300</td></tr>
+          <tr><td>Google</td><td>520,000</td><td>$104.00</td><td>$0.200</td></tr>
+          <tr><td>Open source (local)</td><td>197,392</td><td>$63.71</td><td>$0.323</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Top 5 models by usage</h2>
+      <canvas id="model-chart" width="800" height="300" aria-label="Top models by usage"></canvas>
+      <ol>
+        <li><strong>claude-3-5-sonnet</strong> — 580,000 tokens — $174.00</li>
+        <li><strong>gpt-4o</strong> — 520,000 tokens — $312.00</li>
+        <li><strong>gemini-1.5-pro</strong> — 380,000 tokens — $76.00</li>
+        <li><strong>claude-3-haiku</strong> — 290,000 tokens — $87.00</li>
+        <li><strong>llama-3-70b-local</strong> — 197,392 tokens — $63.71</li>
+      </ol>
+    </section>
+  </main>
+  <footer>
+    <p>© 2026 ParetoOptimal. Apache-2.0 / MIT.</p>
+  </footer>
+  <script src="js/charts.js"></script>
+</body>
+</html>

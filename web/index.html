@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tokn — ParetoOptimal Token Analytics</title>
+  <meta name="description" content="Tokn — cost calculation, pricing book management, and intelligent provider routing for LLM APIs.">
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+  <header>
+    <h1><a href="index.html">Tokn</a></h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="https://github.com/KooshaPari/Tokn" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <h2>Token analytics for LLM workloads</h2>
+      <p>Cost calculation, pricing book management, and intelligent provider routing — pure Rust, no I/O dependencies.</p>
+    </section>
+    <section class="features">
+      <article>
+        <h3>Cost calculation</h3>
+        <p>Compute per-token cost across OpenAI, Anthropic, Google, and custom providers.</p>
+        <pre><code>use pareto_rs::cost::compute_cost;
+let c = compute_cost("openai", "gpt-4o", 1000, 500).unwrap();</code></pre>
+      </article>
+      <article>
+        <h3>Pricing book</h3>
+        <p>Manage model pricing across providers. Reload from disk on the fly.</p>
+        <pre><code>use pareto_rs::models::PricingBook;
+let book = PricingBook::load("pricing.toml")?;</code></pre>
+      </article>
+      <article>
+        <h3>Provider routing</h3>
+        <p>Pick the best model for the job based on price, latency, and quality scores.</p>
+        <pre><code>use pareto_rs::pricing::decide_route;
+let r = decide_route(&book, "fast", 0.5);</code></pre>
+      </article>
+      <article>
+        <h3>Plugin system</h3>
+        <p>Hook into cost/pricing/routing with custom plugins. Three built-ins included.</p>
+        <pre><code>use pareto_rs::plugin::default_registry;
+let reg = default_registry(); // 3 hooks loaded</code></pre>
+      </article>
+    </section>
+    <section class="metrics">
+      <h2>At a glance</h2>
+      <dl>
+        <dt>Test coverage</dt><dd>131+ unit tests</dd>
+        <dt>Language</dt><dd>Rust (edition 2024)</dd>
+        <dt>Dependencies</dt><dd>Zero I/O, zero async runtime</dd>
+        <dt>Workspace</dt><dd>pareto-rs + tokenledger</dd>
+      </dl>
+    </section>
+  </main>
+  <footer>
+    <p>© 2026 ParetoOptimal. Apache-2.0 / MIT.</p>
+  </footer>
+</body>
+</html>
