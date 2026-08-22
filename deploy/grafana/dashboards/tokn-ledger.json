@@ -1,0 +1,36 @@
+{
+  "title": "Tokn / Ledger",
+  "uid": "tokn-ledger",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Ingest rate (events / sec)",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        { "expr": "rate(tokn_ledger_ingest_total[1m])", "legendFormat": "ingest" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Queue depth",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        { "expr": "tokn_ledger_queue_depth", "legendFormat": "depth" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Ledger write latency (s)",
+      "gridPos": { "x": 0, "y": 8, "w": 24, "h": 8 },
+      "targets": [
+        { "expr": "histogram_quantile(0.50, rate(tokn_ledger_write_seconds_bucket[5m]))", "legendFormat": "p50" },
+        { "expr": "histogram_quantile(0.95, rate(tokn_ledger_write_seconds_bucket[5m]))", "legendFormat": "p95" },
+        { "expr": "histogram_quantile(0.99, rate(tokn_ledger_write_seconds_bucket[5m]))", "legendFormat": "p99" }
+      ]
+    }
+  ]
+}

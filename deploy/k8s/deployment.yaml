@@ -1,0 +1,90 @@
+# Kubernetes manifests — Tokn observability + ingest service.
+#
+# Deploy:
+#   kubectl apply -f deploy/k8s/
+# Expose via ingress or NodePort 30010.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tokn
+  labels:
+    app: tokn
+    component: ledger
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tokn
+  template:
+    metadata:
+      labels:
+        app: tokn
+    spec:
+      containers:
+        - name: tokn
+          image: tokn:latest
+          ports:
+            - name: metrics
+              containerPort: 8443
+          env:
+            - name: RUST_LOG
+              value: "info"
+            - name: TOKN_METRICS_PORT
+              value: "8443"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: metrics
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: metrics
+            initialDelaySeconds: 30
+            periodSeconds: 60
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: tokn
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tokn
+  labels:
+    app: tokn
+spec:
+  type: ClusterIP
+  selector:
+    app: tokn
+  ports:
+    - name: metrics
+      port: 8443
+      targetPort: metrics
+---
+apiVersion: v1
+kind: ServiceMonitor
+metadata:
+  name: tokn
+  labels:
+    app: tokn
+spec:
+  selector:
+    matchLabels:
+      app: tokn
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
