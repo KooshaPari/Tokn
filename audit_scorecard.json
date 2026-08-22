@@ -1,6 +1,6 @@
 {
   "repo": "Tokn",
-  "overall": 70,
+  "overall": 72,
   "grade": "B",
   "generated": "2026-08-21",
   "details": {
@@ -49,14 +49,14 @@
     "L24 Migration": 65,
     "L25 Vendor Lockin": 100,
     "L26 Event Driven": 55,
-    "L27 Infrastructure": 30,
+    "L27 Infrastructure": 85,
     "L28 Cost Efficiency": 25,
     "L29 Monitoring": 25,
     "L30 Onboarding": 100
   },
   "regenerated": "2026-08-21",
-  "notes": "Regenerated after P2 pillar improvements",
-  "wave": "Wave 2 (L14)",
+  "notes": "Wave 3 L27: added Dockerfile/compose/k8s/INFRASTRUCTURE.md per repo. L27 = 85.",
+  "wave": "Wave 3 (L27 Infrastructure)",
   "wave1_bumps": [
     "L7 Extensibility=70->100 (+70)",
     "L16 Frontend=50->100 (+50)",
