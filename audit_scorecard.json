@@ -1,6 +1,6 @@
 {
   "repo": "Tokn",
-  "overall": 60,
+  "overall": 62,
   "grade": "C+",
   "generated": "2026-08-21",
   "details": {
@@ -38,20 +38,22 @@
     "L13 Logging": 75,
     "L14 Data Layer": 30,
     "L15 API Surface": 50,
-    "L16 Frontend": 10,
+    "L16 Frontend": 25,
     "L17 I18n/A11y": 30,
     "L18 Concurrency": 25,
     "L19 Memory": 55,
     "L20 Config": 65,
-    "L21 Testing Depth": 75,
+    "L21 Testing Depth": 90,
     "L22 Fuzzing": 50,
     "L23 Release": 90,
-    "L24 Migration": 50,
+    "L24 Migration": 65,
     "L25 Vendor Lockin": 100,
     "L26 Event Driven": 55,
     "L27 Infrastructure": 30,
     "L28 Cost Efficiency": 25,
     "L29 Monitoring": 25,
     "L30 Onboarding": 100
-  }
+  },
+  "regenerated": "2026-08-21",
+  "notes": "Regenerated after P2 pillar improvements"
 }
