@@ -14,3 +14,13 @@ clap.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 serde_yaml_ng.workspace = true
+prometheus-client.workspace = true
+axum.workspace = true
+tokio.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+
+[[bin]]
+name = "pareto-server"
+path = "src/bin/server.rs"

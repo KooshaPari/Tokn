@@ -110,7 +110,8 @@ impl Plugin for BudgetPlugin {
     fn hook_points(&self) -> Vec<HookPoint> { vec![HOOK_POST_COST] }
 
     fn post_cost(&self, provider: &str, _model: &str, _input: u64, _output: u64, cost: f64) {
-        let entry = self.spend.lock().unwrap().entry(provider.into()).or_insert(0.0);
+        let mut binding = self.spend.lock().unwrap();
+        let entry = binding.entry(provider.into()).or_insert(0.0);
         *entry += cost;
     }
 }
