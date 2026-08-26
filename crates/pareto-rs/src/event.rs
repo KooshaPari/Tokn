@@ -74,13 +74,13 @@ impl EventBus for InMemoryEventBus {
     fn publish(&self, event: &Event) {
         let event_type = Self::get_event_type(event);
         let subs = self.subscribers.lock().unwrap();
-        
+
         if let Some(callbacks) = subs.get(event_type) {
             for callback in callbacks {
                 callback(event);
             }
         }
-        
+
         // Also notify wildcard subscribers
         if let Some(callbacks) = subs.get("*") {
             for callback in callbacks {
@@ -116,9 +116,12 @@ mod tests {
         let counter = Arc::new(AtomicUsize::new(0));
         let counter_clone = counter.clone();
 
-        bus.subscribe("CostCalculated", Box::new(move |_| {
-            counter_clone.fetch_add(1, Ordering::SeqCst);
-        }));
+        bus.subscribe(
+            "CostCalculated",
+            Box::new(move |_| {
+                counter_clone.fetch_add(1, Ordering::SeqCst);
+            }),
+        );
 
         let event = Event::CostCalculated {
             request_id: "req-1".to_string(),
@@ -136,9 +139,12 @@ mod tests {
         let counter = Arc::new(AtomicUsize::new(0));
         let counter_clone = counter.clone();
 
-        bus.subscribe("*", Box::new(move |_| {
-            counter_clone.fetch_add(1, Ordering::SeqCst);
-        }));
+        bus.subscribe(
+            "*",
+            Box::new(move |_| {
+                counter_clone.fetch_add(1, Ordering::SeqCst);
+            }),
+        );
 
         bus.publish(&Event::CostCalculated {
             request_id: "req-1".to_string(),
@@ -159,12 +165,15 @@ mod tests {
     fn test_multiple_subscribers() {
         let bus = InMemoryEventBus::new();
         let counter = Arc::new(AtomicUsize::new(0));
-        
+
         for _ in 0..3 {
             let c = counter.clone();
-            bus.subscribe("CostCalculated", Box::new(move |_| {
-                c.fetch_add(1, Ordering::SeqCst);
-            }));
+            bus.subscribe(
+                "CostCalculated",
+                Box::new(move |_| {
+                    c.fetch_add(1, Ordering::SeqCst);
+                }),
+            );
         }
 
         bus.publish(&Event::CostCalculated {
@@ -192,18 +201,21 @@ mod tests {
         let counter = Arc::new(AtomicUsize::new(0));
         let c = counter.clone();
 
-        bus.subscribe("CostCalculated", Box::new(move |_| {
-            c.fetch_add(1, Ordering::SeqCst);
-        }));
+        bus.subscribe(
+            "CostCalculated",
+            Box::new(move |_| {
+                c.fetch_add(1, Ordering::SeqCst);
+            }),
+        );
 
         bus.publish(&Event::CostCalculated {
             request_id: "req-1".to_string(),
             cost: 0.1,
             tokens: 100,
         });
-        
+
         bus.clear();
-        
+
         bus.publish(&Event::CostCalculated {
             request_id: "req-2".to_string(),
             cost: 0.2,
@@ -215,10 +227,21 @@ mod tests {
 
     #[test]
     fn test_event_type_extraction() {
-        let e1 = Event::PriceBookLoaded { provider: "openai".to_string(), model_count: 5 };
-        let e2 = Event::RouteChosen { request_id: "req-2".to_string(), route: "gpt-4".to_string(), estimated_cost: 0.5 };
-        let e3 = Event::BudgetExceeded { user_id: "u-1".to_string(), spent: 10.0, limit: 5.0 };
-        
+        let e1 = Event::PriceBookLoaded {
+            provider: "openai".to_string(),
+            model_count: 5,
+        };
+        let e2 = Event::RouteChosen {
+            request_id: "req-2".to_string(),
+            route: "gpt-4".to_string(),
+            estimated_cost: 0.5,
+        };
+        let e3 = Event::BudgetExceeded {
+            user_id: "u-1".to_string(),
+            spent: 10.0,
+            limit: 5.0,
+        };
+
         assert_eq!(InMemoryEventBus::get_event_type(&e1), "PriceBookLoaded");
         assert_eq!(InMemoryEventBus::get_event_type(&e2), "RouteChosen");
         assert_eq!(InMemoryEventBus::get_event_type(&e3), "BudgetExceeded");
@@ -230,9 +253,12 @@ mod tests {
         let counter = Arc::new(AtomicUsize::new(0));
         let c = counter.clone();
 
-        bus.subscribe("BudgetExceeded", Box::new(move |_| {
-            c.fetch_add(1, Ordering::SeqCst);
-        }));
+        bus.subscribe(
+            "BudgetExceeded",
+            Box::new(move |_| {
+                c.fetch_add(1, Ordering::SeqCst);
+            }),
+        );
 
         bus.publish(&Event::CostCalculated {
             request_id: "req-1".to_string(),
