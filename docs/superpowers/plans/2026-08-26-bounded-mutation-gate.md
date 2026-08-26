@@ -45,6 +45,7 @@ on:
       - "Cargo.toml"
       - "Cargo.lock"
       - "mutants.toml"
+      - ".github/workflows/mutation.yml"
 
 permissions:
   contents: read
@@ -63,7 +64,8 @@ jobs:
           fetch-depth: 0
       - uses: dtolnay/rust-toolchain@stable
       - run: cargo install cargo-mutants --version 27.1.0 --locked
-      - name: Build semantic Rust diff
+      - id: diff
+        name: Build semantic Rust diff
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
@@ -71,9 +73,12 @@ jobs:
           git diff --unified=0 "$BASE_SHA" HEAD -- ':(glob)crates/**/*.rs' > /tmp/mutation.diff
           if [ ! -s /tmp/mutation.diff ]; then
             echo "No changed Rust source; mutation execution is not applicable."
+            echo "has_source_changes=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          echo "has_source_changes=true" >> "$GITHUB_OUTPUT"
       - name: Test changed mutants
+        if: steps.diff.outputs.has_source_changes == 'true'
         run: |
           set -euo pipefail
           cargo mutants --workspace --in-diff /tmp/mutation.diff --no-shuffle -j 2 --timeout 120 --annotations github

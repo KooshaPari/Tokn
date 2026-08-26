@@ -7,8 +7,8 @@ bounded pull-request signal for Rust source changes.
 
 ## Scope
 
-The workflow will run on pull requests only when Rust source or mutation-relevant
-Cargo configuration changes. It will checkout merge-base history, derive a
+The workflow will run on pull requests only when Rust source, mutation-relevant
+Cargo configuration, or its policy file changes. It will checkout merge-base history, derive a
 Rust-only unified diff, and run `cargo-mutants` only for mutants in that diff.
 It will use fixed parallelism and per-mutant timeout, a job deadline, pinned
 `cargo-mutants` version, GitHub annotations, least-privilege permissions, and
@@ -18,8 +18,9 @@ PR-scoped cancellation.
 
 The mutation command will run without a pipe, `|| true`, or any other masked
 exit status. A PR with no changed Rust lines will explicitly report that no
-source mutation candidates apply and exit successfully. This is not a claim
-that the full workspace is mutation-clean.
+source mutation candidates apply, set an explicit false step output, and skip
+the mutation step. This is not a claim that the full workspace is
+mutation-clean.
 
 ## Non-goals
 
