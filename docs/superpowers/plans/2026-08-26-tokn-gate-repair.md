@@ -23,14 +23,14 @@ Tasks 1-3 and the CI parts of Task 4 are implemented and locally verified on thi
 
 ## File map
 
-| File | Responsibility |
-|---|---|
-| `audit_scorecard.json` | Generated project audit data formatted by Prettier. |
-| `crates/pareto-rs/**/*.rs`, `crates/tokenledger/**/*.rs` | Rust source that must conform to current rustfmt. |
-| `.github/workflows/scorecard.yml` | Valid OpenSSF Scorecard job configuration. |
-| `.github/workflows/ci.yml` | CI checkout and gitleaks history availability. |
-| `.github/workflows/mutation.yml` | Bounded mutation analysis with an honest failure result. |
-| `crates/pareto-rs/src/pricing.rs` | Existing single-item routing test made compatible with strict Clippy. |
+| File                                                     | Responsibility                                                        |
+| -------------------------------------------------------- | --------------------------------------------------------------------- |
+| `audit_scorecard.json`                                   | Generated project audit data formatted by Prettier.                   |
+| `crates/pareto-rs/**/*.rs`, `crates/tokenledger/**/*.rs` | Rust source that must conform to current rustfmt.                     |
+| `.github/workflows/scorecard.yml`                        | Valid OpenSSF Scorecard job configuration.                            |
+| `.github/workflows/ci.yml`                               | CI checkout and gitleaks history availability.                        |
+| `.github/workflows/mutation.yml`                         | Bounded mutation analysis with an honest failure result.              |
+| `crates/pareto-rs/src/pricing.rs`                        | Existing single-item routing test made compatible with strict Clippy. |
 
 ### Task 1: Establish red baseline evidence
 
@@ -44,6 +44,7 @@ Tasks 1-3 and the CI parts of Task 4 are implemented and locally verified on thi
 ### Task 2: Make mechanical format fixes
 
 **Files:**
+
 - Modify: `audit_scorecard.json`
 - Modify: every Rust file reported by `cargo fmt --all -- --check`
 
@@ -55,6 +56,7 @@ Tasks 1-3 and the CI parts of Task 4 are implemented and locally verified on thi
 ### Task 3: Correct Scorecard workflow schema
 
 **Files:**
+
 - Modify: `.github/workflows/scorecard.yml:23-24`
 
 - [ ] Treat the `actionlint` syntax failure from Task 1 as the red proof.
@@ -65,6 +67,7 @@ Tasks 1-3 and the CI parts of Task 4 are implemented and locally verified on thi
 ### Task 4: Make security and mutation execution bounded and observable
 
 **Files:**
+
 - Modify: `.github/workflows/ci.yml` only at the checkout used by the gitleaks path and the aggregate reference to the existing `dep-review` job.
 - Modify: `.github/workflows/mutation.yml`.
 

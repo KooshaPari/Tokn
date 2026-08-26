@@ -109,7 +109,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - name: cargo-deny check
-        uses: EmbarkStudios/cargo-deny-action@v1
+        uses: EmbarkStudios/cargo-deny-action@3c6349835b2b7b196a839186cb8b78e02f7b5f25 # v2.1.1
         with:
           arguments: --all-features
 
@@ -182,8 +182,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # gitleaks compares the checked-out commit with HEAD^ on pull requests.
-          fetch-depth: 2
+          # gitleaks scans the exact PR head and its first parent, which may not
+          # be retained by a shallow checkout of the pull-request ref.
+          fetch-depth: 0
       - name: gitleaks
         uses: gitleaks/gitleaks-action@v2
         env:
