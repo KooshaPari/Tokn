@@ -1,0 +1,25 @@
+{
+  "app": {
+    "name": "Tokn",
+    "description": "Motor de precios de tokens de alto rendimiento"
+  },
+  "cli": {
+    "usage": "tokn [COMANDO]",
+    "commands": {
+      "serve": "Iniciar el servidor HTTP",
+      "calculate": "Calcular el costo para una cantidad de tokens",
+      "route": "Seleccionar la mejor ruta para una solicitud",
+      "health": "Verificar la salud del sistema"
+    },
+    "options": {
+      "verbose": "Habilitar salida detallada",
+      "quiet": "Suprimir toda la salida que no sea de error",
+      "json": "Mostrar resultados en formato JSON"
+    }
+  },
+  "errors": {
+    "not_found": "Recurso no encontrado",
+    "invalid_config": "Configuración inválida proporcionada",
+    "budget_exceeded": "Límite de presupuesto excedido"
+  }
+}

@@ -309,8 +309,8 @@ Actions
    S-03 VF never primary critical agent_workflow Route FQ P0 ☐ \***
    S-04 C0 wins patch gen code\*patch\*generator Route C0 P1 ☐ **\*
    S-05 CU multipliers under scarcity code_patch_generator Route CU low-mult P1 ☐ \***
-   S-08 UB early-day scaffold code\*scaffold*fast Route UB P1 ☐ **\*
-   S-09 UB late-day avoided code_scaffold_fast Route UF/MQ/SH P1 ☐ ***
+   S-08 UB early-day scaffold code\*scaffold\*fast Route UB P1 ☐ **\*
+   S-09 UB late-day avoided code_scaffold_fast Route UF/MQ/SH P1 ☐ \***
    S-23 Single-file DAG success small*transform(file) DAG patch:C0/MQ + apply:AP P0 ☐ *\*\*
    S-24 Apply failure escalates file apply_patch DAG escalate reasoner P0 ☐ \_\_\_
 

@@ -10,18 +10,18 @@ cargo run -p pareto-rs --bin pareto-server
 
 This starts an Axum HTTP server on **port 9090** with two endpoints:
 
-| Endpoint     | Description                              |
-|-------------|------------------------------------------|
-| `/health`   | Liveness / readiness probe — returns `200 ok` |
-| `/metrics`  | Prometheus text-format metrics           |
+| Endpoint   | Description                                   |
+| ---------- | --------------------------------------------- |
+| `/health`  | Liveness / readiness probe — returns `200 ok` |
+| `/metrics` | Prometheus text-format metrics                |
 
 ## Exposed metrics
 
-| Metric                                    | Type      | Description                              |
-|-------------------------------------------|-----------|------------------------------------------|
-| `pareto_ingest_total`                     | Counter   | Total cost entries ingested              |
-| `pareto_queue_depth`                      | Gauge     | Current entries waiting to be processed   |
-| `pareto_processing_latency_seconds`       | Histogram | End-to-end processing latency (seconds)  |
+| Metric                              | Type      | Description                             |
+| ----------------------------------- | --------- | --------------------------------------- |
+| `pareto_ingest_total`               | Counter   | Total cost entries ingested             |
+| `pareto_queue_depth`                | Gauge     | Current entries waiting to be processed |
+| `pareto_processing_latency_seconds` | Histogram | End-to-end processing latency (seconds) |
 
 ### Prometheus scrape config
 
