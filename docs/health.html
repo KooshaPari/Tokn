@@ -1,159 +1,422 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tokn — System Health Dashboard</title>
-  <style>
-    :root {
-      --bg: #0d1117;
-      --card: #161b22;
-      --border: #30363d;
-      --text: #c9d1d9;
-      --text-dim: #8b949e;
-      --green: #3fb950;
-      --yellow: #d29922;
-      --red: #f85149;
-      --blue: #58a6ff;
-      --purple: #bc8cff;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); padding: 2rem; }
-    h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
-    .subtitle { color: var(--text-dim); font-size: 0.875rem; margin-bottom: 2rem; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; }
-    .card h2 { font-size: 0.875rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
-    .metric { font-size: 2rem; font-weight: 600; }
-    .metric.green { color: var(--green); }
-    .metric.yellow { color: var(--yellow); }
-    .metric.red { color: var(--red); }
-    .metric.blue { color: var(--blue); }
-    .detail { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.25rem; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-    th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); }
-    th { color: var(--text-dim); font-weight: 500; }
-    .badge { display: inline-block; padding: 0.15em 0.5em; border-radius: 12px; font-size: 0.75rem; font-weight: 500; }
-    .badge.ok { background: rgba(63,185,80,0.15); color: var(--green); }
-    .badge.warn { background: rgba(210,153,34,0.15); color: var(--yellow); }
-    .badge.err { background: rgba(248,81,73,0.15); color: var(--red); }
-    .section { margin-bottom: 2rem; }
-    .section h2 { font-size: 1.125rem; margin-bottom: 0.75rem; }
-    code { background: rgba(88,166,255,0.1); padding: 0.15em 0.4em; border-radius: 4px; font-size: 0.85em; }
-    footer { color: var(--text-dim); font-size: 0.75rem; margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 1rem; }
-  </style>
-</head>
-<body>
-  <h1>Tokn Health Dashboard</h1>
-  <p class="subtitle">Project status, component health, and endpoint reference &mdash; generated from repository metadata</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tokn — System Health Dashboard</title>
+    <style>
+      :root {
+        --bg: #0d1117;
+        --card: #161b22;
+        --border: #30363d;
+        --text: #c9d1d9;
+        --text-dim: #8b949e;
+        --green: #3fb950;
+        --yellow: #d29922;
+        --red: #f85149;
+        --blue: #58a6ff;
+        --purple: #bc8cff;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        padding: 2rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+      }
+      .subtitle {
+        color: var(--text-dim);
+        font-size: 0.875rem;
+        margin-bottom: 2rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.25rem;
+      }
+      .card h2 {
+        font-size: 0.875rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.75rem;
+      }
+      .metric {
+        font-size: 2rem;
+        font-weight: 600;
+      }
+      .metric.green {
+        color: var(--green);
+      }
+      .metric.yellow {
+        color: var(--yellow);
+      }
+      .metric.red {
+        color: var(--red);
+      }
+      .metric.blue {
+        color: var(--blue);
+      }
+      .detail {
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        margin-top: 0.25rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 0.5rem 0.75rem;
+        border-bottom: 1px solid var(--border);
+      }
+      th {
+        color: var(--text-dim);
+        font-weight: 500;
+      }
+      .badge {
+        display: inline-block;
+        padding: 0.15em 0.5em;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+      .badge.ok {
+        background: rgba(63, 185, 80, 0.15);
+        color: var(--green);
+      }
+      .badge.warn {
+        background: rgba(210, 153, 34, 0.15);
+        color: var(--yellow);
+      }
+      .badge.err {
+        background: rgba(248, 81, 73, 0.15);
+        color: var(--red);
+      }
+      .section {
+        margin-bottom: 2rem;
+      }
+      .section h2 {
+        font-size: 1.125rem;
+        margin-bottom: 0.75rem;
+      }
+      code {
+        background: rgba(88, 166, 255, 0.1);
+        padding: 0.15em 0.4em;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      footer {
+        color: var(--text-dim);
+        font-size: 0.75rem;
+        margin-top: 3rem;
+        border-top: 1px solid var(--border);
+        padding-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tokn Health Dashboard</h1>
+    <p class="subtitle">
+      Project status, component health, and endpoint reference &mdash; generated
+      from repository metadata
+    </p>
 
-  <!-- Summary Cards -->
-  <div class="grid">
-    <div class="card">
-      <h2>Overall Status</h2>
-      <div class="metric green">Operational</div>
-      <div class="detail">All core crates compile; CI passes on main</div>
+    <!-- Summary Cards -->
+    <div class="grid">
+      <div class="card">
+        <h2>Overall Status</h2>
+        <div class="metric green">Operational</div>
+        <div class="detail">All core crates compile; CI passes on main</div>
+      </div>
+      <div class="card">
+        <h2>Version</h2>
+        <div class="metric blue">0.1.x</div>
+        <div class="detail">
+          Workspace release track; see <code>VERSION</code>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Crate Count</h2>
+        <div class="metric">2</div>
+        <div class="detail">
+          <code>pareto-rs</code> (analytics) + <code>tokenledger</code>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Last CI Gate</h2>
+        <div class="metric green">Pass</div>
+        <div class="detail">cargo-deny, cargo-audit, trunk-check, nextest</div>
+      </div>
     </div>
-    <div class="card">
-      <h2>Version</h2>
-      <div class="metric blue">0.1.x</div>
-      <div class="detail">Workspace release track; see <code>VERSION</code></div>
-    </div>
-    <div class="card">
-      <h2>Crate Count</h2>
-      <div class="metric">2</div>
-      <div class="detail"><code>pareto-rs</code> (analytics) + <code>tokenledger</code></div>
-    </div>
-    <div class="card">
-      <h2>Last CI Gate</h2>
-      <div class="metric green">Pass</div>
-      <div class="detail">cargo-deny, cargo-audit, trunk-check, nextest</div>
-    </div>
-  </div>
 
-  <!-- Component Health -->
-  <div class="section">
-    <h2>Component Health</h2>
-    <div class="card">
-      <table>
-        <thead><tr><th>Component</th><th>Crate / Module</th><th>Tests</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>Cost Engine</td><td><code>pareto-rs::cost</code></td><td>14</td><td><span class="badge ok">Healthy</span></td></tr>
-          <tr><td>Pricing Engine</td><td><code>pareto-rs::pricing</code></td><td>10+</td><td><span class="badge ok">Healthy</span></td></tr>
-          <tr><td>Format Helpers</td><td><code>pareto-rs::format</code></td><td>4</td><td><span class="badge ok">Healthy</span></td></tr>
-          <tr><td>Data Models</td><td><code>pareto-rs::models</code></td><td>16</td><td><span class="badge ok">Healthy</span></td></tr>
-          <tr><td>Utilities</td><td><code>pareto-rs::utils</code></td><td>3+</td><td><span class="badge ok">Healthy</span></td></tr>
-          <tr><td>Main Format</td><td><code>tokn::format</code></td><td>6+</td><td><span class="badge ok">Healthy</span></td></tr>
-          <tr><td>Main Cost</td><td><code>tokn::cost</code></td><td>8+</td><td><span class="badge ok">Healthy</span></td></tr>
-          <tr><td>Cache / Ingest</td><td><code>tokn::cache</code></td><td>5+</td><td><span class="badge ok">Healthy</span></td></tr>
-          <tr><td>Pricing Reconcile</td><td><code>tokn::pricing</code></td><td>&mdash;</td><td><span class="badge warn">I/O-bound</span></td></tr>
-          <tr><td>Analytics</td><td><code>analytics.rs</code></td><td>&mdash;</td><td><span class="badge warn">External dep</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Component Health -->
+    <div class="section">
+      <h2>Component Health</h2>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Crate / Module</th>
+              <th>Tests</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cost Engine</td>
+              <td><code>pareto-rs::cost</code></td>
+              <td>14</td>
+              <td><span class="badge ok">Healthy</span></td>
+            </tr>
+            <tr>
+              <td>Pricing Engine</td>
+              <td><code>pareto-rs::pricing</code></td>
+              <td>10+</td>
+              <td><span class="badge ok">Healthy</span></td>
+            </tr>
+            <tr>
+              <td>Format Helpers</td>
+              <td><code>pareto-rs::format</code></td>
+              <td>4</td>
+              <td><span class="badge ok">Healthy</span></td>
+            </tr>
+            <tr>
+              <td>Data Models</td>
+              <td><code>pareto-rs::models</code></td>
+              <td>16</td>
+              <td><span class="badge ok">Healthy</span></td>
+            </tr>
+            <tr>
+              <td>Utilities</td>
+              <td><code>pareto-rs::utils</code></td>
+              <td>3+</td>
+              <td><span class="badge ok">Healthy</span></td>
+            </tr>
+            <tr>
+              <td>Main Format</td>
+              <td><code>tokn::format</code></td>
+              <td>6+</td>
+              <td><span class="badge ok">Healthy</span></td>
+            </tr>
+            <tr>
+              <td>Main Cost</td>
+              <td><code>tokn::cost</code></td>
+              <td>8+</td>
+              <td><span class="badge ok">Healthy</span></td>
+            </tr>
+            <tr>
+              <td>Cache / Ingest</td>
+              <td><code>tokn::cache</code></td>
+              <td>5+</td>
+              <td><span class="badge ok">Healthy</span></td>
+            </tr>
+            <tr>
+              <td>Pricing Reconcile</td>
+              <td><code>tokn::pricing</code></td>
+              <td>&mdash;</td>
+              <td><span class="badge warn">I/O-bound</span></td>
+            </tr>
+            <tr>
+              <td>Analytics</td>
+              <td><code>analytics.rs</code></td>
+              <td>&mdash;</td>
+              <td><span class="badge warn">External dep</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
 
-  <!-- Endpoints -->
-  <div class="section">
-    <h2>CLI Endpoints &amp; Commands</h2>
-    <div class="card">
-      <table>
-        <thead><tr><th>Command</th><th>Description</th><th>Module</th></tr></thead>
-        <tbody>
-          <tr><td><code>tokn monthly</code></td><td>Monthly cost breakdown with blended $/MTok</td><td>analytics</td></tr>
-          <tr><td><code>tokn daily</code></td><td>Daily cost breakdown within a month</td><td>analytics</td></tr>
-          <tr><td><code>tokn coverage</code></td><td>Pricing coverage report (priced vs unpriced events)</td><td>analytics</td></tr>
-          <tr><td><code>tokn pricing-check</code></td><td>Verify all events have pricing data</td><td>pricing</td></tr>
-          <tr><td><code>tokn pricing-apply</code></td><td>Apply a pricing patch to the pricing book</td><td>pricing</td></tr>
-          <tr><td><code>tokn pricing-reconcile</code></td><td>Full reconcile: detect missing, apply, verify</td><td>pricing</td></tr>
-          <tr><td><code>tokn pricing-lint</code></td><td>Lint pricing book for placeholder markers</td><td>pricing</td></tr>
-          <tr><td><code>tokn pricing-audit</code></td><td>Audit pricing metadata freshness and structure</td><td>pricing</td></tr>
-          <tr><td><code>tokn bench</code></td><td>Run performance benchmarks</td><td>bench</td></tr>
-          <tr><td><code>tokn ui-snapshot</code></td><td>Generate UI snapshot JSON</td><td>orchestrate</td></tr>
-        </tbody>
-      </table>
+    <!-- Endpoints -->
+    <div class="section">
+      <h2>CLI Endpoints &amp; Commands</h2>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Command</th>
+              <th>Description</th>
+              <th>Module</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>tokn monthly</code></td>
+              <td>Monthly cost breakdown with blended $/MTok</td>
+              <td>analytics</td>
+            </tr>
+            <tr>
+              <td><code>tokn daily</code></td>
+              <td>Daily cost breakdown within a month</td>
+              <td>analytics</td>
+            </tr>
+            <tr>
+              <td><code>tokn coverage</code></td>
+              <td>Pricing coverage report (priced vs unpriced events)</td>
+              <td>analytics</td>
+            </tr>
+            <tr>
+              <td><code>tokn pricing-check</code></td>
+              <td>Verify all events have pricing data</td>
+              <td>pricing</td>
+            </tr>
+            <tr>
+              <td><code>tokn pricing-apply</code></td>
+              <td>Apply a pricing patch to the pricing book</td>
+              <td>pricing</td>
+            </tr>
+            <tr>
+              <td><code>tokn pricing-reconcile</code></td>
+              <td>Full reconcile: detect missing, apply, verify</td>
+              <td>pricing</td>
+            </tr>
+            <tr>
+              <td><code>tokn pricing-lint</code></td>
+              <td>Lint pricing book for placeholder markers</td>
+              <td>pricing</td>
+            </tr>
+            <tr>
+              <td><code>tokn pricing-audit</code></td>
+              <td>Audit pricing metadata freshness and structure</td>
+              <td>pricing</td>
+            </tr>
+            <tr>
+              <td><code>tokn bench</code></td>
+              <td>Run performance benchmarks</td>
+              <td>bench</td>
+            </tr>
+            <tr>
+              <td><code>tokn ui-snapshot</code></td>
+              <td>Generate UI snapshot JSON</td>
+              <td>orchestrate</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
 
-  <!-- Architecture Quick Reference -->
-  <div class="section">
-    <h2>Architecture Quick Reference</h2>
-    <div class="card">
-      <table>
-        <thead><tr><th>Layer</th><th>Location</th><th>Purpose</th></tr></thead>
-        <tbody>
-          <tr><td>Pareto Analytics</td><td><code>crates/pareto-rs/</code></td><td>Pure pricing &amp; routing logic (no I/O)</td></tr>
-          <tr><td>Token Ledger</td><td><code>crates/tokenledger/</code></td><td>Blockchain-backed token state</td></tr>
-          <tr><td>CLI / Ingest</td><td><code>src/</code></td><td>CLI entry point, event ingestion, output formatting</td></tr>
-          <tr><td>Pricing Engine</td><td><code>src/pricing.rs</code></td><td>Pricing reconciliation, audit, lint, apply</td></tr>
-          <tr><td>Analytics</td><td><code>src/analytics.rs</code></td><td>Monthly/daily/coverage report orchestration</td></tr>
-          <tr><td>Cost Calculator</td><td><code>src/cost.rs</code></td><td>Variable cost, subscription allocation, suggestions</td></tr>
-          <tr><td>Cache / Coverage</td><td><code>src/cache.rs</code></td><td>Coverage reports, unpriced event collection</td></tr>
-        </tbody>
-      </table>
+    <!-- Architecture Quick Reference -->
+    <div class="section">
+      <h2>Architecture Quick Reference</h2>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Layer</th>
+              <th>Location</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pareto Analytics</td>
+              <td><code>crates/pareto-rs/</code></td>
+              <td>Pure pricing &amp; routing logic (no I/O)</td>
+            </tr>
+            <tr>
+              <td>Token Ledger</td>
+              <td><code>crates/tokenledger/</code></td>
+              <td>Blockchain-backed token state</td>
+            </tr>
+            <tr>
+              <td>CLI / Ingest</td>
+              <td><code>src/</code></td>
+              <td>CLI entry point, event ingestion, output formatting</td>
+            </tr>
+            <tr>
+              <td>Pricing Engine</td>
+              <td><code>src/pricing.rs</code></td>
+              <td>Pricing reconciliation, audit, lint, apply</td>
+            </tr>
+            <tr>
+              <td>Analytics</td>
+              <td><code>src/analytics.rs</code></td>
+              <td>Monthly/daily/coverage report orchestration</td>
+            </tr>
+            <tr>
+              <td>Cost Calculator</td>
+              <td><code>src/cost.rs</code></td>
+              <td>Variable cost, subscription allocation, suggestions</td>
+            </tr>
+            <tr>
+              <td>Cache / Coverage</td>
+              <td><code>src/cache.rs</code></td>
+              <td>Coverage reports, unpriced event collection</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
 
-  <!-- Data Formats -->
-  <div class="section">
-    <h2>Data Formats</h2>
-    <div class="card">
-      <table>
-        <thead><tr><th>Format</th><th>Extension</th><th>Location</th></tr></thead>
-        <tbody>
-          <tr><td>Pricing Book</td><td><code>.json</code></td><td><code>configs/</code> or <code>pricing.json</code></td></tr>
-          <tr><td>Cost Snapshots</td><td><code>.jsonl</code></td><td><code>ledger/</code></td></tr>
-          <tr><td>Events (Ingested)</td><td><code>.jsonl</code></td><td>Output of <code>tokn ingest</code></td></tr>
-          <tr><td>UI Snapshot</td><td><code>.json</code></td><td>Output of <code>tokn ui-snapshot</code></td></tr>
-          <tr><td>Pricing Patch</td><td><code>.json</code></td><td>Generated by <code>tokn pricing-reconcile</code></td></tr>
-        </tbody>
-      </table>
+    <!-- Data Formats -->
+    <div class="section">
+      <h2>Data Formats</h2>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>Extension</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pricing Book</td>
+              <td><code>.json</code></td>
+              <td><code>configs/</code> or <code>pricing.json</code></td>
+            </tr>
+            <tr>
+              <td>Cost Snapshots</td>
+              <td><code>.jsonl</code></td>
+              <td><code>ledger/</code></td>
+            </tr>
+            <tr>
+              <td>Events (Ingested)</td>
+              <td><code>.jsonl</code></td>
+              <td>Output of <code>tokn ingest</code></td>
+            </tr>
+            <tr>
+              <td>UI Snapshot</td>
+              <td><code>.json</code></td>
+              <td>Output of <code>tokn ui-snapshot</code></td>
+            </tr>
+            <tr>
+              <td>Pricing Patch</td>
+              <td><code>.json</code></td>
+              <td>Generated by <code>tokn pricing-reconcile</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
 
-  <footer>
-    Tokn Health Dashboard &mdash; Version 0.1.x &mdash; Data is static; regenerate by updating this file.
-    <br>Built with plain HTML + CSS. No frameworks.
-  </footer>
-</body>
+    <footer>
+      Tokn Health Dashboard &mdash; Version 0.1.x &mdash; Data is static;
+      regenerate by updating this file.
+      <br />Built with plain HTML + CSS. No frameworks.
+    </footer>
+  </body>
 </html>

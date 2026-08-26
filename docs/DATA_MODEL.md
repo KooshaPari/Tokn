@@ -27,41 +27,41 @@ Migration tracking is held in `_migrations(id, applied_at)`.
 
 Canonical model identifier registry.
 
-| Column        | Type    | Notes                                        |
-|---------------|---------|----------------------------------------------|
-| `id`          | TEXT    | PK — e.g. `claude-opus-4`, `gpt-5`           |
-| `provider`    | TEXT    | `anthropic`, `openai`, `google`, …           |
-| `display_name`| TEXT    | Human-readable label                          |
-| `created_at`  | INTEGER | ms epoch                                     |
-| `updated_at`  | INTEGER | ms epoch                                     |
+| Column         | Type    | Notes                              |
+| -------------- | ------- | ---------------------------------- |
+| `id`           | TEXT    | PK — e.g. `claude-opus-4`, `gpt-5` |
+| `provider`     | TEXT    | `anthropic`, `openai`, `google`, … |
+| `display_name` | TEXT    | Human-readable label               |
+| `created_at`   | INTEGER | ms epoch                           |
+| `updated_at`   | INTEGER | ms epoch                           |
 
 ### `pricing_book`
 
-Append-only price history. Each row captures the *effective* price for a model
+Append-only price history. Each row captures the _effective_ price for a model
 starting at `effective_at`. To change a price, insert a new row with a later
 `effective_at`.
 
-| Column          | Type    | Notes                                    |
-|-----------------|---------|------------------------------------------|
-| `model_id`      | TEXT    | FK → `models.id`                         |
-| `effective_at`  | INTEGER | ms epoch; PK with `model_id`             |
-| `input_usd_1k`  | REAL    | USD per 1,000 input tokens (≥ 0)         |
-| `output_usd_1k` | REAL    | USD per 1,000 output tokens (≥ 0)        |
-| `currency`      | TEXT    | ISO 4217 (default `USD`)                 |
+| Column          | Type    | Notes                             |
+| --------------- | ------- | --------------------------------- |
+| `model_id`      | TEXT    | FK → `models.id`                  |
+| `effective_at`  | INTEGER | ms epoch; PK with `model_id`      |
+| `input_usd_1k`  | REAL    | USD per 1,000 input tokens (≥ 0)  |
+| `output_usd_1k` | REAL    | USD per 1,000 output tokens (≥ 0) |
+| `currency`      | TEXT    | ISO 4217 (default `USD`)          |
 
 ### `cost_ledger`
 
 Append-only cost calculation history. One row per cost call.
 
-| Column          | Type    | Notes                                    |
-|-----------------|---------|------------------------------------------|
-| `id`            | INTEGER | autoincrement PK                         |
-| `model_id`      | TEXT    | FK → `models.id`                         |
-| `input_tokens`  | INTEGER | (≥ 0)                                    |
-| `output_tokens` | INTEGER | (≥ 0)                                    |
-| `cost_usd`      | REAL    | (≥ 0); computed using `pricing_book`     |
-| `computed_at`   | INTEGER | ms epoch                                 |
-| `note`          | TEXT    | Optional context (request id, etc.)      |
+| Column          | Type    | Notes                                |
+| --------------- | ------- | ------------------------------------ |
+| `id`            | INTEGER | autoincrement PK                     |
+| `model_id`      | TEXT    | FK → `models.id`                     |
+| `input_tokens`  | INTEGER | (≥ 0)                                |
+| `output_tokens` | INTEGER | (≥ 0)                                |
+| `cost_usd`      | REAL    | (≥ 0); computed using `pricing_book` |
+| `computed_at`   | INTEGER | ms epoch                             |
+| `note`          | TEXT    | Optional context (request id, etc.)  |
 
 ## Migrations
 

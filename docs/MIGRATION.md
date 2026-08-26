@@ -69,12 +69,12 @@ The pricing book is the primary configuration for per-model cost rates. Key stru
       "subscription_usd_month": 0.0,
       "models": {
         "gpt-4o": {
-          "input_usd_per_mtok": 2.50,
-          "output_usd_per_mtok": 10.00,
-          "cache_write_usd_per_mtok": 2.50,
+          "input_usd_per_mtok": 2.5,
+          "output_usd_per_mtok": 10.0,
+          "cache_write_usd_per_mtok": 2.5,
           "cache_read_usd_per_mtok": 1.25,
-          "tool_input_usd_per_mtok": 2.50,
-          "tool_output_usd_per_mtok": 10.00
+          "tool_input_usd_per_mtok": 2.5,
+          "tool_output_usd_per_mtok": 10.0
         }
       },
       "model_aliases": {
@@ -97,8 +97,8 @@ The pricing book is the primary configuration for per-model cost rates. Key stru
       "subscription_usd_month": 0.0,
       "models": {
         "gpt-4o": {
-          "input_usd_per_mtok": 2.50,
-          "output_usd_per_mtok": 10.00
+          "input_usd_per_mtok": 2.5,
+          "output_usd_per_mtok": 10.0
         }
       }
     }
@@ -166,16 +166,16 @@ All token fields default to 0 when absent (via `#[serde(default)]`).
 
 ### Release Pipeline
 
-| Component | Tool | Notes |
-|---|---|---|
-| Cross-compilation | `cargo-dist` | Produces binaries for linux-x64, linux-aarch64, macos-x64, macos-aarch64, windows-x64 |
-| License audit | `cargo-deny` | Configured via `deny.toml` |
-| Vulnerability audit | `cargo-audit` | Runs in CI on every push to main |
-| Lint | `trunk-check` | Clippy + rustfmt + additional lints |
-| Formatting | `prettier` | For YAML, JSON, MD files |
-| Tests | `cargo-nextest` | Parallel test runner |
-| Coverage | Codecov | Uploads from CI, see `codecov.yml` |
-| Attestation | `gh attestation` | Binary provenance for release assets |
+| Component           | Tool             | Notes                                                                                 |
+| ------------------- | ---------------- | ------------------------------------------------------------------------------------- |
+| Cross-compilation   | `cargo-dist`     | Produces binaries for linux-x64, linux-aarch64, macos-x64, macos-aarch64, windows-x64 |
+| License audit       | `cargo-deny`     | Configured via `deny.toml`                                                            |
+| Vulnerability audit | `cargo-audit`    | Runs in CI on every push to main                                                      |
+| Lint                | `trunk-check`    | Clippy + rustfmt + additional lints                                                   |
+| Formatting          | `prettier`       | For YAML, JSON, MD files                                                              |
+| Tests               | `cargo-nextest`  | Parallel test runner                                                                  |
+| Coverage            | Codecov          | Uploads from CI, see `codecov.yml`                                                    |
+| Attestation         | `gh attestation` | Binary provenance for release assets                                                  |
 
 ### Updating CI Workflows
 
@@ -233,19 +233,19 @@ Tokn/
 
 ### Key Configuration Files
 
-| File | Purpose |
-|---|---|
-| `Cargo.toml` | Workspace dependencies and package metadata |
-| `VERSION` | Single version string (read by CI and release scripts) |
-| `deny.toml` | cargo-deny license and advisory config |
-| `rust-toolchain.toml` | Pinned Rust toolchain version |
-| `clippy.toml` | Clippy lint configuration |
-| `rustfmt.toml` | Rustfmt configuration |
-| `codecov.yml` | Coverage upload configuration |
-| `mutants.toml` | cargo-mutants configuration |
-| `nextest.toml` | cargo-nextest configuration |
-| `justfile` | Task runner recipes |
-| `Taskfile.yml` | Task runner (alternative to justfile) |
+| File                  | Purpose                                                |
+| --------------------- | ------------------------------------------------------ |
+| `Cargo.toml`          | Workspace dependencies and package metadata            |
+| `VERSION`             | Single version string (read by CI and release scripts) |
+| `deny.toml`           | cargo-deny license and advisory config                 |
+| `rust-toolchain.toml` | Pinned Rust toolchain version                          |
+| `clippy.toml`         | Clippy lint configuration                              |
+| `rustfmt.toml`        | Rustfmt configuration                                  |
+| `codecov.yml`         | Coverage upload configuration                          |
+| `mutants.toml`        | cargo-mutants configuration                            |
+| `nextest.toml`        | cargo-nextest configuration                            |
+| `justfile`            | Task runner recipes                                    |
+| `Taskfile.yml`        | Task runner (alternative to justfile)                  |
 
 ### Adding a New Crate
 

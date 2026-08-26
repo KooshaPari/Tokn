@@ -23,22 +23,27 @@ pub type SharedPricingBook = Arc<RwLock<PricingBook>>;
 The module provides several `tokio::spawn`-based functions to parallelize expensive operations:
 
 ### `concurrent_cost_audit`
+
 Calculates costs for a batch of harness records by spawning a separate task for each record. This is ideal for large-scale audit pipelines where records are independent.
 
 ### `concurrent_batch_lookup`
+
 Performs multiple price lookups in parallel. Useful for pre-fetching pricing data for a set of pending requests.
 
 ### `concurrent_batch_upsert`
+
 Updates multiple pricing entries concurrently. This is used for periodic price feed updates where bulk writes are common.
 
 ## Usage Patterns
 
 ### Creating a Shared Book
+
 ```rust
 let book = PricingBook::shared_from_prices(initial_prices);
 ```
 
 ### Concurrent Access
+
 ```rust
 // Read
 let guard = book.read().await;
@@ -50,6 +55,7 @@ guard.upsert(new_pricing);
 ```
 
 ### Spawning Audit Tasks
+
 ```rust
 let agg = concurrent_cost_audit(records, book, OnUnpricedAction::Warn).await;
 ```
