@@ -54,26 +54,22 @@ impl PricingBook {
     /// Insert or update pricing for a specific model.
     pub fn upsert(&mut self, pricing: ModelPricing) -> Option<ModelPricing> {
         self.updated_at = Some(chrono::Utc::now());
-        self.prices.insert(
-            (pricing.provider.clone(), pricing.model.clone()),
-            pricing,
-        )
+        self.prices
+            .insert((pricing.provider.clone(), pricing.model.clone()), pricing)
     }
 
     /// Remove pricing for a specific model.
     pub fn remove(&mut self, provider: &str, model: &str) -> Option<ModelPricing> {
         self.updated_at = Some(chrono::Utc::now());
-        self.prices.remove(&(provider.to_string(), model.to_string()))
+        self.prices
+            .remove(&(provider.to_string(), model.to_string()))
     }
 
     /// Bulk replace all pricing data.
     pub fn replace_all(&mut self, new_prices: Vec<ModelPricing>) {
         self.prices.clear();
         for p in new_prices {
-            self.prices.insert(
-                (p.provider.clone(), p.model.clone()),
-                p,
-            );
+            self.prices.insert((p.provider.clone(), p.model.clone()), p);
         }
         self.updated_at = Some(chrono::Utc::now());
     }
@@ -139,25 +135,23 @@ pub async fn concurrent_cost_audit(
                         routing_score: None,
                     })
                 }
-                None => {
-                    match action {
-                        OnUnpricedAction::Error => None,
-                        _ => Some(CostSnapshot {
-                            id: key.0,
-                            provider: record.provider,
-                            model: record.model,
-                            input_tokens: record.input_tokens,
-                            output_tokens: record.output_tokens,
-                            input_cost: 0.0,
-                            output_cost: 0.0,
-                            total_cost: 0.0,
-                            latency_ms: record.latency_ms,
-                            timestamp: record.timestamp,
-                            routing_criteria: None,
-                            routing_score: None,
-                        }),
-                    }
-                }
+                None => match action {
+                    OnUnpricedAction::Error => None,
+                    _ => Some(CostSnapshot {
+                        id: key.0,
+                        provider: record.provider,
+                        model: record.model,
+                        input_tokens: record.input_tokens,
+                        output_tokens: record.output_tokens,
+                        input_cost: 0.0,
+                        output_cost: 0.0,
+                        total_cost: 0.0,
+                        latency_ms: record.latency_ms,
+                        timestamp: record.timestamp,
+                        routing_criteria: None,
+                        routing_score: None,
+                    }),
+                },
             }
         });
         handles.push(handle);
@@ -236,8 +230,18 @@ mod tests {
 
     fn test_prices() -> Vec<ModelPricing> {
         vec![
-            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 },
-            ModelPricing { provider: "anthropic".into(), model: "claude-3".into(), input_per_m: 3.0, output_per_m: 15.0 },
+            ModelPricing {
+                provider: "openai".into(),
+                model: "gpt-4o".into(),
+                input_per_m: 2.5,
+                output_per_m: 10.0,
+            },
+            ModelPricing {
+                provider: "anthropic".into(),
+                model: "claude-3".into(),
+                input_per_m: 3.0,
+                output_per_m: 15.0,
+            },
         ]
     }
 
@@ -259,11 +263,21 @@ mod tests {
     #[test]
     fn test_pricing_book_upsert() {
         let mut book = PricingBook::new();
-        let p = ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 };
+        let p = ModelPricing {
+            provider: "openai".into(),
+            model: "gpt-4o".into(),
+            input_per_m: 2.5,
+            output_per_m: 10.0,
+        };
         assert!(book.upsert(p).is_none());
         assert_eq!(book.len(), 1);
-        
-        let p2 = ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 3.0, output_per_m: 12.0 };
+
+        let p2 = ModelPricing {
+            provider: "openai".into(),
+            model: "gpt-4o".into(),
+            input_per_m: 3.0,
+            output_per_m: 12.0,
+        };
         assert!(book.upsert(p2).is_some());
         assert_eq!(book.len(), 1);
         assert_eq!(book.get_price("openai", "gpt-4o").unwrap().input_per_m, 3.0);
@@ -280,7 +294,12 @@ mod tests {
     #[test]
     fn test_pricing_book_replace_all() {
         let mut book = PricingBook::from_prices(test_prices());
-        book.replace_all(vec![ModelPricing { provider: "meta".into(), model: "llama-3".into(), input_per_m: 1.0, output_per_m: 4.0 }]);
+        book.replace_all(vec![ModelPricing {
+            provider: "meta".into(),
+            model: "llama-3".into(),
+            input_per_m: 1.0,
+            output_per_m: 4.0,
+        }]);
         assert_eq!(book.len(), 1);
         assert!(book.get_price("meta", "llama-3").is_some());
     }
@@ -289,9 +308,33 @@ mod tests {
     async fn test_concurrent_cost_audit() {
         let book = PricingBook::shared_from_prices(test_prices());
         let records = vec![
-            RawHarnessRecord { provider: "openai".into(), model: "gpt-4o".into(), input_tokens: 1000, output_tokens: 500, latency_ms: Some(100.0), success: true, timestamp: chrono::Utc::now() },
-            RawHarnessRecord { provider: "anthropic".into(), model: "claude-3".into(), input_tokens: 2000, output_tokens: 1000, latency_ms: Some(150.0), success: true, timestamp: chrono::Utc::now() },
-            RawHarnessRecord { provider: "unknown".into(), model: "unknown-model".into(), input_tokens: 100, output_tokens: 100, latency_ms: None, success: true, timestamp: chrono::Utc::now() },
+            RawHarnessRecord {
+                provider: "openai".into(),
+                model: "gpt-4o".into(),
+                input_tokens: 1000,
+                output_tokens: 500,
+                latency_ms: Some(100.0),
+                success: true,
+                timestamp: chrono::Utc::now(),
+            },
+            RawHarnessRecord {
+                provider: "anthropic".into(),
+                model: "claude-3".into(),
+                input_tokens: 2000,
+                output_tokens: 1000,
+                latency_ms: Some(150.0),
+                success: true,
+                timestamp: chrono::Utc::now(),
+            },
+            RawHarnessRecord {
+                provider: "unknown".into(),
+                model: "unknown-model".into(),
+                input_tokens: 100,
+                output_tokens: 100,
+                latency_ms: None,
+                success: true,
+                timestamp: chrono::Utc::now(),
+            },
         ];
         let agg = concurrent_cost_audit(records, book, OnUnpricedAction::Warn).await;
         assert_eq!(agg.call_count, 3);
@@ -307,21 +350,44 @@ mod tests {
         ];
         let results = concurrent_batch_lookup(queries, book).await;
         assert_eq!(results.len(), 3);
-        assert!(results.get(&("openai".into(), "gpt-4o".into())).unwrap().is_some());
-        assert!(results.get(&("unknown".into(), "model".into())).unwrap().is_none());
+        assert!(
+            results
+                .get(&("openai".into(), "gpt-4o".into()))
+                .unwrap()
+                .is_some()
+        );
+        assert!(
+            results
+                .get(&("unknown".into(), "model".into()))
+                .unwrap()
+                .is_none()
+        );
     }
 
     #[tokio::test]
     async fn test_concurrent_batch_upsert() {
         let book = PricingBook::shared_from_prices(test_prices());
         let updates = vec![
-            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 5.0, output_per_m: 20.0 },
-            ModelPricing { provider: "meta".into(), model: "llama-3".into(), input_per_m: 1.0, output_per_m: 4.0 },
+            ModelPricing {
+                provider: "openai".into(),
+                model: "gpt-4o".into(),
+                input_per_m: 5.0,
+                output_per_m: 20.0,
+            },
+            ModelPricing {
+                provider: "meta".into(),
+                model: "llama-3".into(),
+                input_per_m: 1.0,
+                output_per_m: 4.0,
+            },
         ];
         let count = concurrent_batch_upsert(updates, book.clone()).await;
         assert_eq!(count, 2);
         let guard = book.read().await;
         assert_eq!(guard.len(), 3);
-        assert_eq!(guard.get_price("openai", "gpt-4o").unwrap().input_per_m, 5.0);
+        assert_eq!(
+            guard.get_price("openai", "gpt-4o").unwrap().input_per_m,
+            5.0
+        );
     }
 }

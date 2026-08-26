@@ -6,7 +6,7 @@
 use prometheus_client::encoding::text::encode;
 use prometheus_client::metrics::counter::Counter;
 use prometheus_client::metrics::gauge::Gauge;
-use prometheus_client::metrics::histogram::{exponential_buckets, Histogram};
+use prometheus_client::metrics::histogram::{Histogram, exponential_buckets};
 use prometheus_client::registry::Registry;
 
 /// Top-level metrics registry that owns all metric families.
@@ -44,8 +44,7 @@ impl ParetoMetrics {
             queue_depth.clone(),
         );
 
-        let processing_latency =
-            Histogram::new(exponential_buckets(0.001, 2.0, 15));
+        let processing_latency = Histogram::new(exponential_buckets(0.001, 2.0, 15));
         registry.register(
             "pareto_processing_latency_seconds",
             "Processing latency in seconds",
@@ -63,8 +62,7 @@ impl ParetoMetrics {
     /// Encode the current registry state as the OpenMetrics text format.
     pub fn encode_metrics(&self) -> String {
         let mut buffer = String::new();
-        encode(&mut buffer, &self.registry)
-            .expect("encoding to string should not fail");
+        encode(&mut buffer, &self.registry).expect("encoding to string should not fail");
         buffer
     }
 }

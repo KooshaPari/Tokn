@@ -8,10 +8,10 @@
 //! #          or http://localhost:9090/metrics
 //! ```
 
+use axum::Router;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use axum::routing::get;
-use axum::Router;
 use std::net::SocketAddr;
 use std::sync::Arc;
 
@@ -65,7 +65,5 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind(addr)
         .await
         .expect("failed to bind");
-    axum::serve(listener, app)
-        .await
-        .expect("server error");
+    axum::serve(listener, app).await.expect("server error");
 }
