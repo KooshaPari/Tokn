@@ -1,6 +1,7 @@
 use thiserror::Error;
 
 /// Custom error types for the pareto-rs crate.
+#[allow(clippy::enum_variant_names)]
 #[derive(Error, Debug, Clone, PartialEq)]
 pub enum Error {
     #[error("IO error: {0}")]

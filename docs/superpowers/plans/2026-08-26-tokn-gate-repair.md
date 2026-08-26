@@ -103,6 +103,28 @@ Tasks 1-3 and the CI parts of Task 4 are implemented and locally verified on thi
 - [ ] Merge through the protected path, then verify a new `main` SHA has completed required workflows.
 - [ ] Keep PR #121 independent; review and merge it only after its own CI/review gates are green.
 
+### Task 7: Current-main integration repair
+
+**Files:**
+
+- Modify: `Cargo.lock`
+- Modify: `crates/pareto-rs/Cargo.toml`
+- Modify: `crates/pareto-rs/src/error.rs`
+- Modify: `crates/pareto-rs/src/event.rs`
+
+The replacement branch merged current `main` and exposed defects in modules
+introduced there: `error.rs` used the workspace-pinned `thiserror` crate
+without declaring it in the package, and strict Clippy required the event bus
+to implement `Default`. The public error-variant names are retained to avoid
+an API rename; the local lint exception documents that compatibility choice.
+
+- [x] Add `thiserror.workspace = true`; update the `pareto-rs` lockfile
+  dependency list while retaining the existing locked `thiserror` version.
+- [x] Add a failing `InMemoryEventBus::default()` subscription test, then the
+  minimal `Default` implementation and test-only `Arc` import.
+- [x] Verify `cargo clippy --workspace --all-targets --all-features -- -D warnings`,
+  `cargo test --workspace --no-fail-fast`, and `cargo deny check`.
+
 ## Completion definition
 
 Local completion is not release completion. This repair is complete only when the branch diff is verified, the protected PR has a human approval, all required hosted checks are green on the merge SHA, and a human performs the final acceptance/dogfood decision.

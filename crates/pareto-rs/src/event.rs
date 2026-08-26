@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::sync::{Arc, Mutex};
+use std::sync::Mutex;
 
 /// Event types emitted by the cost engine.
 #[derive(Debug, Clone, PartialEq)]
@@ -63,6 +63,12 @@ impl InMemoryEventBus {
     }
 }
 
+impl Default for InMemoryEventBus {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl EventBus for InMemoryEventBus {
     fn subscribe(&self, event_type: &str, callback: EventCallback) {
         let mut subs = self.subscribers.lock().unwrap();
@@ -98,6 +104,7 @@ impl EventBus for InMemoryEventBus {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::Arc;
     use std::sync::atomic::{AtomicUsize, Ordering};
 
     #[test]
@@ -108,6 +115,27 @@ mod tests {
             tokens: 1000,
         };
         assert!(matches!(event, Event::CostCalculated { .. }));
+    }
+
+    #[test]
+    fn test_default_bus_accepts_subscriptions() {
+        let bus = InMemoryEventBus::default();
+        let counter = Arc::new(AtomicUsize::new(0));
+        let counter_clone = counter.clone();
+        bus.subscribe(
+            "CostCalculated",
+            Box::new(move |_| {
+                counter_clone.fetch_add(1, Ordering::SeqCst);
+            }),
+        );
+
+        bus.publish(&Event::CostCalculated {
+            request_id: "req-default".to_string(),
+            cost: 0.1,
+            tokens: 1,
+        });
+
+        assert_eq!(counter.load(Ordering::SeqCst), 1);
     }
 
     #[test]
