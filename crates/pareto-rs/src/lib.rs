@@ -2,8 +2,8 @@
 //!
 //! No I/O, no CLI, no external API calls. Just pure business logic.
 
-pub mod cost;
 pub mod concurrent;
+pub mod cost;
 pub mod format;
 pub mod metrics;
 pub mod models;
