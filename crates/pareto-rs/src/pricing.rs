@@ -250,7 +250,7 @@ mod tests {
     #[test]
     fn test_select_pareto_optimal_single() {
         let h = make_harness("openai", "gpt-4o", 0.01, 0.03, Some(100.0), 0.99);
-        let result = select_pareto_optimal(&[h.clone()], RoutingCriteria::Balanced);
+        let result = select_pareto_optimal(std::slice::from_ref(&h), RoutingCriteria::Balanced);
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].provider, "openai");
     }
@@ -324,9 +324,12 @@ mod tests {
 
     #[test]
     fn test_find_model_price_found() {
-        let prices = vec![
-            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 },
-        ];
+        let prices = vec![ModelPricing {
+            provider: "openai".into(),
+            model: "gpt-4o".into(),
+            input_per_m: 2.5,
+            output_per_m: 10.0,
+        }];
         let found = find_model_price(&prices, "openai", "gpt-4o");
         assert!(found.is_some());
         assert_eq!(found.unwrap().input_per_m, 2.5);
@@ -334,9 +337,12 @@ mod tests {
 
     #[test]
     fn test_find_model_price_not_found() {
-        let prices = vec![
-            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 },
-        ];
+        let prices = vec![ModelPricing {
+            provider: "openai".into(),
+            model: "gpt-4o".into(),
+            input_per_m: 2.5,
+            output_per_m: 10.0,
+        }];
         let found = find_model_price(&prices, "anthropic", "claude-3");
         assert!(found.is_none());
     }
@@ -344,8 +350,18 @@ mod tests {
     #[test]
     fn test_build_price_map() {
         let prices = vec![
-            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 },
-            ModelPricing { provider: "anthropic".into(), model: "claude-3".into(), input_per_m: 3.0, output_per_m: 15.0 },
+            ModelPricing {
+                provider: "openai".into(),
+                model: "gpt-4o".into(),
+                input_per_m: 2.5,
+                output_per_m: 10.0,
+            },
+            ModelPricing {
+                provider: "anthropic".into(),
+                model: "claude-3".into(),
+                input_per_m: 3.0,
+                output_per_m: 15.0,
+            },
         ];
         let map = build_price_map(&prices);
         assert_eq!(map.len(), 2);
@@ -356,9 +372,12 @@ mod tests {
     #[test]
     fn test_diff_pricing_added() {
         let old: Vec<ModelPricing> = vec![];
-        let new = vec![
-            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 },
-        ];
+        let new = vec![ModelPricing {
+            provider: "openai".into(),
+            model: "gpt-4o".into(),
+            input_per_m: 2.5,
+            output_per_m: 10.0,
+        }];
         let diff = diff_pricing(&old, &new, 1.0);
         assert_eq!(diff.added.len(), 1);
         assert_eq!(diff.changed.len(), 0);
@@ -367,9 +386,12 @@ mod tests {
 
     #[test]
     fn test_diff_pricing_removed() {
-        let old = vec![
-            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 },
-        ];
+        let old = vec![ModelPricing {
+            provider: "openai".into(),
+            model: "gpt-4o".into(),
+            input_per_m: 2.5,
+            output_per_m: 10.0,
+        }];
         let new: Vec<ModelPricing> = vec![];
         let diff = diff_pricing(&old, &new, 1.0);
         assert_eq!(diff.added.len(), 0);
@@ -378,12 +400,18 @@ mod tests {
 
     #[test]
     fn test_diff_pricing_changed() {
-        let old = vec![
-            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.0, output_per_m: 10.0 },
-        ];
-        let new = vec![
-            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 3.0, output_per_m: 10.0 },
-        ];
+        let old = vec![ModelPricing {
+            provider: "openai".into(),
+            model: "gpt-4o".into(),
+            input_per_m: 2.0,
+            output_per_m: 10.0,
+        }];
+        let new = vec![ModelPricing {
+            provider: "openai".into(),
+            model: "gpt-4o".into(),
+            input_per_m: 3.0,
+            output_per_m: 10.0,
+        }];
         let diff = diff_pricing(&old, &new, 1.0);
         assert_eq!(diff.added.len(), 0);
         assert_eq!(diff.changed.len(), 1);
@@ -393,12 +421,18 @@ mod tests {
 
     #[test]
     fn test_diff_pricing_no_change_below_threshold() {
-        let old = vec![
-            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.0, output_per_m: 10.0 },
-        ];
-        let new = vec![
-            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.01, output_per_m: 10.0 },
-        ];
+        let old = vec![ModelPricing {
+            provider: "openai".into(),
+            model: "gpt-4o".into(),
+            input_per_m: 2.0,
+            output_per_m: 10.0,
+        }];
+        let new = vec![ModelPricing {
+            provider: "openai".into(),
+            model: "gpt-4o".into(),
+            input_per_m: 2.01,
+            output_per_m: 10.0,
+        }];
         let diff = diff_pricing(&old, &new, 1.0);
         assert_eq!(diff.added.len(), 0);
         assert_eq!(diff.changed.len(), 0);
@@ -407,9 +441,12 @@ mod tests {
 
     #[test]
     fn test_serialize_pricing_yaml_roundtrip() {
-        let prices = vec![
-            ModelPricing { provider: "openai".into(), model: "gpt-4o".into(), input_per_m: 2.5, output_per_m: 10.0 },
-        ];
+        let prices = vec![ModelPricing {
+            provider: "openai".into(),
+            model: "gpt-4o".into(),
+            input_per_m: 2.5,
+            output_per_m: 10.0,
+        }];
         let yaml = serialize_pricing_yaml(&prices).unwrap();
         let parsed = parse_pricing_yaml(&yaml).unwrap();
         assert_eq!(parsed.len(), 1);
