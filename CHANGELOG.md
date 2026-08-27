@@ -76,6 +76,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.0] - 2026-08-26
+
+### Added
+
+- **Plugin System**
+  - `Plugin` trait and `PluginRegistry` for extensible architecture (`plugin.rs`)
+  - 3 built-in plugins: CSV Exporter, Slack Notifier, S3 Uploader
+
+- **Web Dashboard**
+  - `web/index.html` — landing page and navigation
+  - `web/dashboard.html` — interactive analytics dashboard with cost breakdowns, token usage, and session trends
+
+- **Observability**
+  - `metrics.rs` — Prometheus-compatible metrics exposition
+  - `GET /health` — liveness and readiness probe
+  - `GET /metrics` — Prometheus scrape endpoint with request counters, latency histograms, and error rates
+
+- **Concurrency**
+  - `concurrent.rs` — `tokio::sync::RwLock` for shared state with read-heavy workloads
+  - Parallel report generation via `tokio::spawn`
+
+- **Error Handling**
+  - `error.rs` — centralized `ToknError` enum using `thiserror`
+  - Structured errors covering IO, parsing, schema, plugin, and HTTP failure modes
+
+- **Event Bus**
+  - `event.rs` — `EventBus` trait with publish/subscribe interface
+  - Events: `IngestionComplete`, `ReportGenerated`, `PluginInvoked`, `ErrorOccurred`
+
+- **Migration Support**
+  - `schema/` directory for normalized event schema definitions
+  - `migrations/runner.py` — Python-based migration runner with dry-run support
+
+- **Architecture & Documentation**
+  - `COST_MODEL.md` — blended cost model documentation
+  - `MEMORY.md` — memory profiling guide with `dhat`, `tracing`, `jemalloc`
+  - `ARCHITECTURE.md` — module boundaries, data flow, plugin lifecycle, ASCII diagrams
+
+- **Infrastructure**
+  - `Dockerfile` — multi-stage build for minimal runtime image
+  - `docker-compose.yml` — local dev stack (Postgres, Redis, Tokn web server)
+  - `k8s/deployment.yaml` — production Deployment with probes and rolling updates
+  - `k8s/service.yaml` — ClusterIP Service
+  - `k8s/configmap.yaml` — externalized configuration
+
+- **Release Documentation**
+  - `RELEASE.md` — comprehensive release notes for v0.2.0
+
+### Changed
+
+- **CLI** — enhanced argument parsing, new `--format` options (table, JSON, CSV), improved help text
+- Internal event schema versioned; v0.1.x JSONL files remain compatible
+
+### Security
+
+- CI pipeline updated to validate plugin loading, web dashboard serving, and Kubernetes manifest syntax
+
+---
+
 ## [0.1.5] - 2026-07-18
 
 ### Added
