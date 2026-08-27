@@ -341,6 +341,27 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn concurrent_cost_audit_error_excludes_unpriced_records() {
+        let book = PricingBook::shared_from_prices(vec![]);
+        let records = vec![RawHarnessRecord {
+            provider: "unknown".into(),
+            model: "unknown-model".into(),
+            input_tokens: 100,
+            output_tokens: 50,
+            latency_ms: None,
+            success: true,
+            timestamp: chrono::Utc::now(),
+        }];
+
+        let aggregate = concurrent_cost_audit(records, book, OnUnpricedAction::Error).await;
+
+        assert_eq!(aggregate.call_count, 0);
+        assert_eq!(aggregate.total_input_tokens, 0);
+        assert_eq!(aggregate.total_output_tokens, 0);
+        assert_eq!(aggregate.total_cost, 0.0);
+    }
+
+    #[tokio::test]
     async fn test_concurrent_batch_lookup() {
         let book = PricingBook::shared_from_prices(test_prices());
         let queries = vec![

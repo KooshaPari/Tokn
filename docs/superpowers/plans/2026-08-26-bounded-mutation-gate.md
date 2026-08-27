@@ -20,5 +20,10 @@ indefinitely.
 - [x] Prove no old `|| true` or output-masking pipe remains.
 - [x] Generate the current base-to-head Rust diff locally and verify the
       empty/non-empty decision.
+- [x] Use the hosted result to add behavioral tests for the concrete surviving
+      plugin and `OnUnpricedAction::Error` mutants.
+- [x] Exclude only the unobservable `pareto-server` `main -> ()` mutant by
+      name; document that this is not process-lifecycle coverage and does not
+      exclude its handlers.
 - [ ] Push only after local workflow validation, then require a fresh hosted
       mutation result for the exact replacement head.

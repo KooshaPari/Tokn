@@ -43,4 +43,4 @@ jobs:
         if: steps.diff.outputs.has_source_changes == 'true'
         run: |
           set -euo pipefail
-          cargo mutants --workspace --in-diff /tmp/mutation.diff --no-shuffle -j 2 --timeout 120 --annotations github
+          cargo mutants --workspace --in-diff /tmp/mutation.diff --exclude-re '^crates/pareto-rs/src/bin/server\.rs:[0-9]+:[0-9]+: replace main with \(\)$' --no-shuffle -j 2 --timeout 120 --annotations github

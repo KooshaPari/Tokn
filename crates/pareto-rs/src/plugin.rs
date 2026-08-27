@@ -355,6 +355,56 @@ pub fn default_registry() -> PluginRegistry {
 mod tests {
     use super::*;
 
+    #[derive(Default)]
+    struct RecordingPlugin {
+        calls: Mutex<Vec<String>>,
+    }
+
+    impl RecordingPlugin {
+        fn calls(&self) -> Vec<String> {
+            self.calls.lock().unwrap().clone()
+        }
+
+        fn record(&self, call: String) {
+            self.calls.lock().unwrap().push(call);
+        }
+    }
+
+    impl Plugin for RecordingPlugin {
+        fn id(&self) -> PluginId {
+            "recording".into()
+        }
+
+        fn version(&self) -> &str {
+            "test"
+        }
+
+        fn hook_points(&self) -> Vec<HookPoint> {
+            vec![
+                HOOK_PRE_COST,
+                HOOK_PRE_ROUTE,
+                HOOK_POST_ROUTE,
+                HOOK_PRICE_BOOK_LOAD,
+            ]
+        }
+
+        fn pre_cost(&self, provider: &str, model: &str, input: u64, output: u64) {
+            self.record(format!("pre_cost:{provider}:{model}:{input}:{output}"));
+        }
+
+        fn pre_route(&self, criteria: &str, max_price: Option<f64>) {
+            self.record(format!("pre_route:{criteria}:{max_price:?}"));
+        }
+
+        fn post_route(&self, criteria: &str, model: &str, price: f64) {
+            self.record(format!("post_route:{criteria}:{model}:{price}"));
+        }
+
+        fn price_book_load(&self, book_id: &str, model_count: usize) {
+            self.record(format!("price_book_load:{book_id}:{model_count}"));
+        }
+    }
+
     #[test]
     fn default_registry_has_three_plugins() {
         let r = default_registry();
@@ -386,6 +436,30 @@ mod tests {
     }
 
     #[test]
+    fn built_in_plugin_metadata_matches_declared_hooks() {
+        let logging = LoggingPlugin::new();
+        assert_eq!(logging.version(), "0.1.0");
+        assert_eq!(
+            logging.hook_points(),
+            vec![
+                HOOK_PRE_COST,
+                HOOK_POST_COST,
+                HOOK_PRE_ROUTE,
+                HOOK_POST_ROUTE,
+                HOOK_PRICE_BOOK_LOAD,
+            ]
+        );
+
+        let budget = BudgetPlugin::new();
+        assert_eq!(budget.version(), "0.1.0");
+        assert_eq!(budget.hook_points(), vec![HOOK_POST_COST]);
+
+        let timeline = TimelinePlugin::new();
+        assert_eq!(timeline.version(), "0.1.0");
+        assert_eq!(timeline.hook_points(), vec![HOOK_POST_COST]);
+    }
+
+    #[test]
     fn timeline_plugin_records_events() {
         let p = TimelinePlugin::new();
         p.post_cost("anthropic", "claude-3-haiku", 100, 50, 0.005);
@@ -399,9 +473,13 @@ mod tests {
     #[test]
     fn timeline_plugin_clear_works() {
         let p = TimelinePlugin::new();
+        assert_eq!(p.len(), 0);
+        assert!(p.is_empty());
         p.post_cost("openai", "gpt-4o", 1, 1, 0.01);
         assert_eq!(p.len(), 1);
+        assert!(!p.is_empty());
         p.clear();
+        assert_eq!(p.len(), 0);
         assert!(p.is_empty());
     }
 
@@ -415,6 +493,44 @@ mod tests {
             success: true,
         });
         assert_eq!(p.history().len(), 1);
+        p.clear();
+        assert!(p.history().is_empty());
+    }
+
+    #[test]
+    fn registry_lookup_and_list_preserve_registered_plugin_identity() {
+        let r = PluginRegistry::new();
+        r.register(Arc::new(LoggingPlugin::new()));
+        r.register(Arc::new(BudgetPlugin::new()));
+
+        assert_eq!(r.list(), vec!["logging", "budget"]);
+        assert_eq!(
+            r.get("logging").map(|plugin| plugin.id()),
+            Some("logging".into())
+        );
+        assert!(r.get("missing").is_none());
+    }
+
+    #[test]
+    fn registry_dispatches_each_non_cost_hook_with_its_arguments() {
+        let r = PluginRegistry::new();
+        let recording = Arc::new(RecordingPlugin::default());
+        r.register(recording.clone());
+
+        r.invoke_pre_cost("openai", "gpt-4o", 11, 7);
+        r.invoke_pre_route("lowest-cost", Some(2.5));
+        r.invoke_post_route("lowest-cost", "gpt-4o-mini", 0.15);
+        r.invoke_price_book_load("2026-08", 42);
+
+        assert_eq!(
+            recording.calls(),
+            vec![
+                "pre_cost:openai:gpt-4o:11:7",
+                "pre_route:lowest-cost:Some(2.5)",
+                "post_route:lowest-cost:gpt-4o-mini:0.15",
+                "price_book_load:2026-08:42",
+            ]
+        );
     }
 
     #[test]
