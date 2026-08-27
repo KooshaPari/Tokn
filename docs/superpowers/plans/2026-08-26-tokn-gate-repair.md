@@ -119,11 +119,11 @@ to implement `Default`. The public error-variant names are retained to avoid
 an API rename; the local lint exception documents that compatibility choice.
 
 - [x] Add `thiserror.workspace = true`; update the `pareto-rs` lockfile
-  dependency list while retaining the existing locked `thiserror` version.
+      dependency list while retaining the existing locked `thiserror` version.
 - [x] Add a failing `InMemoryEventBus::default()` subscription test, then the
-  minimal `Default` implementation and test-only `Arc` import.
+      minimal `Default` implementation and test-only `Arc` import.
 - [x] Verify `cargo clippy --workspace --all-targets --all-features -- -D warnings`,
-  `cargo test --workspace --no-fail-fast`, and `cargo deny check`.
+      `cargo test --workspace --no-fail-fast`, and `cargo deny check`.
 
 ## Completion definition
 
