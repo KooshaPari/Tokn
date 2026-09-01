@@ -1,0 +1,23 @@
+--- crates/pareto-rs/src/plugin.rs
++++ replace PluginRegistry::invoke_pre_cost with ()
+@@ -295,19 +295,17 @@
+             .collect()
+     }
+ 
+     pub fn count(&self) -> usize {
+         self.plugins.lock().unwrap().len()
+     }
+ 
+     pub fn invoke_pre_cost(&self, provider: &str, model: &str, input: u64, output: u64) {
+-        for p in self.plugins.lock().unwrap().iter() {
+-            p.pre_cost(provider, model, input, output);
+-        }
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     pub fn invoke_post_cost(
+         &self,
+         provider: &str,
+         model: &str,
+         input: u64,
+         output: u64,

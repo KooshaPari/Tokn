@@ -1,0 +1,26 @@
+--- crates/pareto-rs/src/plugin.rs
++++ replace PluginRegistry::get -> Option<Arc<dyn Plugin>> with None
+@@ -273,22 +273,17 @@
+             plugins.remove(i);
+             true
+         } else {
+             false
+         }
+     }
+ 
+     pub fn get(&self, id: &str) -> Option<Arc<dyn Plugin>> {
+-        self.plugins
+-            .lock()
+-            .unwrap()
+-            .iter()
+-            .find(|p| p.id() == id)
+-            .cloned()
++        None /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     pub fn list(&self) -> Vec<PluginId> {
+         self.plugins
+             .lock()
+             .unwrap()
+             .iter()
+             .map(|p| p.id())

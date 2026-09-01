@@ -1,0 +1,21 @@
+--- crates/pareto-rs/src/plugin.rs
++++ replace TimelinePlugin::is_empty -> bool with true
+@@ -209,17 +209,17 @@
+             .iter()
+             .map(|e| e.input_tokens + e.output_tokens)
+             .sum()
+     }
+     pub fn len(&self) -> usize {
+         self.events.lock().unwrap().len()
+     }
+     pub fn is_empty(&self) -> bool {
+-        self.events.lock().unwrap().is_empty()
++        true /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl Default for TimelinePlugin {
+     fn default() -> Self {
+         Self::new()
+     }
+ }

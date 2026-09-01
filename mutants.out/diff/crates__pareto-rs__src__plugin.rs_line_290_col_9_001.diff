@@ -1,0 +1,26 @@
+--- crates/pareto-rs/src/plugin.rs
++++ replace PluginRegistry::list -> Vec<PluginId> with vec![Default::default()]
+@@ -282,22 +282,17 @@
+             .lock()
+             .unwrap()
+             .iter()
+             .find(|p| p.id() == id)
+             .cloned()
+     }
+ 
+     pub fn list(&self) -> Vec<PluginId> {
+-        self.plugins
+-            .lock()
+-            .unwrap()
+-            .iter()
+-            .map(|p| p.id())
+-            .collect()
++        vec![Default::default()] /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     pub fn count(&self) -> usize {
+         self.plugins.lock().unwrap().len()
+     }
+ 
+     pub fn invoke_pre_cost(&self, provider: &str, model: &str, input: u64, output: u64) {
+         for p in self.plugins.lock().unwrap().iter() {

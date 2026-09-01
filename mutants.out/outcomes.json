@@ -1,0 +1,912 @@
+{
+  "outcomes": [
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:214:9: replace TimelinePlugin::len -> usize with 0",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "TimelinePlugin::len",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 213,
+                "column": 5
+              },
+              "end": {
+                "line": 215,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 214,
+              "column": 9
+            },
+            "end": {
+              "line": 214,
+              "column": 42
+            }
+          },
+          "replacement": "0",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_214_col_9.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_214_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 13.966567375,
+          "process_status": "Success",
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.408597875,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:88:9: replace LoggingPlugin::clear with ()",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "LoggingPlugin::clear",
+            "return_type": "",
+            "span": {
+              "start": {
+                "line": 87,
+                "column": 5
+              },
+              "end": {
+                "line": 89,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 88,
+              "column": 9
+            },
+            "end": {
+              "line": 88,
+              "column": 44
+            }
+          },
+          "replacement": "()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_88_col_9.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_88_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 14.081173833,
+          "process_status": "Success",
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.533411542,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:214:9: replace TimelinePlugin::len -> usize with 1",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "TimelinePlugin::len",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 213,
+                "column": 5
+              },
+              "end": {
+                "line": 215,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 214,
+              "column": 9
+            },
+            "end": {
+              "line": 214,
+              "column": 42
+            }
+          },
+          "replacement": "1",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_214_col_9_001.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_214_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.904720666,
+          "process_status": "Success",
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.347834541,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:217:9: replace TimelinePlugin::is_empty -> bool with true",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "TimelinePlugin::is_empty",
+            "return_type": "-> bool",
+            "span": {
+              "start": {
+                "line": 216,
+                "column": 5
+              },
+              "end": {
+                "line": 218,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 217,
+              "column": 9
+            },
+            "end": {
+              "line": 217,
+              "column": 47
+            }
+          },
+          "replacement": "true",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_217_col_9.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_217_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.121739167,
+          "process_status": "Success",
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.3471105,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:217:9: replace TimelinePlugin::is_empty -> bool with false",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "TimelinePlugin::is_empty",
+            "return_type": "-> bool",
+            "span": {
+              "start": {
+                "line": 216,
+                "column": 5
+              },
+              "end": {
+                "line": 218,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 217,
+              "column": 9
+            },
+            "end": {
+              "line": 217,
+              "column": 47
+            }
+          },
+          "replacement": "false",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_217_col_9_001.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_217_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.074886875,
+          "process_status": "Success",
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.361438667,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:281:9: replace PluginRegistry::get -> Option<Arc<dyn Plugin>> with Some(Arc::new(Default::default()))",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "PluginRegistry::get",
+            "return_type": "-> Option<Arc<dyn Plugin>>",
+            "span": {
+              "start": {
+                "line": 280,
+                "column": 5
+              },
+              "end": {
+                "line": 287,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 281,
+              "column": 9
+            },
+            "end": {
+              "line": 286,
+              "column": 22
+            }
+          },
+          "replacement": "Some(Arc::new(Default::default()))",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_281_col_9_001.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_281_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.467062458,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:281:9: replace PluginRegistry::get -> Option<Arc<dyn Plugin>> with None",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "PluginRegistry::get",
+            "return_type": "-> Option<Arc<dyn Plugin>>",
+            "span": {
+              "start": {
+                "line": 280,
+                "column": 5
+              },
+              "end": {
+                "line": 287,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 281,
+              "column": 9
+            },
+            "end": {
+              "line": 286,
+              "column": 22
+            }
+          },
+          "replacement": "None",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_281_col_9.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_281_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.250620333,
+          "process_status": "Success",
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.348924291,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:285:30: replace == with != in PluginRegistry::get",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "PluginRegistry::get",
+            "return_type": "-> Option<Arc<dyn Plugin>>",
+            "span": {
+              "start": {
+                "line": 280,
+                "column": 5
+              },
+              "end": {
+                "line": 287,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 285,
+              "column": 30
+            },
+            "end": {
+              "line": 285,
+              "column": 32
+            }
+          },
+          "replacement": "!=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_285_col_30.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_285_col_30.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.141473291,
+          "process_status": "Success",
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.346671917,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:290:9: replace PluginRegistry::list -> Vec<PluginId> with vec![]",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "PluginRegistry::list",
+            "return_type": "-> Vec<PluginId>",
+            "span": {
+              "start": {
+                "line": 289,
+                "column": 5
+              },
+              "end": {
+                "line": 296,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 290,
+              "column": 9
+            },
+            "end": {
+              "line": 295,
+              "column": 23
+            }
+          },
+          "replacement": "vec![]",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_290_col_9.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_290_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.299952417,
+          "process_status": "Success",
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.284048125,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:290:9: replace PluginRegistry::list -> Vec<PluginId> with vec![Default::default()]",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "PluginRegistry::list",
+            "return_type": "-> Vec<PluginId>",
+            "span": {
+              "start": {
+                "line": 289,
+                "column": 5
+              },
+              "end": {
+                "line": 296,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 290,
+              "column": 9
+            },
+            "end": {
+              "line": 295,
+              "column": 23
+            }
+          },
+          "replacement": "vec![Default::default()]",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_290_col_9_001.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_290_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.17609825,
+          "process_status": "Success",
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.345419417,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:303:9: replace PluginRegistry::invoke_pre_cost with ()",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "PluginRegistry::invoke_pre_cost",
+            "return_type": "",
+            "span": {
+              "start": {
+                "line": 302,
+                "column": 5
+              },
+              "end": {
+                "line": 306,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 303,
+              "column": 9
+            },
+            "end": {
+              "line": 305,
+              "column": 10
+            }
+          },
+          "replacement": "()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_303_col_9.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_303_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.19749325,
+          "process_status": "Success",
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.33198175,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:322:9: replace PluginRegistry::invoke_pre_route with ()",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "PluginRegistry::invoke_pre_route",
+            "return_type": "",
+            "span": {
+              "start": {
+                "line": 321,
+                "column": 5
+              },
+              "end": {
+                "line": 325,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 322,
+              "column": 9
+            },
+            "end": {
+              "line": 324,
+              "column": 10
+            }
+          },
+          "replacement": "()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_322_col_9.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_322_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.206931166,
+          "process_status": "Success",
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.330918209,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:328:9: replace PluginRegistry::invoke_post_route with ()",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "PluginRegistry::invoke_post_route",
+            "return_type": "",
+            "span": {
+              "start": {
+                "line": 327,
+                "column": 5
+              },
+              "end": {
+                "line": 331,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 328,
+              "column": 9
+            },
+            "end": {
+              "line": 330,
+              "column": 10
+            }
+          },
+          "replacement": "()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_328_col_9.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_328_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.141182916,
+          "process_status": "Success",
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.404540791,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/pareto-rs/src/plugin.rs:334:9: replace PluginRegistry::invoke_price_book_load with ()",
+          "package": "pareto-rs",
+          "file": "crates/pareto-rs/src/plugin.rs",
+          "function": {
+            "function_name": "PluginRegistry::invoke_price_book_load",
+            "return_type": "",
+            "span": {
+              "start": {
+                "line": 333,
+                "column": 5
+              },
+              "end": {
+                "line": 337,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 334,
+              "column": 9
+            },
+            "end": {
+              "line": 336,
+              "column": 10
+            }
+          },
+          "replacement": "()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__pareto-rs__src__plugin.rs_line_334_col_9.log",
+      "diff_path": "diff/crates__pareto-rs__src__plugin.rs_line_334_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.0264775,
+          "process_status": "Success",
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.342808875,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/kooshapari/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=pareto-rs@0.1.5"
+          ]
+        }
+      ]
+    }
+  ],
+  "total_mutants": 14,
+  "missed": 0,
+  "caught": 13,
+  "timeout": 0,
+  "unviable": 1,
+  "success": 0,
+  "start_time": "2026-08-27T05:48:00.322393Z",
+  "end_time": "2026-08-27T05:48:24.506633Z",
+  "cargo_mutants_version": "27.1.0"
+}

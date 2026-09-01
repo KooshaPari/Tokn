@@ -1,0 +1,23 @@
+--- crates/pareto-rs/src/plugin.rs
++++ replace PluginRegistry::invoke_price_book_load with ()
+@@ -326,19 +326,17 @@
+ 
+     pub fn invoke_post_route(&self, criteria: &str, model: &str, price: f64) {
+         for p in self.plugins.lock().unwrap().iter() {
+             p.post_route(criteria, model, price);
+         }
+     }
+ 
+     pub fn invoke_price_book_load(&self, book_id: &str, count: usize) {
+-        for p in self.plugins.lock().unwrap().iter() {
+-            p.price_book_load(book_id, count);
+-        }
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl Default for PluginRegistry {
+     fn default() -> Self {
+         Self::new()
+     }
+ }
