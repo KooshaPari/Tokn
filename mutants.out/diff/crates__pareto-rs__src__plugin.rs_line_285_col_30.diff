@@ -1,0 +1,21 @@
+--- crates/pareto-rs/src/plugin.rs
++++ replace == with != in PluginRegistry::get
+@@ -277,17 +277,17 @@
+         }
+     }
+ 
+     pub fn get(&self, id: &str) -> Option<Arc<dyn Plugin>> {
+         self.plugins
+             .lock()
+             .unwrap()
+             .iter()
+-            .find(|p| p.id() == id)
++            .find(|p| p.id() != /* ~ changed by cargo-mutants ~ */ id)
+             .cloned()
+     }
+ 
+     pub fn list(&self) -> Vec<PluginId> {
+         self.plugins
+             .lock()
+             .unwrap()
+             .iter()

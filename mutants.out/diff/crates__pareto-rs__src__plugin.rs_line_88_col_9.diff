@@ -1,0 +1,21 @@
+--- crates/pareto-rs/src/plugin.rs
++++ replace LoggingPlugin::clear with ()
+@@ -80,17 +80,17 @@
+     }
+     pub fn record(&self, call: HookCall) {
+         self.calls.lock().unwrap().push(call);
+     }
+     pub fn history(&self) -> Vec<HookCall> {
+         self.calls.lock().unwrap().clone()
+     }
+     pub fn clear(&self) {
+-        self.calls.lock().unwrap().clear();
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl Default for LoggingPlugin {
+     fn default() -> Self {
+         Self::new()
+     }
+ }

@@ -29,7 +29,9 @@ pub enum PluginError {
 impl std::fmt::Display for PluginError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            PluginError::InvalidData(id, msg) => write!(f, "plugin {} returned invalid data: {}", id, msg),
+            PluginError::InvalidData(id, msg) => {
+                write!(f, "plugin {} returned invalid data: {}", id, msg)
+            }
             PluginError::ExecutionFailed(id, msg) => write!(f, "plugin {} failed: {}", id, msg),
             PluginError::NotFound(id) => write!(f, "plugin {} not found in registry", id),
         }
@@ -52,7 +54,15 @@ pub trait Plugin: Send + Sync {
     fn hook_points(&self) -> Vec<HookPoint>;
 
     fn pre_cost(&self, _provider: &str, _model: &str, _input_tokens: u64, _output_tokens: u64) {}
-    fn post_cost(&self, _provider: &str, _model: &str, _input_tokens: u64, _output_tokens: u64, _cost: f64) {}
+    fn post_cost(
+        &self,
+        _provider: &str,
+        _model: &str,
+        _input_tokens: u64,
+        _output_tokens: u64,
+        _cost: f64,
+    ) {
+    }
     fn pre_route(&self, _criteria: &str, _max_price: Option<f64>) {}
     fn post_route(&self, _criteria: &str, _selected_model: &str, _price: f64) {}
     fn price_book_load(&self, _book_id: &str, _model_count: usize) {}
@@ -63,19 +73,43 @@ pub struct LoggingPlugin {
 }
 
 impl LoggingPlugin {
-    pub fn new() -> Self { Self { calls: Mutex::new(Vec::new()) } }
-    pub fn record(&self, call: HookCall) { self.calls.lock().unwrap().push(call); }
-    pub fn history(&self) -> Vec<HookCall> { self.calls.lock().unwrap().clone() }
-    pub fn clear(&self) { self.calls.lock().unwrap().clear(); }
+    pub fn new() -> Self {
+        Self {
+            calls: Mutex::new(Vec::new()),
+        }
+    }
+    pub fn record(&self, call: HookCall) {
+        self.calls.lock().unwrap().push(call);
+    }
+    pub fn history(&self) -> Vec<HookCall> {
+        self.calls.lock().unwrap().clone()
+    }
+    pub fn clear(&self) {
+        self.calls.lock().unwrap().clear();
+    }
 }
 
-impl Default for LoggingPlugin { fn default() -> Self { Self::new() } }
+impl Default for LoggingPlugin {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl Plugin for LoggingPlugin {
-    fn id(&self) -> PluginId { "logging".into() }
-    fn version(&self) -> &str { "0.1.0" }
+    fn id(&self) -> PluginId {
+        "logging".into()
+    }
+    fn version(&self) -> &str {
+        "0.1.0"
+    }
     fn hook_points(&self) -> Vec<HookPoint> {
-        vec![HOOK_PRE_COST, HOOK_POST_COST, HOOK_PRE_ROUTE, HOOK_POST_ROUTE, HOOK_PRICE_BOOK_LOAD]
+        vec![
+            HOOK_PRE_COST,
+            HOOK_POST_COST,
+            HOOK_PRE_ROUTE,
+            HOOK_POST_ROUTE,
+            HOOK_PRICE_BOOK_LOAD,
+        ]
     }
 }
 
@@ -86,7 +120,10 @@ pub struct BudgetPlugin {
 
 impl BudgetPlugin {
     pub fn new() -> Self {
-        Self { limits: Mutex::new(HashMap::new()), spend: Mutex::new(HashMap::new()) }
+        Self {
+            limits: Mutex::new(HashMap::new()),
+            spend: Mutex::new(HashMap::new()),
+        }
     }
     pub fn set_limit(&self, provider: &str, limit: f64) {
         self.limits.lock().unwrap().insert(provider.into(), limit);
@@ -95,19 +132,39 @@ impl BudgetPlugin {
         *self.spend.lock().unwrap().get(provider).unwrap_or(&0.0)
     }
     pub fn remaining(&self, provider: &str) -> f64 {
-        let limit = self.limits.lock().unwrap().get(provider).copied().unwrap_or(0.0);
+        let limit = self
+            .limits
+            .lock()
+            .unwrap()
+            .get(provider)
+            .copied()
+            .unwrap_or(0.0);
         limit - self.spend(provider)
     }
-    pub fn total_spend(&self) -> f64 { self.spend.lock().unwrap().values().sum() }
-    pub fn total_limit(&self) -> f64 { self.limits.lock().unwrap().values().sum() }
+    pub fn total_spend(&self) -> f64 {
+        self.spend.lock().unwrap().values().sum()
+    }
+    pub fn total_limit(&self) -> f64 {
+        self.limits.lock().unwrap().values().sum()
+    }
 }
 
-impl Default for BudgetPlugin { fn default() -> Self { Self::new() } }
+impl Default for BudgetPlugin {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl Plugin for BudgetPlugin {
-    fn id(&self) -> PluginId { "budget".into() }
-    fn version(&self) -> &str { "0.1.0" }
-    fn hook_points(&self) -> Vec<HookPoint> { vec![HOOK_POST_COST] }
+    fn id(&self) -> PluginId {
+        "budget".into()
+    }
+    fn version(&self) -> &str {
+        "0.1.0"
+    }
+    fn hook_points(&self) -> Vec<HookPoint> {
+        vec![HOOK_POST_COST]
+    }
 
     fn post_cost(&self, provider: &str, _model: &str, _input: u64, _output: u64, cost: f64) {
         let mut binding = self.spend.lock().unwrap();
@@ -131,27 +188,59 @@ pub struct TimelinePlugin {
 }
 
 impl TimelinePlugin {
-    pub fn new() -> Self { Self { events: Mutex::new(Vec::new()) } }
-    pub fn snapshot(&self) -> Vec<TimelineEvent> { self.events.lock().unwrap().clone() }
-    pub fn clear(&self) { self.events.lock().unwrap().clear(); }
-    pub fn total_cost(&self) -> f64 { self.events.lock().unwrap().iter().map(|e| e.cost).sum() }
-    pub fn total_tokens(&self) -> u64 {
-        self.events.lock().unwrap().iter().map(|e| e.input_tokens + e.output_tokens).sum()
+    pub fn new() -> Self {
+        Self {
+            events: Mutex::new(Vec::new()),
+        }
     }
-    pub fn len(&self) -> usize { self.events.lock().unwrap().len() }
-    pub fn is_empty(&self) -> bool { self.events.lock().unwrap().is_empty() }
+    pub fn snapshot(&self) -> Vec<TimelineEvent> {
+        self.events.lock().unwrap().clone()
+    }
+    pub fn clear(&self) {
+        self.events.lock().unwrap().clear();
+    }
+    pub fn total_cost(&self) -> f64 {
+        self.events.lock().unwrap().iter().map(|e| e.cost).sum()
+    }
+    pub fn total_tokens(&self) -> u64 {
+        self.events
+            .lock()
+            .unwrap()
+            .iter()
+            .map(|e| e.input_tokens + e.output_tokens)
+            .sum()
+    }
+    pub fn len(&self) -> usize {
+        self.events.lock().unwrap().len()
+    }
+    pub fn is_empty(&self) -> bool {
+        self.events.lock().unwrap().is_empty()
+    }
 }
 
-impl Default for TimelinePlugin { fn default() -> Self { Self::new() } }
+impl Default for TimelinePlugin {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl Plugin for TimelinePlugin {
-    fn id(&self) -> PluginId { "timeline".into() }
-    fn version(&self) -> &str { "0.1.0" }
-    fn hook_points(&self) -> Vec<HookPoint> { vec![HOOK_POST_COST] }
+    fn id(&self) -> PluginId {
+        "timeline".into()
+    }
+    fn version(&self) -> &str {
+        "0.1.0"
+    }
+    fn hook_points(&self) -> Vec<HookPoint> {
+        vec![HOOK_POST_COST]
+    }
 
     fn post_cost(&self, provider: &str, model: &str, input: u64, output: u64, cost: f64) {
         let ev = TimelineEvent {
-            timestamp_millis: SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0),
+            timestamp_millis: SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .map(|d| d.as_millis())
+                .unwrap_or(0),
             provider: provider.into(),
             model: model.into(),
             input_tokens: input,
@@ -167,7 +256,11 @@ pub struct PluginRegistry {
 }
 
 impl PluginRegistry {
-    pub fn new() -> Self { Self { plugins: Mutex::new(Vec::new()) } }
+    pub fn new() -> Self {
+        Self {
+            plugins: Mutex::new(Vec::new()),
+        }
+    }
 
     pub fn register(&self, plugin: Arc<dyn Plugin>) {
         self.plugins.lock().unwrap().push(plugin);
@@ -176,41 +269,79 @@ impl PluginRegistry {
     pub fn unregister(&self, id: &str) -> bool {
         let mut plugins = self.plugins.lock().unwrap();
         let pos = plugins.iter().position(|p| p.id() == id);
-        if let Some(i) = pos { plugins.remove(i); true } else { false }
+        if let Some(i) = pos {
+            plugins.remove(i);
+            true
+        } else {
+            false
+        }
     }
 
     pub fn get(&self, id: &str) -> Option<Arc<dyn Plugin>> {
-        self.plugins.lock().unwrap().iter().find(|p| p.id() == id).cloned()
+        self.plugins
+            .lock()
+            .unwrap()
+            .iter()
+            .find(|p| p.id() == id)
+            .cloned()
     }
 
     pub fn list(&self) -> Vec<PluginId> {
-        self.plugins.lock().unwrap().iter().map(|p| p.id()).collect()
+        self.plugins
+            .lock()
+            .unwrap()
+            .iter()
+            .map(|p| p.id())
+            .collect()
     }
 
-    pub fn count(&self) -> usize { self.plugins.lock().unwrap().len() }
+    pub fn count(&self) -> usize {
+        self.plugins.lock().unwrap().len()
+    }
 
     pub fn invoke_pre_cost(&self, provider: &str, model: &str, input: u64, output: u64) {
-        for p in self.plugins.lock().unwrap().iter() { p.pre_cost(provider, model, input, output); }
+        for p in self.plugins.lock().unwrap().iter() {
+            p.pre_cost(provider, model, input, output);
+        }
     }
 
-    pub fn invoke_post_cost(&self, provider: &str, model: &str, input: u64, output: u64, cost: f64) {
-        for p in self.plugins.lock().unwrap().iter() { p.post_cost(provider, model, input, output, cost); }
+    pub fn invoke_post_cost(
+        &self,
+        provider: &str,
+        model: &str,
+        input: u64,
+        output: u64,
+        cost: f64,
+    ) {
+        for p in self.plugins.lock().unwrap().iter() {
+            p.post_cost(provider, model, input, output, cost);
+        }
     }
 
     pub fn invoke_pre_route(&self, criteria: &str, max_price: Option<f64>) {
-        for p in self.plugins.lock().unwrap().iter() { p.pre_route(criteria, max_price); }
+        for p in self.plugins.lock().unwrap().iter() {
+            p.pre_route(criteria, max_price);
+        }
     }
 
     pub fn invoke_post_route(&self, criteria: &str, model: &str, price: f64) {
-        for p in self.plugins.lock().unwrap().iter() { p.post_route(criteria, model, price); }
+        for p in self.plugins.lock().unwrap().iter() {
+            p.post_route(criteria, model, price);
+        }
     }
 
     pub fn invoke_price_book_load(&self, book_id: &str, count: usize) {
-        for p in self.plugins.lock().unwrap().iter() { p.price_book_load(book_id, count); }
+        for p in self.plugins.lock().unwrap().iter() {
+            p.price_book_load(book_id, count);
+        }
     }
 }
 
-impl Default for PluginRegistry { fn default() -> Self { Self::new() } }
+impl Default for PluginRegistry {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 pub fn default_registry() -> PluginRegistry {
     let r = PluginRegistry::new();
@@ -223,6 +354,56 @@ pub fn default_registry() -> PluginRegistry {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[derive(Default)]
+    struct RecordingPlugin {
+        calls: Mutex<Vec<String>>,
+    }
+
+    impl RecordingPlugin {
+        fn calls(&self) -> Vec<String> {
+            self.calls.lock().unwrap().clone()
+        }
+
+        fn record(&self, call: String) {
+            self.calls.lock().unwrap().push(call);
+        }
+    }
+
+    impl Plugin for RecordingPlugin {
+        fn id(&self) -> PluginId {
+            "recording".into()
+        }
+
+        fn version(&self) -> &str {
+            "test"
+        }
+
+        fn hook_points(&self) -> Vec<HookPoint> {
+            vec![
+                HOOK_PRE_COST,
+                HOOK_PRE_ROUTE,
+                HOOK_POST_ROUTE,
+                HOOK_PRICE_BOOK_LOAD,
+            ]
+        }
+
+        fn pre_cost(&self, provider: &str, model: &str, input: u64, output: u64) {
+            self.record(format!("pre_cost:{provider}:{model}:{input}:{output}"));
+        }
+
+        fn pre_route(&self, criteria: &str, max_price: Option<f64>) {
+            self.record(format!("pre_route:{criteria}:{max_price:?}"));
+        }
+
+        fn post_route(&self, criteria: &str, model: &str, price: f64) {
+            self.record(format!("post_route:{criteria}:{model}:{price}"));
+        }
+
+        fn price_book_load(&self, book_id: &str, model_count: usize) {
+            self.record(format!("price_book_load:{book_id}:{model_count}"));
+        }
+    }
 
     #[test]
     fn default_registry_has_three_plugins() {
@@ -255,6 +436,30 @@ mod tests {
     }
 
     #[test]
+    fn built_in_plugin_metadata_matches_declared_hooks() {
+        let logging = LoggingPlugin::new();
+        assert_eq!(logging.version(), "0.1.0");
+        assert_eq!(
+            logging.hook_points(),
+            vec![
+                HOOK_PRE_COST,
+                HOOK_POST_COST,
+                HOOK_PRE_ROUTE,
+                HOOK_POST_ROUTE,
+                HOOK_PRICE_BOOK_LOAD,
+            ]
+        );
+
+        let budget = BudgetPlugin::new();
+        assert_eq!(budget.version(), "0.1.0");
+        assert_eq!(budget.hook_points(), vec![HOOK_POST_COST]);
+
+        let timeline = TimelinePlugin::new();
+        assert_eq!(timeline.version(), "0.1.0");
+        assert_eq!(timeline.hook_points(), vec![HOOK_POST_COST]);
+    }
+
+    #[test]
     fn timeline_plugin_records_events() {
         let p = TimelinePlugin::new();
         p.post_cost("anthropic", "claude-3-haiku", 100, 50, 0.005);
@@ -268,17 +473,64 @@ mod tests {
     #[test]
     fn timeline_plugin_clear_works() {
         let p = TimelinePlugin::new();
+        assert_eq!(p.len(), 0);
+        assert!(p.is_empty());
         p.post_cost("openai", "gpt-4o", 1, 1, 0.01);
         assert_eq!(p.len(), 1);
+        assert!(!p.is_empty());
         p.clear();
+        assert_eq!(p.len(), 0);
         assert!(p.is_empty());
     }
 
     #[test]
     fn logging_plugin_records_history() {
         let p = LoggingPlugin::new();
-        p.record(HookCall { plugin_id: "x".into(), hook_point: HOOK_PRE_COST, duration_micros: 10, success: true });
+        p.record(HookCall {
+            plugin_id: "x".into(),
+            hook_point: HOOK_PRE_COST,
+            duration_micros: 10,
+            success: true,
+        });
         assert_eq!(p.history().len(), 1);
+        p.clear();
+        assert!(p.history().is_empty());
+    }
+
+    #[test]
+    fn registry_lookup_and_list_preserve_registered_plugin_identity() {
+        let r = PluginRegistry::new();
+        r.register(Arc::new(LoggingPlugin::new()));
+        r.register(Arc::new(BudgetPlugin::new()));
+
+        assert_eq!(r.list(), vec!["logging", "budget"]);
+        assert_eq!(
+            r.get("logging").map(|plugin| plugin.id()),
+            Some("logging".into())
+        );
+        assert!(r.get("missing").is_none());
+    }
+
+    #[test]
+    fn registry_dispatches_each_non_cost_hook_with_its_arguments() {
+        let r = PluginRegistry::new();
+        let recording = Arc::new(RecordingPlugin::default());
+        r.register(recording.clone());
+
+        r.invoke_pre_cost("openai", "gpt-4o", 11, 7);
+        r.invoke_pre_route("lowest-cost", Some(2.5));
+        r.invoke_post_route("lowest-cost", "gpt-4o-mini", 0.15);
+        r.invoke_price_book_load("2026-08", 42);
+
+        assert_eq!(
+            recording.calls(),
+            vec![
+                "pre_cost:openai:gpt-4o:11:7",
+                "pre_route:lowest-cost:Some(2.5)",
+                "post_route:lowest-cost:gpt-4o-mini:0.15",
+                "price_book_load:2026-08:42",
+            ]
+        );
     }
 
     #[test]

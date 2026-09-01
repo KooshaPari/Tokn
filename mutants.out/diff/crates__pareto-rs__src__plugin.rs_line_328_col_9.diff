@@ -1,0 +1,23 @@
+--- crates/pareto-rs/src/plugin.rs
++++ replace PluginRegistry::invoke_post_route with ()
+@@ -320,19 +320,17 @@
+ 
+     pub fn invoke_pre_route(&self, criteria: &str, max_price: Option<f64>) {
+         for p in self.plugins.lock().unwrap().iter() {
+             p.pre_route(criteria, max_price);
+         }
+     }
+ 
+     pub fn invoke_post_route(&self, criteria: &str, model: &str, price: f64) {
+-        for p in self.plugins.lock().unwrap().iter() {
+-            p.post_route(criteria, model, price);
+-        }
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     pub fn invoke_price_book_load(&self, book_id: &str, count: usize) {
+         for p in self.plugins.lock().unwrap().iter() {
+             p.price_book_load(book_id, count);
+         }
+     }
+ }

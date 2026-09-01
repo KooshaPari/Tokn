@@ -1,0 +1,1 @@
+crates/pareto-rs/src/plugin.rs:281:9: replace PluginRegistry::get -> Option<Arc<dyn Plugin>> with Some(Arc::new(Default::default()))

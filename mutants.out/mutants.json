@@ -1,0 +1,450 @@
+[
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace LoggingPlugin::clear with ()\n@@ -80,17 +80,17 @@\n     }\n     pub fn record(&self, call: HookCall) {\n         self.calls.lock().unwrap().push(call);\n     }\n     pub fn history(&self) -> Vec<HookCall> {\n         self.calls.lock().unwrap().clone()\n     }\n     pub fn clear(&self) {\n-        self.calls.lock().unwrap().clear();\n+        () /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl Default for LoggingPlugin {\n     fn default() -> Self {\n         Self::new()\n     }\n }\n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "LoggingPlugin::clear",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 89
+        },
+        "start": {
+          "column": 5,
+          "line": 87
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/pareto-rs/src/plugin.rs:88:9: replace LoggingPlugin::clear with ()",
+    "package": "pareto-rs",
+    "replacement": "()",
+    "span": {
+      "end": {
+        "column": 44,
+        "line": 88
+      },
+      "start": {
+        "column": 9,
+        "line": 88
+      }
+    }
+  },
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace TimelinePlugin::len -> usize with 0\n@@ -206,17 +206,17 @@\n         self.events\n             .lock()\n             .unwrap()\n             .iter()\n             .map(|e| e.input_tokens + e.output_tokens)\n             .sum()\n     }\n     pub fn len(&self) -> usize {\n-        self.events.lock().unwrap().len()\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n     pub fn is_empty(&self) -> bool {\n         self.events.lock().unwrap().is_empty()\n     }\n }\n \n impl Default for TimelinePlugin {\n     fn default() -> Self {\n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "TimelinePlugin::len",
+      "return_type": "-> usize",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 215
+        },
+        "start": {
+          "column": 5,
+          "line": 213
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/pareto-rs/src/plugin.rs:214:9: replace TimelinePlugin::len -> usize with 0",
+    "package": "pareto-rs",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 42,
+        "line": 214
+      },
+      "start": {
+        "column": 9,
+        "line": 214
+      }
+    }
+  },
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace TimelinePlugin::len -> usize with 1\n@@ -206,17 +206,17 @@\n         self.events\n             .lock()\n             .unwrap()\n             .iter()\n             .map(|e| e.input_tokens + e.output_tokens)\n             .sum()\n     }\n     pub fn len(&self) -> usize {\n-        self.events.lock().unwrap().len()\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n     pub fn is_empty(&self) -> bool {\n         self.events.lock().unwrap().is_empty()\n     }\n }\n \n impl Default for TimelinePlugin {\n     fn default() -> Self {\n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "TimelinePlugin::len",
+      "return_type": "-> usize",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 215
+        },
+        "start": {
+          "column": 5,
+          "line": 213
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/pareto-rs/src/plugin.rs:214:9: replace TimelinePlugin::len -> usize with 1",
+    "package": "pareto-rs",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 42,
+        "line": 214
+      },
+      "start": {
+        "column": 9,
+        "line": 214
+      }
+    }
+  },
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace TimelinePlugin::is_empty -> bool with true\n@@ -209,17 +209,17 @@\n             .iter()\n             .map(|e| e.input_tokens + e.output_tokens)\n             .sum()\n     }\n     pub fn len(&self) -> usize {\n         self.events.lock().unwrap().len()\n     }\n     pub fn is_empty(&self) -> bool {\n-        self.events.lock().unwrap().is_empty()\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl Default for TimelinePlugin {\n     fn default() -> Self {\n         Self::new()\n     }\n }\n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "TimelinePlugin::is_empty",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 218
+        },
+        "start": {
+          "column": 5,
+          "line": 216
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/pareto-rs/src/plugin.rs:217:9: replace TimelinePlugin::is_empty -> bool with true",
+    "package": "pareto-rs",
+    "replacement": "true",
+    "span": {
+      "end": {
+        "column": 47,
+        "line": 217
+      },
+      "start": {
+        "column": 9,
+        "line": 217
+      }
+    }
+  },
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace TimelinePlugin::is_empty -> bool with false\n@@ -209,17 +209,17 @@\n             .iter()\n             .map(|e| e.input_tokens + e.output_tokens)\n             .sum()\n     }\n     pub fn len(&self) -> usize {\n         self.events.lock().unwrap().len()\n     }\n     pub fn is_empty(&self) -> bool {\n-        self.events.lock().unwrap().is_empty()\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl Default for TimelinePlugin {\n     fn default() -> Self {\n         Self::new()\n     }\n }\n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "TimelinePlugin::is_empty",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 218
+        },
+        "start": {
+          "column": 5,
+          "line": 216
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/pareto-rs/src/plugin.rs:217:9: replace TimelinePlugin::is_empty -> bool with false",
+    "package": "pareto-rs",
+    "replacement": "false",
+    "span": {
+      "end": {
+        "column": 47,
+        "line": 217
+      },
+      "start": {
+        "column": 9,
+        "line": 217
+      }
+    }
+  },
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace PluginRegistry::get -> Option<Arc<dyn Plugin>> with None\n@@ -273,22 +273,17 @@\n             plugins.remove(i);\n             true\n         } else {\n             false\n         }\n     }\n \n     pub fn get(&self, id: &str) -> Option<Arc<dyn Plugin>> {\n-        self.plugins\n-            .lock()\n-            .unwrap()\n-            .iter()\n-            .find(|p| p.id() == id)\n-            .cloned()\n+        None /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn list(&self) -> Vec<PluginId> {\n         self.plugins\n             .lock()\n             .unwrap()\n             .iter()\n             .map(|p| p.id())\n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "PluginRegistry::get",
+      "return_type": "-> Option<Arc<dyn Plugin>>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 287
+        },
+        "start": {
+          "column": 5,
+          "line": 280
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/pareto-rs/src/plugin.rs:281:9: replace PluginRegistry::get -> Option<Arc<dyn Plugin>> with None",
+    "package": "pareto-rs",
+    "replacement": "None",
+    "span": {
+      "end": {
+        "column": 22,
+        "line": 286
+      },
+      "start": {
+        "column": 9,
+        "line": 281
+      }
+    }
+  },
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace PluginRegistry::get -> Option<Arc<dyn Plugin>> with Some(Arc::new(Default::default()))\n@@ -273,22 +273,17 @@\n             plugins.remove(i);\n             true\n         } else {\n             false\n         }\n     }\n \n     pub fn get(&self, id: &str) -> Option<Arc<dyn Plugin>> {\n-        self.plugins\n-            .lock()\n-            .unwrap()\n-            .iter()\n-            .find(|p| p.id() == id)\n-            .cloned()\n+        Some(Arc::new(Default::default())) /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn list(&self) -> Vec<PluginId> {\n         self.plugins\n             .lock()\n             .unwrap()\n             .iter()\n             .map(|p| p.id())\n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "PluginRegistry::get",
+      "return_type": "-> Option<Arc<dyn Plugin>>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 287
+        },
+        "start": {
+          "column": 5,
+          "line": 280
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/pareto-rs/src/plugin.rs:281:9: replace PluginRegistry::get -> Option<Arc<dyn Plugin>> with Some(Arc::new(Default::default()))",
+    "package": "pareto-rs",
+    "replacement": "Some(Arc::new(Default::default()))",
+    "span": {
+      "end": {
+        "column": 22,
+        "line": 286
+      },
+      "start": {
+        "column": 9,
+        "line": 281
+      }
+    }
+  },
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace == with != in PluginRegistry::get\n@@ -277,17 +277,17 @@\n         }\n     }\n \n     pub fn get(&self, id: &str) -> Option<Arc<dyn Plugin>> {\n         self.plugins\n             .lock()\n             .unwrap()\n             .iter()\n-            .find(|p| p.id() == id)\n+            .find(|p| p.id() != /* ~ changed by cargo-mutants ~ */ id)\n             .cloned()\n     }\n \n     pub fn list(&self) -> Vec<PluginId> {\n         self.plugins\n             .lock()\n             .unwrap()\n             .iter()\n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "PluginRegistry::get",
+      "return_type": "-> Option<Arc<dyn Plugin>>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 287
+        },
+        "start": {
+          "column": 5,
+          "line": 280
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/pareto-rs/src/plugin.rs:285:30: replace == with != in PluginRegistry::get",
+    "package": "pareto-rs",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 32,
+        "line": 285
+      },
+      "start": {
+        "column": 30,
+        "line": 285
+      }
+    }
+  },
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace PluginRegistry::list -> Vec<PluginId> with vec![]\n@@ -282,22 +282,17 @@\n             .lock()\n             .unwrap()\n             .iter()\n             .find(|p| p.id() == id)\n             .cloned()\n     }\n \n     pub fn list(&self) -> Vec<PluginId> {\n-        self.plugins\n-            .lock()\n-            .unwrap()\n-            .iter()\n-            .map(|p| p.id())\n-            .collect()\n+        vec![] /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn count(&self) -> usize {\n         self.plugins.lock().unwrap().len()\n     }\n \n     pub fn invoke_pre_cost(&self, provider: &str, model: &str, input: u64, output: u64) {\n         for p in self.plugins.lock().unwrap().iter() {\n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "PluginRegistry::list",
+      "return_type": "-> Vec<PluginId>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 296
+        },
+        "start": {
+          "column": 5,
+          "line": 289
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/pareto-rs/src/plugin.rs:290:9: replace PluginRegistry::list -> Vec<PluginId> with vec![]",
+    "package": "pareto-rs",
+    "replacement": "vec![]",
+    "span": {
+      "end": {
+        "column": 23,
+        "line": 295
+      },
+      "start": {
+        "column": 9,
+        "line": 290
+      }
+    }
+  },
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace PluginRegistry::list -> Vec<PluginId> with vec![Default::default()]\n@@ -282,22 +282,17 @@\n             .lock()\n             .unwrap()\n             .iter()\n             .find(|p| p.id() == id)\n             .cloned()\n     }\n \n     pub fn list(&self) -> Vec<PluginId> {\n-        self.plugins\n-            .lock()\n-            .unwrap()\n-            .iter()\n-            .map(|p| p.id())\n-            .collect()\n+        vec![Default::default()] /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn count(&self) -> usize {\n         self.plugins.lock().unwrap().len()\n     }\n \n     pub fn invoke_pre_cost(&self, provider: &str, model: &str, input: u64, output: u64) {\n         for p in self.plugins.lock().unwrap().iter() {\n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "PluginRegistry::list",
+      "return_type": "-> Vec<PluginId>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 296
+        },
+        "start": {
+          "column": 5,
+          "line": 289
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/pareto-rs/src/plugin.rs:290:9: replace PluginRegistry::list -> Vec<PluginId> with vec![Default::default()]",
+    "package": "pareto-rs",
+    "replacement": "vec![Default::default()]",
+    "span": {
+      "end": {
+        "column": 23,
+        "line": 295
+      },
+      "start": {
+        "column": 9,
+        "line": 290
+      }
+    }
+  },
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace PluginRegistry::invoke_pre_cost with ()\n@@ -295,19 +295,17 @@\n             .collect()\n     }\n \n     pub fn count(&self) -> usize {\n         self.plugins.lock().unwrap().len()\n     }\n \n     pub fn invoke_pre_cost(&self, provider: &str, model: &str, input: u64, output: u64) {\n-        for p in self.plugins.lock().unwrap().iter() {\n-            p.pre_cost(provider, model, input, output);\n-        }\n+        () /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn invoke_post_cost(\n         &self,\n         provider: &str,\n         model: &str,\n         input: u64,\n         output: u64,\n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "PluginRegistry::invoke_pre_cost",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 306
+        },
+        "start": {
+          "column": 5,
+          "line": 302
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/pareto-rs/src/plugin.rs:303:9: replace PluginRegistry::invoke_pre_cost with ()",
+    "package": "pareto-rs",
+    "replacement": "()",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 305
+      },
+      "start": {
+        "column": 9,
+        "line": 303
+      }
+    }
+  },
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace PluginRegistry::invoke_pre_route with ()\n@@ -314,19 +314,17 @@\n         cost: f64,\n     ) {\n         for p in self.plugins.lock().unwrap().iter() {\n             p.post_cost(provider, model, input, output, cost);\n         }\n     }\n \n     pub fn invoke_pre_route(&self, criteria: &str, max_price: Option<f64>) {\n-        for p in self.plugins.lock().unwrap().iter() {\n-            p.pre_route(criteria, max_price);\n-        }\n+        () /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn invoke_post_route(&self, criteria: &str, model: &str, price: f64) {\n         for p in self.plugins.lock().unwrap().iter() {\n             p.post_route(criteria, model, price);\n         }\n     }\n \n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "PluginRegistry::invoke_pre_route",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 325
+        },
+        "start": {
+          "column": 5,
+          "line": 321
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/pareto-rs/src/plugin.rs:322:9: replace PluginRegistry::invoke_pre_route with ()",
+    "package": "pareto-rs",
+    "replacement": "()",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 324
+      },
+      "start": {
+        "column": 9,
+        "line": 322
+      }
+    }
+  },
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace PluginRegistry::invoke_post_route with ()\n@@ -320,19 +320,17 @@\n \n     pub fn invoke_pre_route(&self, criteria: &str, max_price: Option<f64>) {\n         for p in self.plugins.lock().unwrap().iter() {\n             p.pre_route(criteria, max_price);\n         }\n     }\n \n     pub fn invoke_post_route(&self, criteria: &str, model: &str, price: f64) {\n-        for p in self.plugins.lock().unwrap().iter() {\n-            p.post_route(criteria, model, price);\n-        }\n+        () /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn invoke_price_book_load(&self, book_id: &str, count: usize) {\n         for p in self.plugins.lock().unwrap().iter() {\n             p.price_book_load(book_id, count);\n         }\n     }\n }\n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "PluginRegistry::invoke_post_route",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 331
+        },
+        "start": {
+          "column": 5,
+          "line": 327
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/pareto-rs/src/plugin.rs:328:9: replace PluginRegistry::invoke_post_route with ()",
+    "package": "pareto-rs",
+    "replacement": "()",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 330
+      },
+      "start": {
+        "column": 9,
+        "line": 328
+      }
+    }
+  },
+  {
+    "diff": "--- crates/pareto-rs/src/plugin.rs\n+++ replace PluginRegistry::invoke_price_book_load with ()\n@@ -326,19 +326,17 @@\n \n     pub fn invoke_post_route(&self, criteria: &str, model: &str, price: f64) {\n         for p in self.plugins.lock().unwrap().iter() {\n             p.post_route(criteria, model, price);\n         }\n     }\n \n     pub fn invoke_price_book_load(&self, book_id: &str, count: usize) {\n-        for p in self.plugins.lock().unwrap().iter() {\n-            p.price_book_load(book_id, count);\n-        }\n+        () /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl Default for PluginRegistry {\n     fn default() -> Self {\n         Self::new()\n     }\n }\n",
+    "file": "crates/pareto-rs/src/plugin.rs",
+    "function": {
+      "function_name": "PluginRegistry::invoke_price_book_load",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 337
+        },
+        "start": {
+          "column": 5,
+          "line": 333
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/pareto-rs/src/plugin.rs:334:9: replace PluginRegistry::invoke_price_book_load with ()",
+    "package": "pareto-rs",
+    "replacement": "()",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 336
+      },
+      "start": {
+        "column": 9,
+        "line": 334
+      }
+    }
+  }
+]
